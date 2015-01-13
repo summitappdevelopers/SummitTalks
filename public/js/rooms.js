@@ -46,9 +46,9 @@ STRooms.controller('RoomsController',function($scope, $http){
         console.log(data);
 
         if(data.data){
-          $scope.rooms[index].isMuted = true;
+          alert($scope.rooms[index].roomName+" muted");
         }else{
-          $scope.rooms[index].isMuted = false;
+          alert($scope.rooms[index].roomName+" note muted");
         }
       });
     }
