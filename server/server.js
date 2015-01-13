@@ -18,10 +18,10 @@ global.app = {
 
 if(app.dev){
 	app.port = dev.port;
-	app.mongo_uri = "mongodb://heroku_app33201011:ka4anhdnpjbcklnsdt7n188o8h@ds031741.mongolab.com:31741/heroku_app33201011";
+	app.mongo_uri ="mongodb://localhost:27017/summit-talks-dev";
 }else{
 	app.port = (process.env.PORT || 5000);
-	app.mongo_uri = "mongodb://localhost:27017/summit-talks-dev";
+	app.mongo_uri ="mongodb://heroku_app33201011:ka4anhdnpjbcklnsdt7n188o8h@ds031741.mongolab.com:31741/heroku_app33201011";
 }
 
 app.utilities.ensureAuthenticated = function ensureAuthenticated(req,res,next) {
@@ -29,7 +29,6 @@ app.utilities.ensureAuthenticated = function ensureAuthenticated(req,res,next) {
 		res.redirect('/auth/google');
 		return;
 	}
-
 	next();
 }
 
