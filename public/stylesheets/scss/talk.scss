@@ -225,7 +225,8 @@ a{
 			}
 
 			@media (max-width: $device-max){
-				top: ($talk-header-height-shrink - 30px)/2;
+				//top: ($talk-header-height-shrink - 30px)/2;
+				display: none;
 			}
 
 		}
