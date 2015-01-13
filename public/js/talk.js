@@ -10,17 +10,26 @@ STTalk.controller('TalkController',function($scope, $http, $timeout){
 	$scope.token = token;
 	$scope.roomName = room.roomName;
 	$scope.roomId = room._id;
+	$scope.isMute = room.isMute;
 	$scope.onlineUsers = [];
 	$scope.messages = [];
 	$scope.profile = profile;
 	$scope.inputMessage;
 	var menuOpen = false;
 	var socketURL;
+	
 	if(dev){
 		socketURL = "http://localhost:1337";
 	}else{
 		socketURL = "https://summittalks.herokuapp.com";
 	}
+
+	if($scope.isMute){
+		$scope.talkPlaceholder = "Room temporarily disabled by "+room.creator.displayName;
+	}else{
+		$scope.talkPlaceholder = "Enter a message. Be nice!";
+	}
+
 
 	$http.get('/api/room/'+$scope.roomId+'/messages').success(function(data) {
 		for(var i=0; i<data.messages.length; i++){
@@ -39,7 +48,7 @@ STTalk.controller('TalkController',function($scope, $http, $timeout){
 		query: 'token='+token+'&roomName='+$scope.roomName+'&roomId='+$scope.roomId
 	});
 
-	if(socket){
+	if(socket && $scope.isMute==false){
 
 		socket.on('inmessage',function(data){
 			if(data.sender._id==$scope.profile._id){
@@ -91,7 +100,6 @@ STTalk.directive('ngEnter', function () {
                 scope.$apply(function (){
                     scope.$eval(attrs.ngEnter);
                 });
-
                 event.preventDefault();
             }
         });

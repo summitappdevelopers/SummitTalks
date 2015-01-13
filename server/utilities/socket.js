@@ -29,7 +29,7 @@ io.sockets.on('connection',function(socket){
 			Prevent multiple instances of "room" opened by a single user
 			from logging as new users
 		*/
-		if(room){
+		if(room && room.isMute==false){
 			var exists = room.members.some(function(member){
 				console.log(profile.displayName+" connected again to "+roomName);
 				return member._id === profile._id;

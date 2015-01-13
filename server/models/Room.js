@@ -12,6 +12,7 @@ var RoomSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'User'
 	},
+	isMute: Boolean,
 	members: Array
 });
 

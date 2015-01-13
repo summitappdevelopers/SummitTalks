@@ -38,6 +38,7 @@ room.route('/create').post(app.utilities.ensureAuthenticated,function(req, res) 
 				newRoom.displayName = req.body.displayName;
 				newRoom.creator = req.user._id;
 				newRoom.creationDate = new Date();
+				newRoom.isMute = false;
 
 			newRoom.save(function(err){
 				if(err){
@@ -66,6 +67,27 @@ room.route('/create').post(app.utilities.ensureAuthenticated,function(req, res) 
 	}
 });
 
+room.route('/mute').post(app.utilities.ensureAuthenticated, function(req,res){
+	app.models.Room.findOne({_id:req.body.id}, function(err, room){
+		if(room.creator.toString()==req.user._id){
+			if(err){
+				throw err;
+			}else{
+				room.isMute = !room.isMute;
+				room.save(function(err){
+					if(err){
+						throw err;
+					}else{
+						res.json({
+							data: room.isMute
+						});
+					}
+				});
+			}
+		}
+	});
+});
+
 room.route('/:id/messages').get(app.utilities.ensureAuthenticated, function(req,res){
 	app.models.Message.find({roomId:req.params.id}, function(err,messages){
 		
@@ -82,7 +104,7 @@ room.route('/:id/messages').get(app.utilities.ensureAuthenticated, function(req,
 });
 
 room.route('/delete').post(app.utilities.ensureAuthenticated, function(req,res){
-	app.models.Room.findOne({_id:req.body.roomId}, function(err,room){
+	app.models.Room.findOne({_id:req.body.id}, function(err,room){
 		var displayName = room.displayName;
 		var roomName = room.roomName;
 		if(room.creator.toString()==req.user._id){

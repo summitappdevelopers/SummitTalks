@@ -1,0 +1,81 @@
+/*BOURBON*/
+/*GOOGLE FONTS*/
+@import url(https://fonts.googleapis.com/css?family=Lato);
+/*VARS*/
+/*KEYFRAMES*/
+@-webkit-keyframes floodLogin {
+  from {
+    background-color: transparent; }
+  to {
+    background-color: #F2784B; } }
+@-moz-keyframes floodLogin {
+  from {
+    background-color: transparent; }
+  to {
+    background-color: #F2784B; } }
+@keyframes floodLogin {
+  from {
+    background-color: transparent; }
+  to {
+    background-color: #F2784B; } }
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #67809F;
+  overflow-y: hidden;
+  overflow-x: hidden; }
+
+.summit-talks-header {
+  font-family: "Lato", "sans-serif";
+  position: fixed;
+  width: 100%;
+  background-color: #22313F;
+  font-size: 24px;
+  z-index: 1;
+  top: 0;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+  height: 50px; }
+  @media (max-width: 700px) {
+    .summit-talks-header {
+      text-align: center; } }
+  .summit-talks-header .title {
+    display: inline-block;
+    color: white;
+    font-size: 24px;
+    position: relative;
+    left: 30px; }
+    @media (min-width: 701px) {
+      .summit-talks-header .title {
+        top: 10px; } }
+    @media (max-width: 700px) {
+      .summit-talks-header .title {
+        left: 0px;
+        font-size: 18px;
+        top: 13px; } }
+
+.login-google {
+  display: block;
+  text-decoration: none;
+  position: relative;
+  border: 2px solid white;
+  width: 250px;
+  height: 100px;
+  margin: 0 auto;
+  top: -webkit-calc((100% - 100px)/2);
+  top: calc((100% - 100px)/2);
+  text-align: center; }
+
+.login-google:hover {
+  cursor: hand;
+  -webkit-animation: floodLogin 0.5s forwards ease-out;
+  -moz-animation: floodLogin 0.5s forwards ease-out;
+  animation: floodLogin 0.5s forwards ease-out; }
+
+.login-text {
+  color: white;
+  position: relative;
+  font-family: "Lato", "sans-serif";
+  font-size: 20px;
+  top: 37px; }
+
+/*# sourceMappingURL=landing.css.map */

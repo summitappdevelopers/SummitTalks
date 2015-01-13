@@ -23,7 +23,7 @@ STRooms.controller('RoomsController',function($scope, $http){
   	}
 
   	$scope.deleteRoom = function(index){
-  		$http.post('/api/room/delete',{roomId:$scope.rooms[index]._id}).success(function(data){
+  		$http.post('/api/room/delete',{id:$scope.rooms[index]._id}).success(function(data){
   			console.log(data);
   			if(data){
   				$scope.rooms.splice(index,1);
@@ -39,6 +39,19 @@ STRooms.controller('RoomsController',function($scope, $http){
   			window.location.href="/room/"+roomName;
   		}
   	}
+
+    $scope.muteRoom = function(index){
+      $http.post('/api/room/mute',{id:$scope.rooms[index]._id}).success(function(data){
+          
+        console.log(data);
+
+        if(data.data){
+          $scope.rooms[index].isMuted = true;
+        }else{
+          $scope.rooms[index].isMuted = false;
+        }
+      });
+    }
 
 });
 

@@ -46,7 +46,7 @@
  						</message>
 					</div>
 					<div class="talk-input">
-						<textarea ng-model="inputMessage" class="talk-input" ng-enter="sendMessage()" placeholder="Enter a message. Be nice!"></textarea>
+						<textarea ng-disabled="isMute" ng-model="inputMessage" class="talk-input" ng-enter="sendMessage()" placeholder="{{talkPlaceholder}}"></textarea>
 					</div>
 				</div>
 		</div>

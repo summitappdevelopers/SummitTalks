@@ -2,8 +2,7 @@
 	
 	- fix ellipses bug
 	- add animations on enter
-	- add delete button
-
+	- add feedback on mute
 */
 
 /*BOURBON*/
@@ -23,7 +22,7 @@ $font: 'Lato','sans-serif';
 body{
 	margin:0;
 	padding:0;
-	background-color: #ecf0f1;
+	background-color: #67809F;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
@@ -77,6 +76,7 @@ body{
 			}
 		}
 		.logout-button{
+			display: block;
 			float: right;
 			position: relative;
 			right: 10px;
@@ -152,7 +152,7 @@ body{
 			position: relative;
 			font-family: $font;
 			font-size: 18px;
-			color: #7f8c8d;
+			color: white;
 			text-align: right;
 			top: (50px - 24px)/2;
 		}
@@ -260,13 +260,28 @@ body{
 						top: (80px - 65px)/2;
 					}
 				}
+
 			}
 
-			.delete-room-box{
+			.room-box-full {
+				width: 100%;
+			}
+
+			.room-box-muted{
+				background-color: #6C7A89;
+			}
+
+			.room-box:hover{
+				background-color: #3A539B;
+				cursor: hand;
+			}
+
+			.room-util-box{
+					position: relative; 
 					text-align: center;
 					height: 100%;
-					width: auto;
-					
+					float: right;
+					left: 5px;
 					@media (min-width: $device-min){
 						font-size: 25px;
 					}
@@ -274,7 +289,7 @@ body{
 						font-size: 15px;
 					}
 
-					.fa-trash {
+					.fa-button {
 						position: relative;
 						@media (min-width: $device-min){
 							top: (80px - 20px)/2;
@@ -285,19 +300,11 @@ body{
 						color: #2c3e50;
 					}
 
-					.fa-trash:hover{
+					.fa-button:hover{
 						color: black;
 					}
 			}
 
-			.room-box-full {
-				width: 100%;
-			}
-
-			.room-box:hover{
-				background-color: #3A539B;
-				cursor: hand;
-			}
 		}
 	}
 }

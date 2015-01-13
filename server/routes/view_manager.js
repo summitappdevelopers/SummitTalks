@@ -4,7 +4,7 @@ view_manager.route('/').get(function(req,res){
 	if(req.user){
 		res.render('rooms',{profile:req.user,version:app.version});
 	}else{
-		res.render('landing');
+		res.render('landing',{version: app.version});
 	}
 });
 
