@@ -3,7 +3,7 @@ var googleAuth = app.modules.express.Router();
 var GoogleStrategy = app.modules.googleStrategy.OAuth2Strategy;
 var GOOGLE_CLIENT_ID = "764510630822-clsfk29gnm6n3bgiur9uc0l5qm7ss6ft.apps.googleusercontent.com";
 var GOOGLE_CLIENT_SECRET = "Dmh6kWGILQ1DpHM5_jGSsT3Z";
-var callbackURL = "http://summittalks-summitps.rhcloud.com/auth/google/callback";
+var callbackURL = "https://summittalks.herokuapp.com/auth/google/callback";
 
 var passport = app.modules.passport;
 
