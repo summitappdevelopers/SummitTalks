@@ -1,0 +1,345 @@
+/*BOURBON*/
+/*GOOGLE FONTS*/
+@import url(http://fonts.googleapis.com/css?family=Lato);
+/*VARS*/
+/*MIXINS*/
+/*KEYFRAMES*/
+@-webkit-keyframes sidebarShow {
+  from {
+    left: -250px; }
+  to {
+    left: 0; } }
+@-moz-keyframes sidebarShow {
+  from {
+    left: -250px; }
+  to {
+    left: 0; } }
+@keyframes sidebarShow {
+  from {
+    left: -250px; }
+  to {
+    left: 0; } }
+@-webkit-keyframes sidebarHide {
+  from {
+    left: 0; }
+  to {
+    left: -250px; } }
+@-moz-keyframes sidebarHide {
+  from {
+    left: 0; }
+  to {
+    left: -250px; } }
+@keyframes sidebarHide {
+  from {
+    left: 0; }
+  to {
+    left: -250px; } }
+@-webkit-keyframes talkContainerGrow {
+  from {
+    width: -webkit-calc(100% - 250px);
+    width: calc(100% - 250px); }
+  to {
+    width: 100%; } }
+@-moz-keyframes talkContainerGrow {
+  from {
+    width: -webkit-calc(100% - 250px);
+    width: calc(100% - 250px); }
+  to {
+    width: 100%; } }
+@keyframes talkContainerGrow {
+  from {
+    width: -webkit-calc(100% - 250px);
+    width: calc(100% - 250px); }
+  to {
+    width: 100%; } }
+@-webkit-keyframes talkContainerShrink {
+  from {
+    width: 100%; }
+  to {
+    width: -webkit-calc(100% - 250px);
+    width: calc(100% - 250px); } }
+@-moz-keyframes talkContainerShrink {
+  from {
+    width: 100%; }
+  to {
+    width: -webkit-calc(100% - 250px);
+    width: calc(100% - 250px); } }
+@keyframes talkContainerShrink {
+  from {
+    width: 100%; }
+  to {
+    width: -webkit-calc(100% - 250px);
+    width: calc(100% - 250px); } }
+@-webkit-keyframes talkHeaderShrink {
+  from {
+    height: 50px; }
+  to {
+    height: 40px; } }
+@-moz-keyframes talkHeaderShrink {
+  from {
+    height: 50px; }
+  to {
+    height: 40px; } }
+@keyframes talkHeaderShrink {
+  from {
+    height: 50px; }
+  to {
+    height: 40px; } }
+@-webkit-keyframes talkHeaderGrow {
+  from {
+    height: 40px; }
+  to {
+    height: 50px; } }
+@-moz-keyframes talkHeaderGrow {
+  from {
+    height: 40px; }
+  to {
+    height: 50px; } }
+@keyframes talkHeaderGrow {
+  from {
+    height: 40px; }
+  to {
+    height: 50px; } }
+@-webkit-keyframes entityEnter {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
+@-moz-keyframes entityEnter {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
+@keyframes entityEnter {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
+body {
+  margin: 0;
+  padding: 0; }
+
+a {
+  text-decoration: none; }
+
+.sidebar {
+  width: 250px;
+  height: 100%;
+  background-color: #446CB3;
+  position: absolute;
+  display: block;
+  overflow-y: scroll;
+  overflow-x: hidden; }
+  @media (min-width: 701px) {
+    .sidebar {
+      -webkit-animation: sidebarShow 0.5s forwards ease-out;
+      -moz-animation: sidebarShow 0.5s forwards ease-out;
+      animation: sidebarShow 0.5s forwards ease-out; } }
+  @media (max-width: 700px) {
+    .sidebar {
+      -webkit-animation: sidebarHide 0.5s forwards ease-out;
+      -moz-animation: sidebarHide 0.5s forwards ease-out;
+      animation: sidebarHide 0.5s forwards ease-out; } }
+  .sidebar .sidebar-branding {
+    width: 100%;
+    height: 50px;
+    background-color: #22313F;
+    text-align: center; }
+    .sidebar .sidebar-branding .sidebar-branding-text {
+      position: relative;
+      font-family: "Lato", "sans-serif";
+      font-size: 24px;
+      color: white;
+      top: 10px; }
+  .sidebar .sidebar-branding:hover {
+    background-color: #34495e; }
+  .sidebar .userLabel {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin-top: 25px;
+    -webkit-animation: entityEnter 0.2s forwards ease-out;
+    -moz-animation: entityEnter 0.2s forwards ease-out;
+    animation: entityEnter 0.2s forwards ease-out; }
+  .sidebar .userLabel:hover {
+    background-color: #3498db;
+    cursor: hand; }
+  .sidebar .userName {
+    position: relative;
+    left: 20px;
+    font-family: "Lato", "sans-serif";
+    color: white;
+    display: inline-block;
+    top: 16px; }
+  .sidebar .sidebar-show {
+    -webkit-animation: sidebarShow 0.5s forwards ease-out;
+    -moz-animation: sidebarShow 0.5s forwards ease-out;
+    animation: sidebarShow 0.5s forwards ease-out; }
+  .sidebar .sidebar-hide {
+    -webkit-animation: sidebarHide 0.5s forwards ease-out;
+    -moz-animation: sidebarHide 0.5s forwards ease-out;
+    animation: sidebarHide 0.5s forwards ease-out; }
+
+.talk-container {
+  position: absolute;
+  border-box: box-sizing;
+  width: -webkit-calc(100% - 250px);
+  width: calc(100% - 250px);
+  height: 100%;
+  background-color: green;
+  display: block;
+  right: 0px; }
+  @media (min-width: 701px) {
+    .talk-container {
+      -webkit-animation: talkContainerShrink 0.5s forwards ease-out;
+      -moz-animation: talkContainerShrink 0.5s forwards ease-out;
+      animation: talkContainerShrink 0.5s forwards ease-out; } }
+  @media (max-width: 700px) {
+    .talk-container {
+      -webkit-animation: talkContainerGrow 0.5s forwards ease-out;
+      -moz-animation: talkContainerGrow 0.5s forwards ease-out;
+      animation: talkContainerGrow 0.5s forwards ease-out; } }
+  .talk-container .talk-header {
+    font-family: "Lato", "sans-serif";
+    font-weight: 300;
+    position: fixed;
+    width: 100%;
+    background-color: #34495e;
+    font-size: 24px;
+    z-index: 1;
+    top: 0;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75); }
+    @media (min-width: 701px) {
+      .talk-container .talk-header {
+        -webkit-animation: talkHeaderGrow 0.5s forwards ease-out;
+        -moz-animation: talkHeaderGrow 0.5s forwards ease-out;
+        animation: talkHeaderGrow 0.5s forwards ease-out; } }
+    @media (max-width: 700px) {
+      .talk-container .talk-header {
+        -webkit-animation: talkHeaderShrink 0.5s forwards ease-out;
+        -moz-animation: talkHeaderShrink 0.5s forwards ease-out;
+        animation: talkHeaderShrink 0.5s forwards ease-out;
+        text-align: center; } }
+    .talk-container .talk-header .talk-title {
+      display: inline-block;
+      color: white;
+      font-size: 24px;
+      position: relative;
+      left: 30px; }
+      @media (min-width: 701px) {
+        .talk-container .talk-header .talk-title {
+          top: 10px; } }
+      @media (max-width: 700px) {
+        .talk-container .talk-header .talk-title {
+          left: 0px;
+          font-size: 18px;
+          top: 8px; } }
+    .talk-container .talk-header .menu-button {
+      position: relative;
+      height: 30px;
+      width: 30px;
+      background-color: red;
+      left: 10px;
+      float: left; }
+      @media (min-width: 701px) {
+        .talk-container .talk-header .menu-button {
+          display: none; } }
+      @media (max-width: 700px) {
+        .talk-container .talk-header .menu-button {
+          top: 5px; } }
+  .talk-container .talk-stream {
+    width: 100%;
+    height: -webkit-calc(100% - 75px);
+    height: calc(100% - 75px);
+    background-color: #ecf0f1;
+    z-index: -1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75); }
+  .talk-container .talk-message, .talk-container .talk-message-user, .talk-container .talk-message:nth-child(1), .talk-container .talk-message:last-child {
+    background-color: #3498db;
+    font-family: "Lato", "sans-serif";
+    font-weight: 300;
+    color: white;
+    display: block;
+    min-height: 50px;
+    position: relative;
+    left: 10px;
+    margin-top: 10px;
+    z-index: 0;
+    border-radius: 5px;
+    float: left;
+    -webkit-animation: entityEnter 0.2s forwards ease-out;
+    -moz-animation: entityEnter 0.2s forwards ease-out;
+    animation: entityEnter 0.2s forwards ease-out; }
+    @media (min-width: 701px) {
+      .talk-container .talk-message, .talk-container .talk-message-user, .talk-container .talk-message:nth-child(1), .talk-container .talk-message:last-child {
+        width: 75%; } }
+    @media (max-width: 700px) {
+      .talk-container .talk-message, .talk-container .talk-message-user, .talk-container .talk-message:nth-child(1), .talk-container .talk-message:last-child {
+        width: 100%; } }
+  .talk-container .talk-message-user {
+    background-color: #2ecc71;
+    float: right; }
+  @media (min-width: 701px) {
+    .talk-container .talk-message-user:nth-child(1), .talk-container .talk-message:nth-child(1) {
+      margin-top: 70px; } }
+  @media (max-width: 700px) {
+    .talk-container .talk-message-user:nth-child(1), .talk-container .talk-message:nth-child(1) {
+      margin-top: 60px; } }
+  .talk-container .talk-message-user:last-child, .talk-container .talk-message:last-child {
+    margin-bottom: 10px; }
+  .talk-container .talk-message-title {
+    position: relative;
+    top: 5px;
+    left: 5px; }
+  .talk-container .talk-message-content {
+    position: relative;
+    left: 5px;
+    top: 2px;
+    bottom: 5px;
+    width: 100%; }
+  .talk-container .talk-message-image {
+    padding: 20px;
+    max-height: 300px; }
+  .talk-container .talk-message-desmos {
+    padding: 20px;
+    height: 500px;
+    width: 700px;
+    border: 0px; }
+  .talk-container .talk-message-youtube {
+    padding: 20px; }
+  .talk-container .talk-input {
+    align: right;
+    font-family: "Lato", "sans-serif";
+    font-size: 14px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 75px;
+    z-index: 1;
+    border-top: 1px solid #d9dcde;
+    border-left: 0px;
+    background-color: #ecf0f1;
+    text-indent: 10px;
+    resize: none;
+    box-shadow: 0px 10px 0px 0px rgba(0, 0, 0, 0.75); }
+  .talk-container .talk-input:focus {
+    outline: none; }
+
+.avi {
+  float: left;
+  position: relative;
+  border-radius: 100%;
+  border: solid 2px white;
+  width: 35px;
+  height: 35px;
+  left: 10px; }
+  @media (min-width: 701px) {
+    .avi {
+      top: 5.5px; } }
+  @media (max-width: 700px) {
+    .avi {
+      display: none; } }
+
+/*# sourceMappingURL=talk.css.map */

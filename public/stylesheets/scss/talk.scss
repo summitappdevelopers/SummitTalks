@@ -1,0 +1,353 @@
+/*BOURBON*/
+@import '../bourbon/bourbon';
+
+/*GOOGLE FONTS*/
+@import url(http://fonts.googleapis.com/css?family=Lato);
+
+/*VARS*/
+$sidebar-width: 250px;
+$talk-header-height-grow: 50px;
+$talk-header-height-shrink: 40px;
+$device-max: 700px;
+$device-min: 701px;
+$font: 'Lato','sans-serif';
+/*MIXINS*/
+
+
+/*KEYFRAMES*/
+
+@include keyframes(sidebarShow){
+	from{
+		left: -$sidebar-width;
+	}
+	to{
+		left: 0;
+	}
+}
+
+@include keyframes(sidebarHide) {
+	from{
+		left: 0;
+	}
+	to{
+		left: -$sidebar-width;
+	}
+}
+
+@include keyframes(talkContainerGrow){
+	from{
+		@include calc(width, "100% - #{$sidebar-width}");
+	}
+	to{
+		width: 100%;
+	}
+}
+
+@include keyframes(talkContainerShrink) {
+	from{
+		width: 100%;
+	}
+	to{
+		@include calc(width, "100% - #{$sidebar-width}");
+	}
+}
+
+@include keyframes(talkHeaderShrink){
+	from{
+		height: $talk-header-height-grow;
+	}
+	to{
+		height: $talk-header-height-shrink;
+	}
+}
+
+@include keyframes(talkHeaderGrow) {
+	from{
+		height: $talk-header-height-shrink;
+	}
+	to{
+		height: $talk-header-height-grow;
+	}
+}
+
+@include keyframes(entityEnter){
+	from{
+		opacity: 0;
+	}
+	to{
+		opacity: 1;
+	}
+}
+
+body{
+	margin:0;
+	padding:0;	
+}
+
+a{
+	text-decoration: none;
+}
+
+.wrap {
+	//@extend body;
+}
+
+.sidebar {
+	width: $sidebar-width;
+	height: 100%;
+	background-color: #446CB3;
+	position: absolute;
+	display: block;
+	overflow-y: scroll;
+	overflow-x: hidden;
+
+	@media (min-width: $device-min){
+		@include animation(sidebarShow 0.5s forwards ease-out);
+	}
+	@media (max-width: $device-max){
+		@include animation(sidebarHide 0.5s forwards ease-out);
+	}
+
+	.sidebar-branding{
+		width: 100%;
+		height: 50px;
+		background-color: #22313F;
+		text-align: center;
+
+		.sidebar-branding-text{
+			position: relative;
+			font-family: $font;
+			font-size: 24px;
+			color: white;
+			top: (50px - 30px)/2;
+		}
+	}
+
+	.sidebar-branding:hover{
+		background-color: #34495e;
+	}
+
+	.userLabel{
+		position: relative;
+		width: 100%;
+		height: 50px;
+		margin-top: 25px;
+		@include animation(entityEnter 0.2s forwards ease-out);
+	}
+
+	.userLabel:hover{
+		background-color: #3498db;
+		cursor: hand;
+
+	}
+
+	.userName {
+		position: relative;
+		left: 20px;
+		font-family: $font;
+		color: white;
+		display: inline-block;
+		top: (50px - 18px)/2;
+	}
+
+	.sidebar-show{
+		@include animation(sidebarShow 0.5s forwards ease-out);
+	}
+
+	.sidebar-hide{
+		@include animation(sidebarHide 0.5s forwards ease-out);
+	}
+}
+
+.talk-container{
+
+	position: absolute;
+	border-box: box-sizing;
+	@include calc(width, "100% - #{$sidebar-width}");
+	height: 100%;
+	background-color: green;
+	display: block;
+	right: 0px;
+
+	@media (min-width: $device-min){
+		@include animation(talkContainerShrink 0.5s forwards ease-out);
+	}
+
+	@media (max-width: $device-max){
+		@include animation(talkContainerGrow 0.5s forwards ease-out);
+	}
+
+	.talk-header{
+		font-family: $font;
+		font-weight: 300;
+		position: fixed;
+		width: 100%;
+		background-color: #34495e;
+		font-size: 24px;
+		z-index: 1;
+		top: 0;
+		box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+		@media (min-width: $device-min){
+			@include animation(talkHeaderGrow 0.5s forwards ease-out);
+		}
+
+		@media (max-width: $device-max){
+			@include animation(talkHeaderShrink 0.5s forwards ease-out);
+			text-align: center;
+		}
+
+		.talk-title{
+			display: inline-block;
+			color: white;
+			font-size: 24px;
+			position: relative;
+			left: 30px;
+			@media (min-width: $device-min){
+				top: ($talk-header-height-grow - 30px)/2;
+			}
+			@media (max-width: $device-max){
+				left: 0px;
+				font-size: 18px;
+				top: ($talk-header-height-shrink - 24px)/2;
+			}
+
+		}
+
+		.menu-button{
+			position: relative;
+			height: 30px;
+			width: 30px;
+			background-color: red;
+			left: 10px;
+			float: left;
+			@media (min-width: $device-min){
+				display: none;
+			}
+
+			@media (max-width: $device-max){
+				top: ($talk-header-height-shrink - 30px)/2;
+			}
+
+		}
+	}
+
+	.talk-stream {
+		width: 100%;
+		@include calc(height, "100% - 75px");
+		background-color: #ecf0f1;
+		z-index: -1;
+		overflow-y: auto;
+		overflow-x: hidden;
+		box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+	}
+
+	.talk-message{
+		background-color: #3498db;
+		font-family: $font;
+		font-weight: 300;
+		color: white;
+		display: block;
+		min-height: 50px;
+		position: relative;
+		left: 10px;
+		margin-top: 10px;
+		z-index: 0;
+		border-radius: 5px;
+		float: left;
+		@include animation(entityEnter 0.2s forwards ease-out);
+		@media (min-width: $device-min){
+			width: 75%;
+		}
+
+		@media (max-width: $device-max){
+			width: 100%;
+		}
+	}
+
+	.talk-message-user{
+		@extend .talk-message;
+		background-color: #2ecc71;
+		float: right;
+	}
+
+	.talk-message:nth-child(1){
+		@extend .talk-message;
+		@media (min-width: $device-min){
+			margin-top: $talk-header-height-grow + 20px;
+		}
+		@media (max-width: $device-max){
+			margin-top: $talk-header-height-shrink + 20px;
+		}
+	}
+
+	.talk-message:last-child{
+		@extend .talk-message;
+		margin-bottom: 10px;
+	}
+
+	.talk-message-title{
+		position: relative;
+		top: 5px;
+		left: 5px;
+	}
+
+	.talk-message-content{
+		position: relative;
+		left: 5px;
+		top: 2px;
+		bottom: 5px;
+		width: 100%;
+	}
+
+	.talk-message-image{
+		padding: 20px;
+		max-height: 300px;
+	}
+
+	.talk-message-desmos{
+		padding: 20px;
+		height: 500px;
+		width: 700px;
+		border: 0px;
+	}
+
+	.talk-message-youtube{
+		padding: 20px;
+	}
+
+	.talk-input{
+		align: right;
+		font-family: $font;
+		font-size: 14px;
+		position: fixed;
+		bottom:0;
+		width: 100%;
+		height: 75px;
+		z-index: 1;
+		border-top: 1.0px solid lighten(#bdc3c7, 10%);
+		border-left: 0px;
+		background-color: #ecf0f1;
+		text-indent: 10px;
+		resize: none;
+		box-shadow: 0px 10px 0px 0px rgba(0,0,0,0.75);
+	}
+
+	.talk-input:focus{outline:none;}
+
+}
+
+.avi{
+	float: left;
+	position: relative;
+	border-radius: 100%;
+	border: solid 2px white;
+	width:35px;
+	height:35px;
+	left: 10px;
+	@media (min-width: $device-min){
+		top: ($talk-header-height-grow - 39px)/2;
+	}
+	@media (max-width: $device-max){
+		display: none;
+	}
+}
