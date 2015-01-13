@@ -15,6 +15,12 @@ STTalk.controller('TalkController',function($scope, $http, $timeout){
 	$scope.profile = profile;
 	$scope.inputMessage;
 	var menuOpen = false;
+	var socketURL;
+	if(dev){
+		socketURL = "http://localhost:1337";
+	}else{
+		socketURL = "http://summittalks.herokuapp.com";
+	}
 
 	$http.get('/api/room/'+$scope.roomId+'/messages').success(function(data) {
 		for(var i=0; i<data.messages.length; i++){
@@ -29,7 +35,7 @@ STTalk.controller('TalkController',function($scope, $http, $timeout){
 
   	$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight+205}, 1000);
 
-	var socket = io.connect("https://summittalks.herokuapp.com",{
+	var socket = io.connect(socketURL,{
 		query: 'token='+token+'&roomName='+$scope.roomName+'&roomId='+$scope.roomId
 	});
 

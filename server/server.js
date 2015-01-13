@@ -10,17 +10,17 @@ global.app = {
 		expressSession: "scheminup",
 		jwtSecret: "topszn"
 	},
-	dev: false,
+	dev: true,
 	port: {},
 	mongo_uri: {},
 	version: 'v2014.01.12.1'
 }
 
+app.port = (process.env.PORT || 1337);
+
 if(app.dev){
-	app.port = dev.port;
 	app.mongo_uri ="mongodb://localhost:27017/summit-talks-dev";
 }else{
-	app.port = (process.env.PORT || 5000);
 	app.mongo_uri ="mongodb://heroku_app33201011:ka4anhdnpjbcklnsdt7n188o8h@ds031741.mongolab.com:31741/heroku_app33201011";
 }
 
@@ -91,6 +91,8 @@ app.modules.passport.deserializeUser(function(id,done){
 app.modules.server.listen(app.port);
 app.modules.io = require('socket.io')(app.modules.server);
 app.utilities.talkSocket = require('./utilities/socket');
+
+console.log("App listening on port: "+app.port);
 
 process.on('SIGINT', function() {
 	console.log("Disconnecting all sockets...");
