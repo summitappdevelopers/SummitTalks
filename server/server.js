@@ -10,10 +10,18 @@ global.app = {
 		expressSession: "scheminup",
 		jwtSecret: "topszn"
 	},
-	dev: {
-		port: 1337
-	},
-	version: 'v2014.01.10.1'
+	dev: false,
+	port {},
+	mongo_uri: {},
+	version: 'v2014.01.12.1'
+}
+
+if(dev){
+	app.port = dev.port;
+	app.mongo_uri = "mongodb://heroku_app33201011:ka4anhdnpjbcklnsdt7n188o8h@ds031741.mongolab.com:31741/heroku_app33201011";
+}else{
+	app.port = (process.env.PORT || 5000);
+	app.mongo_uri = "mongodb://localhost:27017/summit-talks-dev";
 }
 
 app.utilities.ensureAuthenticated = function ensureAuthenticated(req,res,next) {
@@ -45,17 +53,7 @@ app.utilities.view_manager = require('./routes/view_manager');
 
 //====== MONGODB SETUP ======
 
-if(process.env.OPENSHIFT_MONGODB_DB_URL){
-	if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
-		mongodb_connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
-		process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
-		process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
-		process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
-		process.env.OPENSHIFT_APP_NAME;
-	}
-}
-
-app.modules.mongoose.connect(mongodb_connection_string);
+app.modules.mongoose.connect(app.mongo_uri);
 
 app.models.Room = require('./models/Room');
 app.models.Message = require('./models/Message');
@@ -91,7 +89,7 @@ app.modules.passport.deserializeUser(function(id,done){
 	});
 });
 
-app.modules.server.listen(parseInt(process.env.OPENSHIFT_NODEJS_PORT),process.env.OPENSHIFT_NODEJS_IP);
+app.modules.server.listen(app.port);
 app.modules.io = require('socket.io')(app.modules.server);
 app.utilities.talkSocket = require('./utilities/socket');
 

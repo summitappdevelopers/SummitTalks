@@ -29,7 +29,7 @@ STTalk.controller('TalkController',function($scope, $http, $timeout){
 
   	$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight+205}, 1000);
 
-	var socket = io.connect("http://summittalks-summitps.rhcloud.com",{
+	var socket = io.connect("https://summittalks.herokuapp.com",{
 		query: 'token='+token+'&roomName='+$scope.roomName+'&roomId='+$scope.roomId
 	});
 

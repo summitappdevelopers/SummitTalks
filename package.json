@@ -1,6 +1,9 @@
 {
   "name": "SummitTalks",
   "version": "1.0.0",
+  "engines": {
+  	"node": "0.10.x"
+  },
   "description": "Teacher moderated group chat for Summit students",
   "dependencies": {
     "body-parser": "^1.10.1",
