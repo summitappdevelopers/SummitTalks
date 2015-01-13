@@ -237,7 +237,7 @@ a{
 		@include calc(height, "100% - 75px");
 		background-color: #ecf0f1;
 		z-index: -1;
-		overflow-y: auto;
+		overflow-y: hidden;
 		overflow-x: hidden;
 		box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 	}
