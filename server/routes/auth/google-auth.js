@@ -8,7 +8,7 @@ var callbackURL;
 if(app.dev){
 	callbackURL = "http://localhost:1337/auth/google/callback";
 }else{
-	callbackURL = "http://summittalks.herokuapp.com/auth/google/callback";
+	callbackURL = "https://summittalks.herokuapp.com/auth/google/callback";
 }
 
 var passport = app.modules.passport;

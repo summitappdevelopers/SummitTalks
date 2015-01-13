@@ -19,7 +19,7 @@ STTalk.controller('TalkController',function($scope, $http, $timeout){
 	if(dev){
 		socketURL = "http://localhost:1337";
 	}else{
-		socketURL = "http://summittalks.herokuapp.com";
+		socketURL = "https://summittalks.herokuapp.com";
 	}
 
 	$http.get('/api/room/'+$scope.roomId+'/messages').success(function(data) {
