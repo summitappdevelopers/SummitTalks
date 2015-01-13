@@ -28,7 +28,7 @@ passport.use(new GoogleStrategy({
 			if(user){
 				return done(null,user);
 			}else{
-				if(profile._json.hd=="summitps.org" || profile._json.hd=="mysummitps"){
+				if(profile._json.hd=="summitps.org" || profile._json.hd=="mysummitps.org"){
 					var isTeacher = false;
 					if(profile._json.hd=="summitps.org" || profile.emails[0].value=="dev.tahoma@mysummitps.org"){
 						isTeacher = true;
