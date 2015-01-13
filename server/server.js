@@ -11,7 +11,7 @@ global.app = {
 		jwtSecret: "topszn"
 	},
 	dev: false,
-	port {},
+	port: {},
 	mongo_uri: {},
 	version: 'v2014.01.12.1'
 }
