@@ -28,24 +28,28 @@ passport.use(new GoogleStrategy({
 			if(user){
 				return done(null,user);
 			}else{
-				var isTeacher = false;
-				if(profile._json.hd=="summitps.org" || profile.emails[0].value=="dev.tahoma@mysummitps.org"){
-					isTeacher = true;
-				}
-				var newUser = new app.models.User({
-					google_id: profile.id,
-					displayName: profile.displayName,
-					email: profile.emails[0].value,
-					picture: profile._json.picture,
-					isTeacher: isTeacher
-				});
-
-				newUser.save(function(err){
-					if(err){
-						throw err;
+				if(profile._json.hd=="summitps.org" || profile._json.hd=="mysummitps"){
+					var isTeacher = false;
+					if(profile._json.hd=="summitps.org" || profile.emails[0].value=="dev.tahoma@mysummitps.org"){
+						isTeacher = true;
 					}
-					return done(null,newUser);
-				});
+					var newUser = new app.models.User({
+						google_id: profile.id,
+						displayName: profile.displayName,
+						email: profile.emails[0].value,
+						picture: profile._json.picture,
+						isTeacher: isTeacher
+					});
+
+					newUser.save(function(err){
+						if(err){
+							throw err;
+						}
+						return done(null,newUser);
+						});
+				}else{
+					return done(null,{message:'Sorry, only summit emails allowed.'});
+				}
 			}
 		});
 	}
