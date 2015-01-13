@@ -16,7 +16,7 @@ global.app = {
 	version: 'v2014.01.12.1'
 }
 
-if(dev){
+if(app.dev){
 	app.port = dev.port;
 	app.mongo_uri = "mongodb://heroku_app33201011:ka4anhdnpjbcklnsdt7n188o8h@ds031741.mongolab.com:31741/heroku_app33201011";
 }else{
