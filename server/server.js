@@ -13,7 +13,7 @@ global.app = {
 	dev: true,
 	port: {},
 	mongo_uri: {},
-	version: 'v2014.01.12.1'
+	version: 'v2014.01.13.1'
 }
 
 app.port = (process.env.PORT || 1337);

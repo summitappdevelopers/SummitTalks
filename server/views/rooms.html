@@ -39,21 +39,21 @@
 
 				<div class="rooms-list">
 					<div class="room-box-container" ng-repeat="room in rooms | filter:roomSearchText">	
-						<div ng-click="goToRoom($index)" ng-class="profile.isTeacher?'room-box':'room-box room-box-full' ">
+						<div ng-click="goToRoom($index)" class='room-box'>
 							<img class="avi-room" ng-src={{room.creator.picture}}>
 							<div class="room-name-box">
 								<span class="room-name">{{room.displayName}}</br><i>{{room.creator.displayName}}</i></span>
 							</div>
  							<div class="room-details-box">
-								<span class="room-count">
+								<span class="room-utils">
 									<i class="fa fa-users"></i>
 									{{room.members.length}}
+									<span ng-show="room.creator._id==profile._id">
+										<i class="fa fa-button fa-ban" ng-click="muteRoom($event,$index)"></i>
+										<i class="fa fa-button fa-trash" ng-click="deleteRoom($event,$index)"></i>
+									</span>
 								</span>
 							</div>
-						</div>
-						<div class="room-util-box" ng-show="room.creator._id==profile._id">
-							<i class="fa fa-button fa-trash" ng-click="deleteRoom($index)"></i>
-							<i class="fa fa-button fa-ban" ng-click="muteRoom($index)"></i>
 						</div>
 					</div>
 				</div>

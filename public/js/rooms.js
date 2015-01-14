@@ -22,7 +22,8 @@ STRooms.controller('RoomsController',function($scope, $http){
   		});
   	}
 
-  	$scope.deleteRoom = function(index){
+  	$scope.deleteRoom = function(event, index){
+      event.stopPropagation();
   		$http.post('/api/room/delete',{id:$scope.rooms[index]._id}).success(function(data){
   			console.log(data);
   			if(data){
@@ -40,7 +41,8 @@ STRooms.controller('RoomsController',function($scope, $http){
   		}
   	}
 
-    $scope.muteRoom = function(index){
+    $scope.muteRoom = function(event, index){
+      event.stopPropagation();
       $http.post('/api/room/mute',{id:$scope.rooms[index]._id}).success(function(data){
           
         console.log(data);
