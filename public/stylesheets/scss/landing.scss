@@ -27,6 +27,7 @@ body{
 	background-color: #67809F;
 	overflow-y: hidden;
 	overflow-x: hidden;
+	height: 100%;
 }
 
 .summit-talks-header{
@@ -68,7 +69,8 @@ body{
 	width: 250px;
 	height: 100px;
 	margin: 0 auto;
-	@include calc(top,"(100% - 100px)/2");
+	top: -webkit-calc((100% - 100px)/2);
+	top: -moz-calc((100% - 100px)/2 );
 	text-align: center;
 }
 

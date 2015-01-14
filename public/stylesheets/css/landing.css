@@ -23,7 +23,8 @@ body {
   padding: 0;
   background-color: #67809F;
   overflow-y: hidden;
-  overflow-x: hidden; }
+  overflow-x: hidden;
+  height: 100%; }
 
 .summit-talks-header {
   font-family: "Lato", "sans-serif";
@@ -62,7 +63,7 @@ body {
   height: 100px;
   margin: 0 auto;
   top: -webkit-calc((100% - 100px)/2);
-  top: calc((100% - 100px)/2);
+  top: -moz-calc((100% - 100px)/2 );
   text-align: center; }
 
 .login-google:hover {
