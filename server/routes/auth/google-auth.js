@@ -48,7 +48,7 @@ passport.use(new GoogleStrategy({
 						return done(null,newUser);
 						});
 				}else{
-					return done(null,{message:'Sorry, only summit emails allowed.'});
+					return done("Sorry, only summit emails allowed.");
 				}
 			}
 		});

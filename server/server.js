@@ -10,7 +10,7 @@ global.app = {
 		expressSession: "scheminup",
 		jwtSecret: "topszn"
 	},
-	dev: true,
+	dev: false,
 	port: {},
 	mongo_uri: {},
 	version: 'v2014.01.13.1'
