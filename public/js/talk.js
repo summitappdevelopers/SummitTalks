@@ -151,7 +151,7 @@ STTalk.directive('message',function($compile){
 					if(ampersandPosition != -1) {
 					  video_id = video_id.substring(0, ampersandPosition);
 					}
-					element.append("<iframe class='talk-message-youtube' width='560' height='315' src='http://www.youtube.com/embed/"+video_id+"'frameborder='0' allowfullscreen></iframe>");
+					element.append("<iframe class='talk-message-youtube' width='560' height='315' src='https://www.youtube.com/embed/"+video_id+"'frameborder='0' allowfullscreen></iframe>");
 				}
 			}
 			if(urlMatches){
