@@ -13,10 +13,16 @@ global.app = {
 	dev: false,
 	port: {},
 	mongo_uri: {},
-	version: 'v2014.01.13.1'
+	version: {}
+}
+
+if(process.argv[2]=="dev"){
+	app.dev = true;
 }
 
 app.port = (process.env.PORT || 1337);
+var d = new Date();
+app.version = d.getYear()+"."+d.getMonth()+"."+d.getDay();
 
 if(app.dev){
 	app.mongo_uri ="mongodb://localhost:27017/summit-talks-dev";
@@ -61,7 +67,7 @@ app.models.User = require('./models/User');
 //====== EXPRESS SETUP ======
 app.express = app.modules.express();
 app.modules.server = app.modules.http.createServer(app.express);
-app.express.use(app.modules.session({secret:app.secrets.expressSession}));
+app.express.use(app.modules.session({secret:app.secrets.expressSession, resave: true, saveUninitialized: true}));
 app.express.use(app.modules.cookieParser());
 app.express.use(app.modules.bodyParser.urlencoded({'extended':'true'}));
 app.express.use(app.modules.bodyParser.json());
@@ -92,7 +98,7 @@ app.modules.server.listen(app.port);
 app.modules.io = require('socket.io')(app.modules.server);
 app.utilities.talkSocket = require('./utilities/socket');
 
-console.log("App listening on port: "+app.port);
+console.log("App listening on port: "+app.port+" Dev Mode: "+app.dev);
 
 process.on('SIGINT', function() {
 	console.log("Disconnecting all sockets...");
