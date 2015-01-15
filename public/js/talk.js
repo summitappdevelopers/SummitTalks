@@ -7,6 +7,12 @@
 var STTalk = angular.module('STTalk',['ngSanitize']);
 
 STTalk.controller('TalkController',function($scope, $http, $timeout, $sanitize){
+
+
+	 if (Notification.permission !== "granted"){
+	 	Notification.requestPermission();
+	 }
+
 	$scope.token = token;
 	$scope.roomName = room.roomName;
 	$scope.roomId = room._id;
@@ -61,6 +67,12 @@ STTalk.controller('TalkController',function($scope, $http, $timeout, $sanitize){
 			$scope.messages.push(data);
 			$scope.$apply();
 			$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight}, 1000);
+			if(data.sender._id != $scope.profile._id){
+				new Notification(data.sender.displayName, {
+    				icon: '/images/logo.png',
+    				body: data.content,
+ 				});
+			}
 		});
 
 		socket.on('currentusers',function(data){
