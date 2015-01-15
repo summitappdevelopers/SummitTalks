@@ -6,7 +6,7 @@
 
 var STTalk = angular.module('STTalk',['ngSanitize']);
 
-STTalk.controller('TalkController',function($scope, $http, $timeout){
+STTalk.controller('TalkController',function($scope, $http, $timeout, $sanitize){
 	$scope.token = token;
 	$scope.roomName = room.roomName;
 	$scope.roomId = room._id;
@@ -85,7 +85,7 @@ STTalk.controller('TalkController',function($scope, $http, $timeout){
 
 		$scope.sendMessage = function(){
 			if($scope.inputMessage.length>0){
-				socket.emit('outmessage',{content: $scope.inputMessage});
+				socket.emit('outmessage',{content: $scope.inputMessage.replace(/(<([^>]+)>)/ig,"")});
 			}
 			$scope.inputMessage = '';
 		};
@@ -159,6 +159,7 @@ STTalk.directive('message',function($compile){
 					content = content.replace(urlMatches[u],"<a target='_blank' href="+urlMatches[u]+">"+urlMatches[u]+"</a>");
 				}
 			}
+
 			scope.message.content = content;
 
  		},

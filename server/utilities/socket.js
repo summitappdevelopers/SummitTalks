@@ -50,6 +50,7 @@ io.sockets.on('connection',function(socket){
 
 			socket.on('outmessage', function(data){
 				if(data.content.length>0){
+					data.content = data.content.replace(/(<([^>]+)>)/ig,"");
 					io.to(roomName).emit('inmessage',{content:data.content,sender: profile,sendTime:new Date()});
 					var newMessage = new app.models.Message();
 						newMessage.content = data.content;
