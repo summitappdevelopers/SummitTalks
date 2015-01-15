@@ -120,7 +120,7 @@ body {
   padding: 0; }
 
 a {
-  text-decoration: none; }
+  color: white; }
 
 .sidebar {
   width: 250px;
@@ -145,6 +145,8 @@ a {
     height: 50px;
     background-color: #22313F;
     text-align: center; }
+    .sidebar .sidebar-branding .sidebar-link {
+      text-decoration: none !important; }
     .sidebar .sidebar-branding .sidebar-branding-text {
       position: relative;
       font-family: "Lato", "sans-serif";
@@ -346,3 +348,5 @@ a {
   @media (max-width: 700px) {
     .avi {
       display: none; } }
+
+/*# sourceMappingURL=talk.css.map */

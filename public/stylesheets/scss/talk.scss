@@ -85,7 +85,7 @@ body{
 }
 
 a{
-	text-decoration: none;
+	color: white;
 }
 
 .wrap {
@@ -113,6 +113,10 @@ a{
 		height: 50px;
 		background-color: #22313F;
 		text-align: center;
+
+		.sidebar-link{
+			text-decoration: none !important;
+		}
 
 		.sidebar-branding-text{
 			position: relative;
