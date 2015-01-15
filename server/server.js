@@ -13,7 +13,8 @@ global.app = {
 	dev: false,
 	port: {},
 	mongo_uri: {},
-	version: {}
+	version: {},
+	maintenance: true
 }
 
 if(process.argv[2]=="dev"){

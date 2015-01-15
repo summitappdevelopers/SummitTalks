@@ -28,7 +28,12 @@
 		<div class="wrap">
 			<div class="rooms-header">
 				<span class="title">
-					Summit Talks (<%- version %>)
+					Summit Talks
+					<% if(maintenance) { %>
+						(Under maintenance, expect bugs)
+					<% } else { %>
+						(<%- version %>)
+					<% } %>
 				</span>
 				<div class="user-info">
 					<span class="user-info-name"><%- profile.displayName %></span>
