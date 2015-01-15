@@ -30,7 +30,6 @@ STTalk.controller('TalkController',function($scope, $http, $timeout){
 		$scope.talkPlaceholder = "Enter a message. Be nice!";
 	}
 
-
 	$http.get('/api/room/'+$scope.roomId+'/messages').success(function(data) {
 		for(var i=0; i<data.messages.length; i++){
 			if(data.messages[i].sender._id==$scope.profile._id){
@@ -47,6 +46,10 @@ STTalk.controller('TalkController',function($scope, $http, $timeout){
 	var socket = io.connect(socketURL,{
 		query: 'token='+token+'&roomName='+$scope.roomName+'&roomId='+$scope.roomId
 	});
+
+	window.onUnload = function(){
+		socket.disconnect();
+	}
 
 	if(socket && $scope.isMute==false){
 
