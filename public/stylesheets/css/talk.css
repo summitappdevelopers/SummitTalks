@@ -293,6 +293,11 @@ a {
     position: relative;
     top: 5px;
     left: 5px; }
+  .talk-container .talk-message-time {
+    position: relative;
+    top: 5px;
+    left: 15px;
+    font-size: 14px; }
   .talk-container .talk-message-content {
     position: relative;
     left: 5px;
