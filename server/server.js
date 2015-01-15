@@ -22,7 +22,7 @@ if(process.argv[2]=="dev"){
 
 app.port = (process.env.PORT || 1337);
 var d = new Date();
-app.version = d.getYear()+"."+d.getMonth()+"."+d.getDay();
+app.version = "v"+d.getFullYear()+"."+d.getMonth()+1+"."+d.getDate();
 
 if(app.dev){
 	app.mongo_uri ="mongodb://localhost:27017/summit-talks-dev";
