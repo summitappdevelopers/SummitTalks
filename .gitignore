@@ -1,4 +1,4 @@
 .DS_Store
 node_modules
-*.scssc
+**/.sass-cache/*
 *.css.map

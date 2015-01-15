@@ -115,13 +115,15 @@ STTalk.directive('message',function(){
 			message: '=message'
 		},
 		link: function(scope,element,attrs){
-			 var content = scope.message.content;
-			 var imageMatches = content.match(/(http:\/\/[\w\-\.]+\.[a-zA-Z]{2,3}(?:\/\S*)?(?:[\w])+\.(?:jpg|png|gif|jpeg|bmp))/ig);
-			 var urlMatches = content.match(/https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}/ig);
-			 var desmosMatches = content.match(/https?:\/\/www.desmos.com\/calculator\/[a-zA-Z0-9]+/ig);
-			 var youtubeMatches = content.match(/(?:.+?)?(?:\/v\/|watch\/|\?v=|\&v=|youtu\.be\/|\/v=|^youtu\.be\/)([a-zA-Z0-9_-]{11})+/ig)
 
-			 if(imageMatches){
+			var dateString = moment(scope.message.sendTime).fromNow();
+			scope.message.sendTime = dateString;
+			var content = scope.message.content;
+			var imageMatches = content.match(/(http:\/\/[\w\-\.]+\.[a-zA-Z]{2,3}(?:\/\S*)?(?:[\w])+\.(?:jpg|png|gif|jpeg|bmp))/ig);
+			var urlMatches = content.match(/https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}/ig);
+			var desmosMatches = content.match(/https?:\/\/www.desmos.com\/calculator\/[a-zA-Z0-9]+/ig);
+			var youtubeMatches = content.match(/(?:.+?)?(?:\/v\/|watch\/|\?v=|\&v=|youtu\.be\/|\/v=|^youtu\.be\/)([a-zA-Z0-9_-]{11})+/ig)
+			if(imageMatches){
 			 	for(var i=0; i<imageMatches.length; i++){
 			 		scope.message.content = scope.message.content.replace(imageMatches[i],"");
 			 		element.append("<img class='talk-message-image' src='"+imageMatches[i]+"'></br>");
@@ -141,6 +143,6 @@ STTalk.directive('message',function(){
 				}
 			}
  		},
-		template:'<div><b class="talk-message-title">{{ message.sender.displayName }}</b><p class="talk-message-content">{{ message.content }}</p></div>',
+		template:'<div><b class="talk-message-title">{{ message.sender.displayName }}</b><span class="talk-message-time">{{ message.sendTime }}</span><p class="talk-message-content">{{ message.content }}</p></div>',
 	};
 });
