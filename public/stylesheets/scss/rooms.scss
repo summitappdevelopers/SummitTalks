@@ -20,10 +20,10 @@ $font: 'Lato','sans-serif';
 /*KEYFRAMES*/
 @include keyframes(highlightRoom){
 	from{
-		background-color: #90C695;
+		background-color: #26A65B;
 	}
 	to{
-		background-color: #68C3A3;
+		background-color: #03A678;
 	}
 }
 
@@ -206,7 +206,7 @@ body{
 			.room-box{
 				width: 100%;
 				height: 100%;
-				background-color: #90C695;
+				background-color: #26A65B;
 				float: left;
 				box-shadow: 0px 0px 18px 1px rgba(0,0,0,0.4);
 				.avi-room{
@@ -273,7 +273,7 @@ body{
 			}
 
 			.room-box:hover{
-				@include animation(highlightRoom 0.5s forwards ease-in);
+				@include animation(highlightRoom 0.1s forwards ease-in);
 				cursor: hand;
 			}
 
