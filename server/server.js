@@ -14,7 +14,7 @@ global.app = {
 	port: {},
 	mongo_uri: {},
 	version: {},
-	maintenance: false
+	announcements: {}
 }
 
 if(process.argv[2]=="dev"){
@@ -40,6 +40,7 @@ app.utilities.ensureAuthenticated = function ensureAuthenticated(req,res,next) {
 }
 
 app.modules.http = require('http');
+app.modules.fs = require('fs');
 app.modules.express = require('express');
 app.modules.session = require('express-session');
 app.modules.mongoose = require('mongoose');
@@ -85,6 +86,7 @@ app.express.set('view engine','html');
 app.express.engine('html', require('ejs').renderFile);
 app.express.set('views',__dirname + '/views');
 
+
 app.modules.passport.serializeUser(function(user,done){
 	done(null,user._id);
 });
@@ -94,7 +96,7 @@ app.modules.passport.deserializeUser(function(id,done){
 		done(err,user);
 	});
 });
-
+app.announcements = app.modules.fs.readFileSync('utilities/announcements.txt','utf8').toString().split("***");
 app.modules.server.listen(app.port);
 app.modules.io = require('socket.io')(app.modules.server);
 app.utilities.talkSocket = require('./utilities/socket');

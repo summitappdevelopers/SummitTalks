@@ -4,6 +4,7 @@ STRooms.controller('RoomsController',function($scope, $http){
 	
 	$scope.rooms = [];
 	$scope.profile = profile;
+  $scope.announcements  = announcements;
 
 	$http.get('/api/room').success(function(data) {
 		$scope.rooms = data.data;
@@ -55,6 +56,10 @@ STRooms.controller('RoomsController',function($scope, $http){
         }
       });
     }
+
+    $('.announcements-bar').click(function(){
+      $(this).toggleClass('announcements-bar-retract');
+    });
 
 });
 

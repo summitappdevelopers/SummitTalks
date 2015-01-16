@@ -24,6 +24,36 @@
     background-color: #26A65B; }
   to {
     background-color: #03A678; } }
+@-webkit-keyframes expandBar {
+  from {
+    height: 40px; }
+  to {
+    height: 500px; } }
+@-moz-keyframes expandBar {
+  from {
+    height: 40px; }
+  to {
+    height: 500px; } }
+@keyframes expandBar {
+  from {
+    height: 40px; }
+  to {
+    height: 500px; } }
+@-webkit-keyframes retractBar {
+  from {
+    height: 500px; }
+  to {
+    height: 40px; } }
+@-moz-keyframes retractBar {
+  from {
+    height: 500px; }
+  to {
+    height: 40px; } }
+@keyframes retractBar {
+  from {
+    height: 500px; }
+  to {
+    height: 40px; } }
 body {
   margin: 0;
   padding: 0;
@@ -226,6 +256,56 @@ body {
         animation: highlightRoom 0.1s forwards ease-in;
         cursor: hand; }
 
+.announcements-bar {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  width: 200px;
+  height: 40px;
+  clear: both;
+  box-shadow: 0px 0px 18px 1px rgba(0, 0, 0, 0.2);
+  -webkit-animation: expandBar 0.2s forwards ease-in;
+  -moz-animation: expandBar 0.2s forwards ease-in;
+  animation: expandBar 0.2s forwards ease-in; }
+  @media (max-width: 701px) {
+    .announcements-bar {
+      display: none; } }
+  .announcements-bar .announcements-bar-header {
+    width: 100%;
+    height: 40px;
+    background-color: #2c3e50;
+    text-align: center; }
+    .announcements-bar .announcements-bar-header .announcements-bar-header-title {
+      position: relative;
+      font-family: "Lato", "sans-serif";
+      color: white;
+      top: 10px; }
+  .announcements-bar .announcements-bar-stream {
+    height: 100%;
+    width: 100%;
+    background-color: #bdc3c7;
+    overflow-x: hidden;
+    overflow-y: auto; }
+    .announcements-bar .announcements-bar-stream .announcement {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 20px;
+      height: auto;
+      background-color: #ecf0f1;
+      padding: 10px;
+      border-bottom: 1px solid #7f8c8d; }
+      .announcements-bar .announcements-bar-stream .announcement .announcement-text {
+        font-size: 14px;
+        font-family: "Lato", "sans-serif"; }
+
+.announcements-bar:hover {
+  cursor: hand; }
+
+.announcements-bar-retract {
+  -webkit-animation: retractBar 0.1s forwards ease-in;
+  -moz-animation: retractBar 0.1s forwards ease-in;
+  animation: retractBar 0.1s forwards ease-in; }
+
 .avi, .rooms-wrap .rooms-list .room-box-container .room-box .avi-room {
   position: relative;
   border-radius: 100%;
@@ -235,3 +315,5 @@ body {
   left: 10px;
   float: left;
   clear: right; }
+
+/*# sourceMappingURL=rooms.css.map */

@@ -2,7 +2,7 @@ var view_manager = app.modules.express.Router();
 
 view_manager.route('/').get(function(req,res){
 	if(req.user){
-		res.render('rooms',{profile:req.user,version:app.version,maintenance:app.maintenance});
+		res.render('rooms',{profile:req.user,version:app.version,announcements: app.announcements});
 	}else{
 		res.render('landing',{version: app.version});
 	}

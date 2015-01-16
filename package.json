@@ -2,7 +2,7 @@
   "name": "SummitTalks",
   "version": "1.0.0",
   "engines": {
-  	"node": "0.10.x"
+    "node": "0.10.x"
   },
   "description": "Teacher moderated group chat for Summit students",
   "dependencies": {
@@ -11,11 +11,12 @@
     "ejs": "^1.0.0",
     "express": "^4.10.6",
     "express-session": "^1.9.3",
-    "moment": "^2.8.4",
+    "fs": "0.0.2",
+    "jsonwebtoken": "^3.2.0",
     "method-override": "^2.3.1",
+    "moment": "^2.8.4",
     "mongoose": "^3.8.21",
     "passport": "^0.2.1",
-    "jsonwebtoken": "^3.2.0",
     "passport-google-oauth": "^0.1.5",
     "socket.io": "^1.2.1",
     "socketio-jwt": "^2.3.5"
@@ -27,5 +28,5 @@
   },
   "author": "Ajay Ramesh",
   "license": "ISC",
-  "main":"server/server.js"
+  "main": "server/server.js"
 }

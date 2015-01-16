@@ -23,17 +23,13 @@
 	
 		<script>
 			var profile =  <%- JSON.stringify(profile) %>;
+			var announcements = <%- JSON.stringify(announcements) %>;
 		</script>
 
 		<div class="wrap">
 			<div class="rooms-header">
 				<span class="title">
-					Summit Talks
-					<% if(maintenance) { %>
-						(Under maintenance, expect bugs)
-					<% } else { %>
-						(<%- version %>)
-					<% } %>
+					Summit Talks (<%- version %>)
 				</span>
 				<div class="user-info">
 					<span class="user-info-name"><%- profile.displayName %></span>
@@ -71,6 +67,18 @@
 						</div>
 					</div>
 				</div>
+
+				<div class="announcements-bar">
+					<div class="announcements-bar-header">
+						<span class="announcements-bar-header-title">Announcements</span>
+					</div>
+					<div class="announcements-bar-stream">
+						<div ng-repeat="announcement in announcements" class="announcement">
+							<span class="announcement-text">{{announcement}}</span>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</body>

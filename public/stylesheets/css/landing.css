@@ -24,7 +24,8 @@ body {
   background-color: #67809F;
   overflow-y: hidden;
   overflow-x: hidden;
-  height: 100%; }
+  height: 100%;
+  text-align: center; }
 
 .summit-talks-header {
   font-family: "Lato", "sans-serif";
@@ -78,3 +79,5 @@ body {
   font-family: "Lato", "sans-serif";
   font-size: 20px;
   top: 37px; }
+
+/*# sourceMappingURL=landing.css.map */
