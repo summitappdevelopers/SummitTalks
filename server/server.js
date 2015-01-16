@@ -96,7 +96,7 @@ app.modules.passport.deserializeUser(function(id,done){
 		done(err,user);
 	});
 });
-app.announcements = app.modules.fs.readFileSync('/utilities/announcements.txt','utf8').toString().split("***");
+app.announcements = app.modules.fs.readFileSync('./utilities/announcements.txt','utf8').toString().split("***");
 app.modules.server.listen(app.port);
 app.modules.io = require('socket.io')(app.modules.server);
 app.utilities.talkSocket = require('./utilities/socket');
