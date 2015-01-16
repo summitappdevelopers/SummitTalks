@@ -13,9 +13,9 @@ STRooms.controller('RoomsController',function($scope, $http){
 
   	$scope.createRoom = function(){
   		$http.post('/api/room/create',{displayName:$scope.roomDisplayName}).success(function(data){
-  			console.log(data);
   			if(data){
-  				$scope.rooms.push(data.data);
+  				$scope.rooms.unshift(data.data);
+          $scope.roomDisplayName = '';
   			}
   		}).error(function(data){
   			console.log("Unable to create room");
@@ -24,14 +24,18 @@ STRooms.controller('RoomsController',function($scope, $http){
 
   	$scope.deleteRoom = function(event, index){
       event.stopPropagation();
-  		$http.post('/api/room/delete',{id:$scope.rooms[index]._id}).success(function(data){
-  			console.log(data);
-  			if(data){
-  				$scope.rooms.splice(index,1);
-  			}
-  		}).error(function(data){
-  			console.log("Unable to delete room");
-  		});
+
+      if(confirm("Deleting the room will also delete all the messages, are you sure you want to continue?")){
+        $http.post('/api/room/delete',{id:$scope.rooms[index]._id}).success(function(data){
+          if(data){
+            $scope.rooms.splice(index,1);
+          }
+        }).error(function(data){
+          console.log("Unable to delete room");
+        });
+
+      }
+
   	}
 
   	$scope.goToRoom = function(index){
@@ -44,9 +48,6 @@ STRooms.controller('RoomsController',function($scope, $http){
     $scope.muteRoom = function(event, index){
       event.stopPropagation();
       $http.post('/api/room/mute',{id:$scope.rooms[index]._id}).success(function(data){
-          
-        console.log(data);
-
         if(data.data){
           alert($scope.rooms[index].roomName+" muted");
         }else{
