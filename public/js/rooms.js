@@ -4,7 +4,12 @@ STRooms.controller('RoomsController',function($scope, $http){
 	
 	$scope.rooms = [];
 	$scope.profile = profile;
-  $scope.announcements  = announcements;
+
+  $http.get('/public/announcements.txt').success(function(data){
+    $scope.announcements = data.toString().split("***");
+  }).error(function(data){
+    console.log("Unable to get announcements");
+  });
 
 	$http.get('/api/room').success(function(data) {
 		$scope.rooms = data.data;

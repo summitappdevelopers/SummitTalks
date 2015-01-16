@@ -14,7 +14,6 @@ global.app = {
 	port: {},
 	mongo_uri: {},
 	version: {},
-	announcements: {}
 }
 
 if(process.argv[2]=="dev"){
@@ -79,6 +78,7 @@ app.express.use(app.modules.passport.session());
 app.express.use('/js', app.modules.express.static(__dirname + '/../public/js/'));
 app.express.use('/css', app.modules.express.static(__dirname + '/../public/stylesheets/css/'));
 app.express.use('/images', app.modules.express.static(__dirname + '/../public/images/'));
+app.express.use('/public',app.modules.express.static(__dirname+ '/../public/'));
 app.express.use('/api',app.utilities.api_manager);
 app.express.use('/auth',app.utilities.auth);
 app.express.use('/',app.utilities.view_manager);
@@ -96,7 +96,7 @@ app.modules.passport.deserializeUser(function(id,done){
 		done(err,user);
 	});
 });
-app.announcements = app.modules.fs.readFileSync('./utilities/announcements.txt','utf8').toString().split("***");
+
 app.modules.server.listen(app.port);
 app.modules.io = require('socket.io')(app.modules.server);
 app.utilities.talkSocket = require('./utilities/socket');
