@@ -13,7 +13,8 @@ var RoomSchema = new Schema({
 		ref: 'User'
 	},
 	isMute: Boolean,
-	members: Array
+	members: Array,
+	creationDate: Date
 });
 
 module.exports = mongoose.model('Room', RoomSchema);

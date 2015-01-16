@@ -6,20 +6,15 @@
 var room = app.modules.express.Router();
 
 room.route('/').get(app.utilities.ensureAuthenticated, function(req,res){
-	app.models.Room.find({},function(err,rooms){
-		if(err){
-			throw err;
-		}else{
-			app.models.Room.populate(rooms, {path: 'creator'},function(err, rooms){
-				if(err){
-					throw err;
-				}else{
-					res.json({
-						data: rooms
-					});
-				}
-			});
-		}
+	app.models.Room.find({}).populate('creator').sort({creationDate: 'desc'}).exec(function(err, rooms){
+    	if(err){
+    		throw err;
+    	}else{
+    		console.log(rooms);
+    		res.json({
+    			data: rooms
+    		});
+    	}
 	});
 });
 
@@ -89,18 +84,17 @@ room.route('/mute').post(app.utilities.ensureAuthenticated, function(req,res){
 });
 
 room.route('/:id/messages').get(app.utilities.ensureAuthenticated, function(req,res){
-	app.models.Message.find({roomId:req.params.id}, function(err,messages){
-		
-		app.models.Message.populate(messages, {path: 'sender'}, function(err, messages){
-			if(err){
-				throw err;
-			}else{
-				res.json({
-					messages: messages
-				});
-			}
-		});
+
+	app.models.Message.find({roomId:req.params.id}).populate('sender').sort({sendTime:'asc'}).exec(function(err,messages){
+		if(err){
+			throw err;
+		}else{
+			res.json({
+				messages: messages
+			});
+		}
 	});
+
 });
 
 room.route('/delete').post(app.utilities.ensureAuthenticated, function(req,res){
