@@ -259,9 +259,9 @@ body {
 .announcements-bar {
   position: fixed;
   bottom: 0px;
-  right: 0px;
-  width: 200px;
+  width: 250px;
   height: 40px;
+  right: 20px;
   clear: both;
   box-shadow: 0px 0px 18px 1px rgba(0, 0, 0, 0.2);
   -webkit-animation: expandBar 0.2s forwards ease-in;
