@@ -1,83 +1,174 @@
-var STRooms = angular.module('STRooms',[]);
+/*
+ * @jsx React.DOM 
+ */
 
-STRooms.controller('RoomsController',function($scope, $http){
-	
-	$scope.rooms = [];
-	$scope.profile = profile;
 
-  $http.get('/public/announcements.txt').success(function(data){
-    $scope.announcements = data.toString().split("***");
-  }).error(function(data){
-    console.log("Unable to get announcements");
-  });
-
-	$http.get('/api/room').success(function(data) {
-		$scope.rooms = data.data;
-  	}).error(function(data){
-  		console.log("Unable to get rooms");
-  	});
-
-  	$scope.createRoom = function(){
-  		$http.post('/api/room/create',{displayName:$scope.roomDisplayName}).success(function(data){
-  			if(data){
-  				$scope.rooms.unshift(data.data);
-          $scope.roomDisplayName = '';
-  			}
-  		}).error(function(data){
-  			console.log("Unable to create room");
-  		});
-  	}
-
-  	$scope.deleteRoom = function(event, index){
-      event.stopPropagation();
-
-      if(confirm("Deleting the room will also delete all the messages, are you sure you want to continue?")){
-        $http.post('/api/room/delete',{id:$scope.rooms[index]._id}).success(function(data){
-          if(data){
-            $scope.rooms.splice(index,1);
-          }
-        }).error(function(data){
-          console.log("Unable to delete room");
-        });
-
+var RoomCreateInput = React.createClass({
+  render: function(){
+    if(profile.isTeacher){
+      return (
+        <div className="create-room">
+              <input type="text" placeholder="Give a room name and hit enter" className="create-room-input" onChange={this.handleChange} onKeyPress={this.handleKeyPress}></input>
+        </div>
+      )
+    }
+    return null;
+  },
+  getInitialState: function(){
+    return {value: ''}
+  },
+  handleChange: function(e){
+    this.setState({value: e.target.value});
+  },
+  handleKeyPress: function(e){
+    if(e.which==13){
+      if(this.state.value.length>0){
+        this.props.handleAdd(this.state.value);
       }
+    }
+  }
 
-  	}
+});
 
-  	$scope.goToRoom = function(index){
-  		var roomName = $scope.rooms[index].roomName;
-  		if(roomName){
-  			window.location.href="/room/"+roomName;
-  		}
-  	}
+var RoomHeader = React.createClass({
+  render: function(){
+    var className = "rooms-list-header"
+    if(!profile.isTeacher){
+      className+=" rooms-list-header-push";
+    }
+    return (
+      <div className={className}>
+        <span className="rooms-list-header-title">Rooms</span>
+        <RoomSearch />
+      </div>
+    )
+  }
+});
 
-    $scope.muteRoom = function(event, index){
-      event.stopPropagation();
-      $http.post('/api/room/mute',{id:$scope.rooms[index]._id}).success(function(data){
-        if(data.data){
-          alert($scope.rooms[index].roomName+" muted");
-        }else{
-          alert($scope.rooms[index].roomName+" not muted");
-        }
-      });
+var RoomSearch = React.createClass({
+  render: function(){
+     return (
+        <input type="text" placeholder="Search for a room name" className="rooms-list-search-input"></input>
+      )
+  }
+});
+
+var Room = React.createClass({
+  render: function(){
+    
+    var utilDisplay={};
+    if(!this.props.isTeacher){
+      utilDisplay.display = 'none';
     }
 
-    $('.announcements-bar').click(function(){
-      $(this).toggleClass('announcements-bar-retract');
+    return(
+      <div className="room-box-container">  
+            <div className='room-box' onClick={this.handleClick}>
+              <img className="avi-room" src={this.props.room.creator.picture}></img>
+              <div className="room-name-box">
+                <span className="room-name">{this.props.room.displayName}<br></br><i>{this.props.room.creator.displayName}</i></span>
+              </div>
+              <div className="room-details-box">
+                <span className="room-utils">
+                  <i className="fa fa-users"></i>
+                  {this.props.room.members.length}  
+                  <span style={utilDisplay}>
+                    <i className="fa fa-button fa-ban" onClick={this.handleMute}></i>
+                    <i className="fa fa-button fa-trash" onClick={this.handleDelete}></i>
+                  </span>
+                </span>
+              </div>
+            </div>
+      </div>   
+    )
+  },
+  handleMute: function(e){
+    e.stopPropagation();
+    $.post('/api/room/mute', {id:this.props.room._id}, function(data){
+      console.log(data);
     });
+  },
+  handleDelete: function(e){
+    e.stopPropagation();
+    this.props.handleDelete(this.props.room._id);
+  },
+  handleClick: function(e){
+    this.props.handleClick(this.props.room.roomName);
+  }
 
 });
 
-STRooms.directive('ngEnter', function () {
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
-                    scope.$eval(attrs.ngEnter);
-                });
+var RoomList = React.createClass({
 
-                event.preventDefault();
-            }
+  render: function(){
+
+    return(
+      <div className='rooms-list'>
+          
+        {this.props.rooms.map(function(room) {
+          return <Room key={room._id} isTeacher={profile.isTeacher} handleClick={this.handleClick} handleDelete={this.handleDelete} room={room}/>
+        }.bind(this))}
+
+      </div>
+    )
+  },
+
+  handleDelete: function(id){
+    this.props.handleDelete(id);
+  },
+
+  handleClick: function(roomName){
+    this.props.handleClick(roomName);
+  }
+
+});
+
+var RoomApp = React.createClass({
+
+  getInitialState: function(){
+    return {rooms: []}
+  },
+  componentDidMount: function() {
+    $.get('/api/room', function(data) {
+      var rooms = data;
+      if (this.isMounted()) {
+        this.setState({
+          rooms: rooms
         });
-    };
+      }
+    }.bind(this));
+  },
+  render: function(){
+    return (
+      <div>
+        <RoomCreateInput handleAdd={this.handleAdd}/>
+        <RoomHeader/>
+        <RoomList handleClick={this.handleClick} handleDelete={this.handleDelete} rooms={this.state.rooms} />
+      </div>
+    );
+  },
+  handleClick: function(roomName){
+    var win = window.open('/room/'+roomName, '_blank');
+    win.focus();
+  },
+  handleAdd: function(displayName){
+    $.post('/api/room/create', {displayName: displayName}, function(data){
+      this.state.rooms.push(data);
+      this.setState();
+    }.bind(this));
+  },
+  handleDelete: function(id){
+    for(var i=0;i<this.state.rooms.length;i++){
+      if(this.state.rooms[i]._id==id){
+        this.state.rooms.splice(i,1);
+        this.setState();
+        break;
+      }
+    }
+    $.post('/api/room/delete',{id:id}, function(data){
+      console.log(data);
+    });
+  }
 });
+
+React.render(<RoomApp/>, $('.rooms-wrap').get(0));

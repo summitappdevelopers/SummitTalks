@@ -11,9 +11,7 @@ room.route('/').get(app.utilities.ensureAuthenticated, function(req,res){
     		throw err;
     	}else{
     		console.log(rooms);
-    		res.json({
-    			data: rooms
-    		});
+    		res.json(rooms);
     	}
 	});
 });
@@ -43,9 +41,7 @@ room.route('/create').post(app.utilities.ensureAuthenticated,function(req, res) 
 						if(err){
 							throw err;
 						}else{
-							res.json({
-								data: newRoom
-							});
+							res.json(newRoom);
 						}
 					});
 				}
@@ -73,9 +69,7 @@ room.route('/mute').post(app.utilities.ensureAuthenticated, function(req,res){
 					if(err){
 						throw err;
 					}else{
-						res.json({
-							data: room.isMute
-						});
+						res.json(room.isMute);
 					}
 				});
 			}
@@ -89,9 +83,7 @@ room.route('/:id/messages').get(app.utilities.ensureAuthenticated, function(req,
 		if(err){
 			throw err;
 		}else{
-			res.json({
-				messages: messages
-			});
+			res.json(messages);
 		}
 	});
 
@@ -119,16 +111,12 @@ room.route('/delete').post(app.utilities.ensureAuthenticated, function(req,res){
 						clientSocket.disconnect();
 					}
 
-					res.json({
-						message: 'Deleted '+displayName
-					});
+					res.json('Deleted '+displayName);
 				}
 			});
 
 		}else{
-			res.json({
-				message: 'You are unauthorized to delete '+displayName
-			});
+			res.json('You are unauthorized to delete '+displayName);
 		}
 	});
 });
