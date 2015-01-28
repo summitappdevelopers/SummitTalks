@@ -12,17 +12,6 @@ window.onbeforeunload = function(){
 	return "You are now disconnecting from this room";
 }
 
-var pendingGraphs = [];
-
-function processGraphs(graphs){
-	if(graphs.length>0){
-		for(var j in graphs){
-			$calculatorIframe = $("<iframe>").attr("src", graphs[j].desmosUrl).addClass('talk-message-desmos');
-				$calculatorIframe.appendTo($('[data-reactid="'+graphs[j].reactId+'"]'));
-			}
-	}
-}
-
 if (Notification.permission !== "granted"){
  	Notification.requestPermission();
 }
@@ -73,7 +62,7 @@ var TalkMessage = React.createClass({
 	getInitialState: function(){
 		return {elements: []}
 	},
-	componentDidMount: function(){
+	componentWillMount: function(){
 
 		var content = this.props.message.content;
 
@@ -81,6 +70,24 @@ var TalkMessage = React.createClass({
 
 		var tokens = content.split(regex);
 		var matches = content.match(regex);
+
+		/* Works thanks to @GreenJello & Ronak Gajrawala */
+		function process(token){
+			if (/(https?:\/\/[\w\-\.]+\.[a-zA-Z]{2,3}(?:\/\S*)?(?:[\w])+\.(?:jpg|png|gif|jpeg|bmp|svg))/ig.test(token)) {
+				return <img className="talk-message-image" src={token}></img>
+			} else if (/https?:\/\/www.desmos.com\/calculator\/[a-zA-Z0-9]+/ig.test(token)) {
+				return <iframe className="talk-message-desmos" src={token}></iframe>
+			} else if (/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(.+)/ig.test(token)) {
+				var video_id = token.split('v=')[1];
+				var ampersandPosition = video_id.indexOf('&');
+				if(ampersandPosition != -1) {
+  					video_id = video_id.substring(0, ampersandPosition);
+				}
+				return <iframe className='talk-message-youtube' width='560' height='315' src={'https://www.youtube.com/embed/'+video_id} frameBorder='0' allowfullscreen></iframe>;
+			} else {
+				return <a target="_blank" href={token}>{token}</a>
+			}
+		}
 
 		if(tokens){
 			var nextElements = [];
@@ -92,31 +99,13 @@ var TalkMessage = React.createClass({
 				if(j%2==0){
 					nextElements.push(tokens[Math.floor(j/2)]);
 				}else{
-					nextElements.push(this.processContent(matches[Math.floor(j/2)],this));
+					nextElements.push(process(matches[Math.floor(j/2)]));
 				}
 			}
 
 			this.setState({elements: nextElements});
 		}
 
-	},
-	processContent: function(token, that){
-		/* Works thanks to @GreenJello & Ronak Gajrawala */
-		if (/(https?:\/\/[\w\-\.]+\.[a-zA-Z]{2,3}(?:\/\S*)?(?:[\w])+\.(?:jpg|png|gif|jpeg|bmp|svg))/ig.test(token)) {
-			return <img className="talk-message-image" src={token}></img>
-		} else if (/https?:\/\/www.desmos.com\/calculator\/[a-zA-Z0-9]+/ig.test(token)) {
-			var reactId = $(that.getDOMNode()).get(0).dataset.reactid;
-			processGraphs([{reactId: reactId, desmosUrl: token}]);
-		} else if (/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(.+)/ig.test(token)) {
-			var video_id = token.split('v=')[1];
-			var ampersandPosition = video_id.indexOf('&');
-			if(ampersandPosition != -1) {
-					video_id = video_id.substring(0, ampersandPosition);
-			}
-			return <iframe className='talk-message-youtube' width='560' height='315' src={'https://www.youtube.com/embed/'+video_id} frameBorder='0' allowfullscreen></iframe>;
-		} else {
-			return <a target="_blank" href={token}>{token}</a>
-		}
 	},
 	render: function(){
 		
@@ -133,7 +122,6 @@ var TalkMessage = React.createClass({
 			</div>
 		)
 	}
-
 });
 
 var TalkStream = React.createClass({
@@ -246,7 +234,7 @@ var TalkApp = React.createClass({
 		socket.emit('')
 	},
 	scrollDown: function(){
-		$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight}, 100);
+		$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight}, 1000);
 	},
 	render: function(){
 		return (
@@ -283,12 +271,8 @@ var TalkApp = React.createClass({
 				}
 			}
 			if(!before){
-				this.setState({messages: data}, function(){
-					this.scrollDown();
-					if(pendingGraphs.length>0){
-						processGraphs(pendingGraphs);
-					}
-				});
+				this.setState({messages: data});
+				this.scrollDown();
 			}else{
 				var nextMessages = data.concat(this.state.messages);
 				this.setState({messages: nextMessages});
