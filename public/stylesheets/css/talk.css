@@ -115,12 +115,30 @@
     opacity: 0; }
   to {
     opacity: 1; } }
+@-webkit-keyframes talkStreamButtonHover {
+  from {
+    background-color: #bdc3c7; }
+  to {
+    background-color: #AAB0B3; } }
+@-moz-keyframes talkStreamButtonHover {
+  from {
+    background-color: #bdc3c7; }
+  to {
+    background-color: #AAB0B3; } }
+@keyframes talkStreamButtonHover {
+  from {
+    background-color: #bdc3c7; }
+  to {
+    background-color: #AAB0B3; } }
 body {
   margin: 0;
   padding: 0; }
 
 a {
   color: white; }
+
+.hidden {
+  display: none; }
 
 .sidebar {
   width: 250px;
@@ -258,6 +276,31 @@ a {
     overflow-y: auto;
     overflow-x: hidden;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75); }
+  .talk-container .talk-stream-button {
+    margin-top: 50px;
+    width: 100%;
+    height: 50px;
+    background-color: #bdc3c7;
+    z-index: 0;
+    position: relative;
+    text-align: center; }
+    @media (min-width: 701px) {
+      .talk-container .talk-stream-button {
+        margin-top: 50px; } }
+    @media (max-width: 700px) {
+      .talk-container .talk-stream-button {
+        margin-top: 40px; } }
+    .talk-container .talk-stream-button .load-text {
+      font-family: "Lato", "sans-serif";
+      position: relative;
+      font-size: 18px;
+      color: #7f8c8d;
+      top: 14px; }
+  .talk-container .talk-stream-button:hover {
+    cursor: hand;
+    -webkit-animation: talkStreamButtonHover 0.5s forwards ease-out;
+    -moz-animation: talkStreamButtonHover 0.5s forwards ease-out;
+    animation: talkStreamButtonHover 0.5s forwards ease-out; }
   .talk-container .talk-message, .talk-container .talk-message-user, .talk-container .talk-message:nth-child(1), .talk-container .talk-message:last-child {
     background-color: #3498db;
     font-family: "Lato", "sans-serif";
@@ -328,9 +371,9 @@ a {
     border-top: 1px solid #d9dcde;
     border-left: 0px;
     background-color: #ecf0f1;
-    text-indent: 10px;
     resize: none;
-    box-shadow: 0px 10px 0px 0px rgba(0, 0, 0, 0.75); }
+    box-shadow: 0px 10px 0px 0px rgba(0, 0, 0, 0.75);
+    overflow: auto; }
   .talk-container .talk-input:focus {
     outline: none; }
 

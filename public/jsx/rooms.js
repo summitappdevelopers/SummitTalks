@@ -1,3 +1,7 @@
+/*
+ * @jsx React.DOM 
+ */
+
 //FIX SEARCH!
 
 var RoomCreateInput = React.createClass({

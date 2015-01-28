@@ -21,7 +21,9 @@
     "socket.io": "^1.2.1",
     "socketio-jwt": "^2.3.5"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gulp": "^3.8.10"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server/server.js"

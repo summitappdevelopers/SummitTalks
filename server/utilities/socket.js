@@ -43,25 +43,24 @@ io.sockets.on('connection',function(socket){
 
 			room.save(function(err){
 				if(err) throw err;
-				socket.emit('currentusers',{
-					roomMembers:room.members
-				});
+				socket.emit('currentusers',room.members);
 			});
 
 			socket.on('outmessage', function(data){
 				if(data.content.length>0){
 					data.content = data.content.replace(/(<([^>]+)>)/ig,"");
-					io.to(roomName).emit('inmessage',{content:data.content,sender: profile,sendTime:new Date()});
-					var newMessage = new app.models.Message();
-						newMessage.content = data.content;
-						newMessage.sender = profile._id
-						newMessage.roomId = roomId;
-						newMessage.sendTime = new Date();
-					newMessage.save(function(err){
-						if(err) throw err;
+					saveMessage(data.content, function(message){
+						io.to(roomName).emit('inmessage',{content:message.content, _id: message._id, sender: profile,sendTime:new Date()});
 					});
 				}
 			});
+
+			// socket.on('outreply', function(data){
+			// 	if(data.content.length>0){
+			// 		data.content = data.content.replace(/(<([^>]+)>)/ig,"");
+			// 		io.to(roomName).emit('inreply', {content:data.content, sender: profile, sendTime: new Date(), parentId: data.parent});
+			// 	}
+			// });
 
 			socket.on('disconnect',function(data){
 				socket.leave(roomName);
@@ -96,5 +95,18 @@ io.sockets.on('connection',function(socket){
 			});
 		}
 	});
+
+		function saveMessage(content, callback, parentId){
+			var newMessage = new app.models.Message();
+			newMessage.content = content;
+			newMessage.sender = profile._id;
+			newMessage.roomId = roomId;
+			newMessage.sendTime = new Date();
+			if(parentId) newMessage.parent = app.modules.mongoose.Schema.Types.ObjectId(parentId);
+			newMessage.save(function(err){
+				if(err) throw err;
+				callback(newMessage);
+			});
+		}
 
 });

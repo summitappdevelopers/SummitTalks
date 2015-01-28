@@ -8,7 +8,11 @@ var MessageSchema = new Schema({
 	},
 	roomId: String,
 	sendTime: Date,
-	content: String
+	content: String,
+	parent: {
+		type: Schema.ObjectId,
+		ref: 'Message'
+	}
 });
 
 module.exports = mongoose.model('Message', MessageSchema);

@@ -10,7 +10,6 @@ room.route('/').get(app.utilities.ensureAuthenticated, function(req,res){
     	if(err){
     		throw err;
     	}else{
-    		console.log(rooms);
     		res.json(rooms);
     	}
 	});
@@ -78,12 +77,22 @@ room.route('/mute').post(app.utilities.ensureAuthenticated, function(req,res){
 });
 
 room.route('/:id/messages').get(app.utilities.ensureAuthenticated, function(req,res){
+	
+	var query = {
+		roomId: req.params.id
+	};
 
-	app.models.Message.find({roomId:req.params.id}).populate('sender').sort({sendTime:'asc'}).exec(function(err,messages){
+	if(req.query.before != 0){
+		console.log("exists");
+		query._id = {$lt: req.query.before};
+	}
+
+	app.models.Message.find(query).populate('sender').sort({sendTime: -1}).limit(req.query.limit).exec(function(err,messages){
 		if(err){
 			throw err;
 		}else{
-			res.json(messages);
+			//FIND A BETTER WAY TO DO THIS
+			res.json(messages.reverse());
 		}
 	});
 

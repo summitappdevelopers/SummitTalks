@@ -1,3 +1,8 @@
+/*
+ * @jsx React.DOM 
+ */
+
+
 var socketURL = "https://summittalks.herokuapp.com";
 
 if(dev){
@@ -10,17 +15,6 @@ var socket = io.connect(socketURL,{
 window.onbeforeunload = function(){
 	socket.disconnect();
 	return "You are now disconnecting from this room";
-}
-
-var pendingGraphs = [];
-
-function processGraphs(graphs){
-	if(graphs.length>0){
-		for(var j in graphs){
-			$calculatorIframe = $("<iframe>").attr("src", graphs[j].desmosUrl).addClass('talk-message-desmos');
-				$calculatorIframe.appendTo($('[data-reactid="'+graphs[j].reactId+'"]'));
-			}
-	}
 }
 
 if (Notification.permission !== "granted"){
@@ -70,54 +64,6 @@ var TalkSideBar = React.createClass({
 });
 
 var TalkMessage = React.createClass({
-	getInitialState: function(){
-		return {elements: []}
-	},
-	componentDidMount: function(){
-
-		var content = this.props.message.content;
-
-		var regex = /https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}/ig;
-
-		var tokens = content.split(regex);
-		var matches = content.match(regex);
-
-		if(tokens){
-			var nextElements = [];
-			var addLength = 0;
-			if(matches){
-				addLength = matches.length
-			}
-			for(var j=0; j<(tokens.length+addLength); j++){
-				if(j%2==0){
-					nextElements.push(tokens[Math.floor(j/2)]);
-				}else{
-					nextElements.push(this.processContent(matches[Math.floor(j/2)],this));
-				}
-			}
-
-			this.setState({elements: nextElements});
-		}
-
-	},
-	processContent: function(token, that){
-		/* Works thanks to @GreenJello & Ronak Gajrawala */
-		if (/(https?:\/\/[\w\-\.]+\.[a-zA-Z]{2,3}(?:\/\S*)?(?:[\w])+\.(?:jpg|png|gif|jpeg|bmp|svg))/ig.test(token)) {
-			return <img className="talk-message-image" src={token}></img>
-		} else if (/https?:\/\/www.desmos.com\/calculator\/[a-zA-Z0-9]+/ig.test(token)) {
-			var reactId = $(that.getDOMNode()).get(0).dataset.reactid;
-			processGraphs([{reactId: reactId, desmosUrl: token}]);
-		} else if (/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(.+)/ig.test(token)) {
-			var video_id = token.split('v=')[1];
-			var ampersandPosition = video_id.indexOf('&');
-			if(ampersandPosition != -1) {
-					video_id = video_id.substring(0, ampersandPosition);
-			}
-			return <iframe className='talk-message-youtube' width='560' height='315' src={'https://www.youtube.com/embed/'+video_id} frameBorder='0' allowfullscreen></iframe>;
-		} else {
-			return <a target="_blank" href={token}>{token}</a>
-		}
-	},
 	render: function(){
 		
 		var talkMessageClass = "talk-message";
@@ -125,44 +71,41 @@ var TalkMessage = React.createClass({
 			talkMessageClass = "talk-message-user";
 		}
 
+		var content = this.props.message.content;
+		var imageMatches = content.match(/(https?:\/\/[\w\-\.]+\.[a-zA-Z]{2,3}(?:\/\S*)?(?:[\w])+\.(?:jpg|png|gif|jpeg|bmp|svg))/ig);
+		var urlMatches = content.match(/https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,}/ig);
+		var desmosMatches = content.match(/https?:\/\/www.desmos.com\/calculator\/[a-zA-Z0-9]+/ig);
+		var youtubeMatches = content.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(.+)/g);
+
+		// if(imageMatches){
+		//  	for(var i=0; i<imageMatches.length; i++){
+		//  		content = content.replace(imageMatches[i],"<img className='talk-message-image' src='"+imageMatches[i]+"'><br></br>");
+		//  	}
+		// }
+
 		return (
 
 			<div className={talkMessageClass}>
 				<b className='talk-message-title'>{this.props.message.sender.displayName}</b><span className='talk-message-time'>{this.props.message.sendTime}</span>
-				<p className='talk-message-content'>{this.state.elements}</p>
+				<p className='talk-message-content'>{this.props.message.content}</p>
 			</div>
 		)
 	}
-
 });
 
 var TalkStream = React.createClass({
 
 	render: function(){
-
-		var buttonClass = "talk-stream-button";
-
-		if(this.props.isNew){
-			buttonClass = "disabled";
-		}
-
 		return (
 			<div>
-				<div onClick={this.handleClick} className={buttonClass}>
-					<p className="load-text">Load older messages</p>
-				</div>
 				{this.props.messages.map(function(message){
 					return(<TalkMessage key={message._id} message={message}/>);
 				}.bind(this))}
 			</div>
 		)
-	},
-
-	handleClick: function() {
-		this.props.loadOlder();
 	}
 
-});
+})
 
 var TalkInput = React.createClass({
 	getInitialState: function(){
@@ -204,10 +147,18 @@ var TalkApp = React.createClass({
 			socket.on('userleave', this.userLeave);
 			socket.on('inmessage', this.inMessage);
 		}
-		return {users: [], messages:[], profile: profile, room: room, isNew: true};
+		return {users: [], messages:[], profile: profile, room: room};
 	},
 	componentDidMount: function(){
-		this.getMessages(20,0);
+		$.get('/api/room/'+this.state.room._id+'/messages', function(data){
+			for(var i in data){
+				if(data[i].sender._id == profile._id){
+					data[i].isSelf = true;
+				}
+			}
+			this.setState({messages: data});
+			this.scrollDown();
+		}.bind(this));
 	},
 	currentUsers: function(data){
 		this.setState({users: data});
@@ -242,11 +193,8 @@ var TalkApp = React.createClass({
 	handleSend: function(message){
 		socket.emit('outmessage',{content: message.replace(/(<([^>]+)>)/ig,"")});
 	},
-	handleReply: function(message, parent){
-		socket.emit('')
-	},
 	scrollDown: function(){
-		$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight}, 100);
+		$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight}, 1000);
 	},
 	render: function(){
 		return (
@@ -260,40 +208,12 @@ var TalkApp = React.createClass({
 						</span>
 					</div>
 					<div className="talk-stream">
-						<TalkStream isNew={this.state.isNew} loadOlder={this.loadOlder} messages={this.state.messages}/>
+						<TalkStream messages={this.state.messages}/>
 					</div>
 					<TalkInput disabled={this.state.room.isMute} handleSend={this.handleSend}/>
 				</div>
 			</div>
 		)
-	},
-	loadOlder: function(){
-		this.getMessages(20, this.state.messages[0]._id);
-	},
-	getMessages: function(limit, before){
-		$.get('/api/room/'+this.state.room._id+'/messages?limit='+limit+'&before='+before, function(data){
-			if(data.length < 20){
-				this.setState({isNew: true});
-			}else{
-				this.setState({isNew: false});
-			}
-			for(var i in data){
-				if(data[i].sender._id == profile._id){
-					data[i].isSelf = true;
-				}
-			}
-			if(!before){
-				this.setState({messages: data}, function(){
-					this.scrollDown();
-					if(pendingGraphs.length>0){
-						processGraphs(pendingGraphs);
-					}
-				});
-			}else{
-				var nextMessages = data.concat(this.state.messages);
-				this.setState({messages: nextMessages});
-			}
-		}.bind(this));
 	}
 });
 
