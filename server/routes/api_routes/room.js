@@ -1,8 +1,3 @@
-/*	
-	TODO: Find a better way to load old messages
-		  Disconnect sockets on room delete
-*/
-
 var room = app.modules.express.Router();
 
 room.route('/').get(app.utilities.ensureAuthenticated, function(req,res){
@@ -12,6 +7,13 @@ room.route('/').get(app.utilities.ensureAuthenticated, function(req,res){
     	}else{
     		res.json(rooms);
     	}
+	});
+});
+
+room.route('/:name').get(app.utilities.ensureAuthenticated, function(req,res){
+	app.models.Room.findOne({roomName:req.params.name}).populate('creator').exec(function(err, room) {
+		if(err) throw err;
+		res.json(room);
 	});
 });
 
@@ -29,6 +31,7 @@ room.route('/create').post(app.utilities.ensureAuthenticated,function(req, res) 
 				newRoom.roomName = roomName;
 				newRoom.displayName = req.body.displayName;
 				newRoom.creator = req.user._id;
+				newRoom.subject = req.body.subject;
 				newRoom.creationDate = new Date();
 				newRoom.isMute = false;
 

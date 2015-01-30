@@ -52,23 +52,23 @@ $font: 'Lato','sans-serif';
 	}
 }
 
-@include keyframes(talkHeaderShrink){
-	from{
-		height: $talk-header-height-grow;
-	}
-	to{
-		height: $talk-header-height-shrink;
-	}
-}
+// @include keyframes(talkHeaderShrink){
+// 	from{
+// 		height: $talk-header-height-grow;
+// 	}
+// 	to{
+// 		height: $talk-header-height-shrink;
+// 	}
+// }
 
-@include keyframes(talkHeaderGrow) {
-	from{
-		height: $talk-header-height-shrink;
-	}
-	to{
-		height: $talk-header-height-grow;
-	}
-}
+// @include keyframes(talkHeaderGrow) {
+// 	from{
+// 		height: $talk-header-height-shrink;
+// 	}
+// 	to{
+// 		height: $talk-header-height-grow;
+// 	}
+// }
 
 @include keyframes(entityEnter){
 	from{
@@ -100,6 +100,11 @@ a{
 
 .hidden{
 	display: none;
+}
+
+h1{
+	padding: 0px;
+	margin: 0px;
 }
 
 .wrap {
@@ -141,31 +146,31 @@ a{
 		}
 	}
 
+	p{
+		left: 15px;
+		position: relative;
+	}
+
+	.talk-subject-name{
+		font-family: $font;
+		font-size: 18px;
+		color: white;
+	}
+
+	.talk-subject-room{
+		cursor: hand;
+		font-family: $font;
+		font-size: 16px;
+		color: white;
+		margin: 15px;
+	}
+
+	.talk-subject-room:hover{
+		text-decoration: underline;
+	}
+
 	.sidebar-branding:hover{
 		background-color: #34495e;
-	}
-
-	.userLabel{
-		position: relative;
-		width: 100%;
-		height: 50px;
-		margin-top: 25px;
-		@include animation(entityEnter 0.2s forwards ease-out);
-	}
-
-	.userLabel:hover{
-		background-color: #3498db;
-		cursor: hand;
-
-	}
-
-	.userName {
-		position: relative;
-		left: 20px;
-		font-family: $font;
-		color: white;
-		display: inline-block;
-		top: (50px - 18px)/2;
 	}
 
 	.sidebar-show{
@@ -206,11 +211,13 @@ a{
 		top: 0;
 		box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 		@media (min-width: $device-min){
-			@include animation(talkHeaderGrow 0.5s forwards ease-out);
+			height: $talk-header-height-grow;
+			//@include animation(talkHeaderGrow 0.5s forwards ease-out);
 		}
 
 		@media (max-width: $device-max){
-			@include animation(talkHeaderShrink 0.5s forwards ease-out);
+			height: $talk-header-height-shrink;
+			//@include animation(talkHeaderShrink 0.5s forwards ease-out);
 			text-align: center;
 		}
 
@@ -248,6 +255,7 @@ a{
 			}
 
 		}
+		
 	}
 
 	.talk-stream {
@@ -288,6 +296,14 @@ a{
 	.talk-stream-button:hover{
 		cursor: hand;
 		@include animation(talkStreamButtonHover 0.5s forwards ease-out);
+	}
+
+	.talk-welcome{
+		font-family: $font;
+		width: 100%;
+		height: 100%;
+		background-color: #ecf0f1;
+		box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 	}
 
 	.talk-message{

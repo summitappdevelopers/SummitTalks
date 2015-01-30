@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
-/*	displayName is can have spaces and special characters
+/*	
+	displayName is can have spaces and special characters
 	roomName is used in URLs
 */
 
@@ -14,6 +15,7 @@ var RoomSchema = new Schema({
 	},
 	isMute: Boolean,
 	members: Array,
+	subject: String,
 	creationDate: Date
 });
 

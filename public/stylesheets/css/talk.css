@@ -70,36 +70,6 @@
   to {
     width: -webkit-calc(100% - 250px);
     width: calc(100% - 250px); } }
-@-webkit-keyframes talkHeaderShrink {
-  from {
-    height: 50px; }
-  to {
-    height: 40px; } }
-@-moz-keyframes talkHeaderShrink {
-  from {
-    height: 50px; }
-  to {
-    height: 40px; } }
-@keyframes talkHeaderShrink {
-  from {
-    height: 50px; }
-  to {
-    height: 40px; } }
-@-webkit-keyframes talkHeaderGrow {
-  from {
-    height: 40px; }
-  to {
-    height: 50px; } }
-@-moz-keyframes talkHeaderGrow {
-  from {
-    height: 40px; }
-  to {
-    height: 50px; } }
-@keyframes talkHeaderGrow {
-  from {
-    height: 40px; }
-  to {
-    height: 50px; } }
 @-webkit-keyframes entityEnter {
   from {
     opacity: 0; }
@@ -140,6 +110,10 @@ a {
 .hidden {
   display: none; }
 
+h1 {
+  padding: 0px;
+  margin: 0px; }
+
 .sidebar {
   width: 250px;
   height: 100%;
@@ -171,26 +145,23 @@ a {
       font-size: 24px;
       color: white;
       top: 10px; }
+  .sidebar p {
+    left: 15px;
+    position: relative; }
+  .sidebar .talk-subject-name {
+    font-family: "Lato", "sans-serif";
+    font-size: 18px;
+    color: white; }
+  .sidebar .talk-subject-room {
+    cursor: hand;
+    font-family: "Lato", "sans-serif";
+    font-size: 16px;
+    color: white;
+    margin: 15px; }
+  .sidebar .talk-subject-room:hover {
+    text-decoration: underline; }
   .sidebar .sidebar-branding:hover {
     background-color: #34495e; }
-  .sidebar .userLabel {
-    position: relative;
-    width: 100%;
-    height: 50px;
-    margin-top: 25px;
-    -webkit-animation: entityEnter 0.2s forwards ease-out;
-    -moz-animation: entityEnter 0.2s forwards ease-out;
-    animation: entityEnter 0.2s forwards ease-out; }
-  .sidebar .userLabel:hover {
-    background-color: #3498db;
-    cursor: hand; }
-  .sidebar .userName {
-    position: relative;
-    left: 20px;
-    font-family: "Lato", "sans-serif";
-    color: white;
-    display: inline-block;
-    top: 16px; }
   .sidebar .sidebar-show {
     -webkit-animation: sidebarShow 0.5s forwards ease-out;
     -moz-animation: sidebarShow 0.5s forwards ease-out;
@@ -231,14 +202,10 @@ a {
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75); }
     @media (min-width: 701px) {
       .talk-container .talk-header {
-        -webkit-animation: talkHeaderGrow 0.5s forwards ease-out;
-        -moz-animation: talkHeaderGrow 0.5s forwards ease-out;
-        animation: talkHeaderGrow 0.5s forwards ease-out; } }
+        height: 50px; } }
     @media (max-width: 700px) {
       .talk-container .talk-header {
-        -webkit-animation: talkHeaderShrink 0.5s forwards ease-out;
-        -moz-animation: talkHeaderShrink 0.5s forwards ease-out;
-        animation: talkHeaderShrink 0.5s forwards ease-out;
+        height: 40px;
         text-align: center; } }
     .talk-container .talk-header .talk-title {
       display: inline-block;
@@ -301,6 +268,12 @@ a {
     -webkit-animation: talkStreamButtonHover 0.5s forwards ease-out;
     -moz-animation: talkStreamButtonHover 0.5s forwards ease-out;
     animation: talkStreamButtonHover 0.5s forwards ease-out; }
+  .talk-container .talk-welcome {
+    font-family: "Lato", "sans-serif";
+    width: 100%;
+    height: 100%;
+    background-color: #ecf0f1;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75); }
   .talk-container .talk-message, .talk-container .talk-message-user, .talk-container .talk-message:nth-child(1), .talk-container .talk-message:last-child {
     background-color: #3498db;
     font-family: "Lato", "sans-serif";
