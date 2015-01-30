@@ -37,6 +37,10 @@ var TalkApp = React.createClass({
 			};
 	},
 	componentDidMount: function(){
+		/* 
+			Client never disconnects explicitly, but lets the server handle it when window is closed
+			setTimeout() waits for "Stay on Page" click from dialog box.
+		*/
 		window.onbeforeunload = function(){
 			socket.emit('willdisconnect', this.state.joinedRooms);
 			setTimeout(function() {
@@ -47,6 +51,9 @@ var TalkApp = React.createClass({
 		this.getSubjects();
 	},
 	inMessage: function(data){
+		/*
+			Display a Desktop notification only when someone else is talking
+		*/
 		if(data.sender._id==profile._id){
 			data.isSelf = true;
 		}else{
@@ -63,7 +70,10 @@ var TalkApp = React.createClass({
 		socket.emit('outmessage',{content: message.replace(/(<([^>]+)>)/ig,""), roomId:this.state.room._id, roomName: this.state.room.roomName});
 	},
 	userJoin: function(data){
-		console.log(data.displayName+" joined.");
+		/*
+			Update room members when a unique user joins
+		*/
+		console.log(data.displayName+" joined "+this.state.room.roomName);
 		var nextMembers = this.state.room.members;
 		nextMembers.push(data);
 		var nextRoom = this.state.room;
@@ -71,9 +81,12 @@ var TalkApp = React.createClass({
 		this.setState({room: nextRoom});
 	},
 	userLeave: function(data){
+		/*
+			Update room members when a unique user leaves
+		*/
 		for(var m in this.state.room.members){
 			if(this.state.room.members[m]._id==data){
-				console.log(this.state.room.members[m].displayName+" left.");
+				console.log(this.state.room.members[m].displayName+" left "+this.state.room.roomName);
 				var nextMembers = this.state.room.members;
 				nextMembers.splice(m,1);
 				var nextRoom = this.state.room;
@@ -84,21 +97,28 @@ var TalkApp = React.createClass({
 		}
 	},
 	handleJoinRoom: function(roomName){
+		/*
+			Fired when a room is selected in the sidebar
+		*/
 		this.getRoom(roomName);
 	},
 	scrollDown: function(){
 		$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight}, 500);
 	},
 	loadOlder: function(){
+		/*
+			Fired when "Load older messages" button is clicked. 20 is the current limit
+		*/
 		this.getMessages(20, this.state.messages[0]._id);
 	},
 	getSubjects: function(){
+		/*
+			Sorts all the rooms into predefined "Subjects" to be rendered on the sidebar
+		*/
 		$.get('/api/room/', function(data){
-
 			var nextSubjects = this.state.subjects;
 			for(var i in data){
 				switch(data[i].subject){
-
 					case "Math":
 						nextSubjects[0].rooms.push(data[i]);
 						break;
@@ -124,6 +144,9 @@ var TalkApp = React.createClass({
 	},
 	getRoom: function(roomName){
 		$.get('/api/room/'+roomName, function(data){
+			/*
+				Check if the user has already joined in another instance
+			*/
 			var alreadyJoined = false;
 			for(var i in data.members){
 				if(data.members[i]._id==profile._id){
@@ -132,9 +155,15 @@ var TalkApp = React.createClass({
 					break;
 				}
 			}
+			/*
+				If this is the first join, then add user to the list
+			*/
 			if(alreadyJoined==false){
 				data.members = data.members.concat([profile]);
 			}
+			/*
+				Prevent joining a room more than once when clicking on them
+			*/
 			if(this.state.joinedRooms.indexOf(data.roomName)==-1){
 				var nextJoinedRooms = this.state.joinedRooms.concat([data.roomName]);
 			}else{
@@ -147,16 +176,21 @@ var TalkApp = React.createClass({
 	},
 	getMessages: function(limit, before){
 		$.get('/api/room/'+this.state.room._id+'/messages?limit='+limit+'&before='+before, function(data){
+			/*
+				The room is "new" if it has less than 20 messages.
+			*/
 			if(data.length < 20){
 				this.setState({isNew: true});
 			}else{
 				this.setState({isNew: false});
 			}
+			/* Check if current user sent message */
 			for(var i in data){
 				if(data[i].sender._id == profile._id){
 					data[i].isSelf = true;
 				}
 			}
+			/* Check if loading new messages initially, or loading the old ones */
 			if(!before){
 				this.setState({messages: data});
 				this.scrollDown();
@@ -167,9 +201,7 @@ var TalkApp = React.createClass({
 		}.bind(this));
 	},
 	render: function(){
-
 		var ContentView;
-
 		if (this.state.room) {
 
 			ContentView = 

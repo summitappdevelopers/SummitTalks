@@ -23,6 +23,8 @@ io.sockets.on('connection', function(socket){
 
 				socket.join(data.roomName);
 
+				/* Check if user is already connected to the room, but has opened another instance (ie. tabs) */
+
 				var userExists = false;
 				for(var m=0; m<room.members.length; m++){
 					if(room.members[m]._id == profile._id){
@@ -31,6 +33,8 @@ io.sockets.on('connection', function(socket){
 						break;
 					}
 				}
+
+				/* Add user to room.members if it is their first time joining */
 				
 				if(!userExists){
 					room.members.push(profile);
@@ -55,11 +59,19 @@ io.sockets.on('connection', function(socket){
 		}
 	});
 
+	/*
+		Client will send the list of all the rooms it is connected to when closing the window.
+	*/
+
 	socket.on('willdisconnect', function(data){
 		app.models.Room.find({roomName: {$in: data}}, function(err, rooms){
 			for(var i in rooms){
 				var room = rooms[i];
 				var instances = 0;
+				/*
+					Check if client is disconnecting from an instance of a room (ie. tabs)
+					The client should only truly "disconnect" if it closed its last instance of the room
+				*/
 				for(var sockID in io.nsps['/'].adapter.rooms[room.roomName]){
 					if(io.sockets.connected[sockID].client.request.decoded_token._id==profile._id){
 						instances+=1;

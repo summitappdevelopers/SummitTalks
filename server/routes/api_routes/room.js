@@ -86,7 +86,6 @@ room.route('/:id/messages').get(app.utilities.ensureAuthenticated, function(req,
 	};
 
 	if(req.query.before != 0){
-		console.log("exists");
 		query._id = {$lt: req.query.before};
 	}
 
