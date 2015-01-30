@@ -10,7 +10,7 @@ config = {
     // When running Ghost in the wild, use the production environment
     // Configure your URL and mail settings here
     production: {
-        url: 'https://summittalks.herokuapp.com/blog',
+        url: 'https://summittalks.herokuapp.com:2368/blog',
         mail: {},
         database: {
             client: 'sqlite3',
@@ -24,7 +24,7 @@ config = {
             // Host to be passed to node's `net.Server#listen()`
             host: '127.0.0.1',
             // Port to be passed to node's `net.Server#listen()`, for iisnode set this to `process.env.PORT`
-            port: process.env.PORT
+            port: '2368'
         }
     },
 
@@ -32,7 +32,7 @@ config = {
     development: {
         // The url to use when providing links to the site, E.g. in RSS and email.
         // Change this to your Ghost blogs published URL.
-        url: 'http://127.0.0.1:1337/blog',
+        url: 'http://localhost:2368/blog',
 
         // Example mail config
         // Visit http://support.ghost.org/mail for instructions
@@ -58,9 +58,9 @@ config = {
         },
         server: {
             // Host to be passed to node's `net.Server#listen()`
-            host: '127.0.0.1',
+            host: 'localhost',
             // Port to be passed to node's `net.Server#listen()`, for iisnode set this to `process.env.PORT`
-            port: '1337'
+            port: '2368'
         }
     }
 

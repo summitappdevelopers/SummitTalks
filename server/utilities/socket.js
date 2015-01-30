@@ -11,7 +11,7 @@ io.set('authorization', socketioJwt.authorize({
   handshake: true
 }));
 
-io.sockets.on('connection', function(socket){
+io.on('connection', function(socket){
 
 	var profile = socket.client.request.decoded_token;
 	
@@ -64,6 +64,7 @@ io.sockets.on('connection', function(socket){
 	*/
 
 	socket.on('willdisconnect', function(data){
+		console.log(data);
 		app.models.Room.find({roomName: {$in: data}}, function(err, rooms){
 			for(var i in rooms){
 				var room = rooms[i];
@@ -78,6 +79,9 @@ io.sockets.on('connection', function(socket){
 					}
 				}
 				if(instances==1){
+					/*
+						Remove the right user from the list of users
+					*/
 					for(var j in room.members){
 						if(room.members[j]._id==profile._id){
 							room.members.splice(j,1);

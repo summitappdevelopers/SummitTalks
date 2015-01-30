@@ -3,8 +3,10 @@
 */
 
 var socketURL = "https://summittalks.herokuapp.com";
+var blogURL = "https://summittalks.herokuapp.com";
 if(dev){
 	socketURL = "http://localhost:1337";
+	blogURL = "http://localhost:2368/blog";
 }
 var socket = io.connect(socketURL,{query: 'token='+token});;
 
@@ -26,12 +28,12 @@ var TalkApp = React.createClass({
 				profile: profile, 
 				room: null, 
 				subjects: [
-							{name:"MATH", rooms:[]}, 
-							{name:"SCIENCE", rooms:[]}, 
-							{name:"SOCIAL STUDIES", rooms: []}, 
-							{name:"ENGLISH", rooms:[]}, 
-							{name:"FOREIGN LANGUAGE", rooms:[]},
-							{name:"OTHER", rooms:[]}
+							{name:"Math", rooms:[]}, 
+							{name:"Science", rooms:[]}, 
+							{name:"Social Studies", rooms: []}, 
+							{name:"English", rooms:[]}, 
+							{name:"Foreign Language", rooms:[]},
+							{name:"Other", rooms:[]}
 						  ], 
 				isNew: true,
 			};
@@ -101,6 +103,9 @@ var TalkApp = React.createClass({
 			Fired when a room is selected in the sidebar
 		*/
 		this.getRoom(roomName);
+	},
+	handleHomeButton: function(){
+		this.setState({room: null});
 	},
 	scrollDown: function(){
 		$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight}, 500);
@@ -222,14 +227,12 @@ var TalkApp = React.createClass({
 		}else{
 
 			ContentView =
-				<div className="talk-welcome">
-					<h1>Welcome to Summit Talks!</h1>
-				</div>
+				<iframe className="talk-blog" src={blogURL}></iframe>
 		}
 
 		return (
 			<div>
-				<TalkSideBar handleJoinRoom={this.handleJoinRoom} subjects={this.state.subjects}/>
+				<TalkSideBar handleHomeButton={this.handleHomeButton} handleJoinRoom={this.handleJoinRoom} subjects={this.state.subjects}/>
 				<div className="talk-container">
 					{ContentView}
 				</div>
@@ -243,8 +246,8 @@ var TalkSideBar = React.createClass({
 	render: function(){
 		return (
 			<div className="sidebar">
-				<div className="sidebar-branding">
-					<a className="sidebar-link" href="/">
+				<div className="sidebar-branding" onClick={this.handleHomeButton}>
+					<a className="sidebar-link">
 					<span className="sidebar-branding-text">Summit Talks</span></a>
 				</div>
 				<TalkSubjectsList handleJoinRoom={this.handleJoinRoom} subjects={this.props.subjects}/>
@@ -253,6 +256,9 @@ var TalkSideBar = React.createClass({
 	},
 	handleJoinRoom: function(roomName){
 		this.props.handleJoinRoom(roomName);
+	},
+	handleHomeButton: function(){
+		this.props.handleHomeButton();
 	}
 });
 

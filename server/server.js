@@ -53,9 +53,11 @@ app.modules.googleStrategy = require('passport-google-oauth');
 app.modules.moment = require('moment');
 app.modules.jwt = require('jsonwebtoken');
 app.modules.socketJwt = require('socketio-jwt');
+app.modules.ghost = require('ghost');
 app.utilities.api_manager = require('./routes/api_manager');
 app.utilities.auth = require('./routes/auth/auth');
 app.utilities.view_manager = require('./routes/view_manager');
+app.utilities.path = require('path');
 
 //====== MONGODB SETUP ======
 
@@ -97,9 +99,27 @@ app.modules.passport.deserializeUser(function(id,done){
 	});
 });
 
+
 app.modules.server.listen(app.port);
 app.modules.io = require('socket.io')(app.modules.server);
 app.utilities.talkSocket = require('./utilities/socket');
+
+
+app.modules.ghost({
+	config: app.utilities.path.join(__dirname, '/ghost/ghost.js')
+}).then(function(ghostServer){
+	app.express.use(ghostServer.config.paths.subdir, ghostServer.rootApp);
+	ghostServer.start(app.express);
+}).then(function(req,res){
+	app.express.get('*', function(req,res){
+		res.status(404).send('<h1>404</h1><p>Page not found.</p>');
+	});
+	app.express.post('*', function(req,res){
+		res.status(404).json({error:'Resource not found'});
+	});
+});
+
+
 
 console.log("App listening on port: "+app.port+" Dev Mode: "+app.dev);
 
