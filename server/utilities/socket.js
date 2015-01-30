@@ -80,10 +80,10 @@ io.sockets.on('connection', function(socket){
 				if(instances==1){
 					for(var j in room.members){
 						if(room.members[j]._id==profile._id){
-							room.members.splice(i,1);
+							room.members.splice(j,1);
 							room.save(function(err, room){
 								if(err) throw err;
-								console.log("Fully disconnecting "+profile.displayName);
+								console.log("Fully disconnecting "+profile.displayName+" from "+room.roomName);
 								socket.broadcast.to(room.roomName).emit('userleave', profile._id);
 								socket.disconnect();
 							});
