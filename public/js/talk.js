@@ -104,6 +104,18 @@ var TalkApp = React.createClass({
 		*/
 		this.getRoom(roomName);
 	},
+	handleCreateRoom: function(name, subject){
+		$.post('/api/room/create',{displayName:name,subject:subject},function(data){
+			var nextSubjects = this.state.subjects;
+			for(var i in nextSubjects){
+				if(nextSubjects[i].name == data.subject){
+					nextSubjects[i].rooms.unshift(data);
+					break;
+				}
+			}
+			this.setState({subjects:nextSubjects});
+		}.bind(this));
+	},
 	handleHomeButton: function(){
 		this.setState({room: null});
 	},
@@ -232,7 +244,7 @@ var TalkApp = React.createClass({
 
 		return (
 			<div>
-				<TalkSideBar handleHomeButton={this.handleHomeButton} handleJoinRoom={this.handleJoinRoom} subjects={this.state.subjects}/>
+				<TalkSideBar handleCreateRoom={this.handleCreateRoom} handleHomeButton={this.handleHomeButton} handleJoinRoom={this.handleJoinRoom} subjects={this.state.subjects}/>
 				<div className="talk-container">
 					{ContentView}
 				</div>
@@ -241,18 +253,25 @@ var TalkApp = React.createClass({
 	}
 });
 
+
 var TalkSideBar = React.createClass({
 
 	render: function(){
+		var createRoom = null;
+		if(profile.isTeacher){
+			createRoom = <TalkCreateRoom handleCreateRoom={this.handleCreateRoom} />
+		}
 		return (
 			<div className="sidebar">
-				<div className="sidebar-branding" onClick={this.handleHomeButton}>
-					<a className="sidebar-link">
-					<span className="sidebar-branding-text">Summit Talks</span></a>
-				</div>
+				<TalkToolbar handleHomeButton={this.handleHomeButton}/>
+				{createRoom}
 				<TalkSubjectsList handleJoinRoom={this.handleJoinRoom} subjects={this.props.subjects}/>
+				<TalkUser/>
 			</div>
 		)
+	},
+	handleCreateRoom: function(name, subject){
+		this.props.handleCreateRoom(name, subject);
 	},
 	handleJoinRoom: function(roomName){
 		this.props.handleJoinRoom(roomName);
@@ -260,6 +279,77 @@ var TalkSideBar = React.createClass({
 	handleHomeButton: function(){
 		this.props.handleHomeButton();
 	}
+});
+
+var TalkToolbar = React.createClass({
+	getInitialState: function(){
+		return {isExpanded: false};
+	},
+	render: function(){
+		var caretClass="fa fa-caret-down";
+		var brandingClass="sidebar-branding";
+		var toolbarElements = [];
+		if(this.state.isExpanded){
+			caretClass = "fa fa-caret-up";
+			brandingClass="sidebar-branding-expanded";
+			toolbarElements.push(
+				<a href="/auth/logout"><div className="logout-button"><i className="fa fa-sign-out"></i></div></a>
+			)
+		}
+		return(
+			<div className={brandingClass}>
+				<a className="sidebar-link">
+				<span className="sidebar-branding-text" onClick={this.handleHomeButton}>Summit Talks</span></a>
+				<i className={caretClass} onClick={this.handleCaretButton}></i>
+				{toolbarElements}
+			</div>
+		)
+	},
+	handleHomeButton: function(){
+		this.props.handleHomeButton();
+	},
+	handleCaretButton: function(e){
+		e.preventDefault();
+		this.setState({isExpanded: !this.state.isExpanded});
+	}
+});
+
+var TalkCreateRoom = React.createClass({
+  render: function(){
+    if(profile.isTeacher){
+      return (
+        <div className="create-room">
+        	<p className="talk-subject-name">Create a room</p>
+        	<select className="subject-selection">
+			    <option value="Math">Math</option>
+			    <option value="Science">Science</option>
+			    <option value="Social Studies">Social Studies</option>
+			    <option value="English">English</option>
+			    <option value="Foreign Language">Foreign Language</option>
+			    <option value="Other">Other</option>
+  			</select>
+       		<input type="text" value={this.state.value} placeholder="Name it and hit enter" className="create-room-input" onChange={this.handleText} onKeyPress={this.handleKeyPress}></input>
+        </div>
+      )
+    }
+    return null;
+  },
+  getInitialState: function(){
+    return {value: ''}
+  },
+  handleText: function(e){
+    this.setState({value: e.target.value});
+  },
+  handleKeyPress: function(e){
+    if(e.which==13){
+    	var subjectSelection = $('.subject-selection').val();
+      if(this.state.value.length>0 & subjectSelection.length>0){
+        this.props.handleCreateRoom(this.state.value,subjectSelection);
+        this.setState({value:''});
+      }
+    }
+  }
+
 });
 
 var TalkSubjectsList = React.createClass({
@@ -294,6 +384,14 @@ var TalkSubject = React.createClass({
 	},
 	handleJoinRoom: function(roomName){
 		this.props.handleJoinRoom(roomName);
+	}
+});
+
+var TalkUser = React.createClass({
+	render: function(){
+		return(
+			<div className="talk-user"></div>
+		)
 	}
 });
 
