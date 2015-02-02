@@ -231,9 +231,7 @@ var TalkApp = React.createClass({
 						<div className="talk-members-button">
 						</div>
 					</div>
-					<div className="talk-stream">
-						<TalkStream isNew={this.state.isNew} loadOlder={this.loadOlder} messages={this.state.messages}/>
-					</div>
+					<TalkStream isNew={this.state.isNew} loadOlder={this.loadOlder} messages={this.state.messages}/>
 					<TalkInput disabled={this.state.room.isMute} handleSend={this.handleSend}/>
 				</div>);
 		}else{
@@ -404,7 +402,7 @@ var TalkStream = React.createClass({
 		}
 
 		return (
-			<div>
+			<div className="talk-stream">
 				<div onClick={this.handleClick} className={buttonClass}>
 					<p className="load-text">Load older messages</p>
 				</div>

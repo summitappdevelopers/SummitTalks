@@ -180,6 +180,7 @@ h1 {
       color: white;
       top: 10px; }
     .sidebar .sidebar-branding .fa-caret-down, .sidebar .sidebar-branding-expanded .fa-caret-down, .sidebar .sidebar-branding .fa-caret-up, .sidebar .sidebar-branding-expanded .fa-caret-up {
+      cursor: hand;
       position: relative;
       color: white;
       float: right;
