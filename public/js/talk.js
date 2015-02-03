@@ -1,7 +1,3 @@
-/*
-	newroom > scienceroom > newroom > reload = crash
-*/
-
 var socketURL = "https://summittalks.herokuapp.com";
 var blogURL = "https://summittalks.herokuapp.com";
 if(dev){
@@ -36,6 +32,7 @@ var TalkApp = React.createClass({
 							{name:"Other", rooms:[]}
 						  ], 
 				isNew: true,
+				showMembers: false
 			};
 	},
 	componentDidMount: function(){
@@ -115,6 +112,15 @@ var TalkApp = React.createClass({
 			}
 			this.setState({subjects:nextSubjects});
 		}.bind(this));
+	},
+	handleDeleteRoom: function(roomId){
+		for(var i in this.state.subjects){
+			
+		}
+		console.log(roomId);
+	},
+	handleMuteRoom: function(roomId){
+		console.log(roomId);
 	},
 	handleHomeButton: function(){
 		this.setState({room: null});
@@ -217,9 +223,17 @@ var TalkApp = React.createClass({
 			}
 		}.bind(this));
 	},
+	toggleMemberList: function(){
+		this.setState({showMembers: !this.state.showMembers});
+	},
 	render: function(){
 		var ContentView;
+		var membersListClass = "member-list";
 		if (this.state.room) {
+
+			if(!this.state.showMembers){
+				membersListClass = "hidden";
+			}
 
 			ContentView = 
 				(<div>
@@ -228,7 +242,14 @@ var TalkApp = React.createClass({
 						<span className="talk-title">
 							{this.state.room.displayName} - <i>{this.state.room.creator.displayName}</i> 
 						</span>
-						<div className="talk-members-button">
+						<div className="talk-members-button" onClick={this.toggleMemberList}>
+							<i className="fa fa-user"></i>
+							<span className="member-count">{this.state.room.members.length}</span>
+							<div className={membersListClass}>
+								{this.state.room.members.map(function(member){
+									return <span><span className="member-name">{member.displayName}</span><br></br></span>
+								}.bind(this))}
+							</div>
 						</div>
 					</div>
 					<TalkStream isNew={this.state.isNew} loadOlder={this.loadOlder} messages={this.state.messages}/>
@@ -242,7 +263,7 @@ var TalkApp = React.createClass({
 
 		return (
 			<div>
-				<TalkSideBar handleCreateRoom={this.handleCreateRoom} handleHomeButton={this.handleHomeButton} handleJoinRoom={this.handleJoinRoom} subjects={this.state.subjects}/>
+				<TalkSideBar handleMuteRoom={this.handleMuteRoom} handleDeleteRoom={this.handleDeleteRoom} handleCreateRoom={this.handleCreateRoom} handleHomeButton={this.handleHomeButton} handleJoinRoom={this.handleJoinRoom} subjects={this.state.subjects}/>
 				<div className="talk-container">
 					{ContentView}
 				</div>
@@ -263,10 +284,16 @@ var TalkSideBar = React.createClass({
 			<div className="sidebar">
 				<TalkToolbar handleHomeButton={this.handleHomeButton}/>
 				{createRoom}
-				<TalkSubjectsList handleJoinRoom={this.handleJoinRoom} subjects={this.props.subjects}/>
+				<TalkSubjectsList handleDeleteRoom={this.handleDeleteRoom} handleMuteRoom={this.handleMuteRoom} handleJoinRoom={this.handleJoinRoom} subjects={this.props.subjects}/>
 				<TalkUser/>
 			</div>
 		)
+	},
+	handleMuteRoom: function(roomId){
+		this.props.handleMuteRoom(roomId);
+	},
+	handleDeleteRoom: function(roomId){
+		this.props.handleDeleteRoom(roomId);
 	},
 	handleCreateRoom: function(name, subject){
 		this.props.handleCreateRoom(name, subject);
@@ -356,13 +383,19 @@ var TalkSubjectsList = React.createClass({
 			<div className="talk-subjects-list">
 				{this.props.subjects.map(function(subject){
 					if(subject.rooms.length > 0){
-						return <TalkSubject key={subject.name} handleJoinRoom={this.handleJoinRoom} subject={subject}/>;
+						return <TalkSubject handleDeleteRoom={this.handleDeleteRoom} handleMuteRoom={this.handleMuteRoom} key={subject.name} handleJoinRoom={this.handleJoinRoom} subject={subject}/>;
 					}else{
 						return null;
 					}
 				}.bind(this))}
 			</div>
 		)
+	},
+	handleMuteRoom: function(roomId){
+		this.props.handleMuteRoom(roomId);
+	},
+	handleDeleteRoom: function(roomId){
+		this.props.handleDeleteRoom(roomId);
 	},
 	handleJoinRoom: function(roomName){
 		this.props.handleJoinRoom(roomName);
@@ -375,10 +408,16 @@ var TalkSubject = React.createClass({
 			<div>
 				<p className="talk-subject-name">{this.props.subject.name}</p>
 				{this.props.subject.rooms.map(function(room){
-					return <p className="talk-subject-room" key={room._id} onClick={this.handleJoinRoom.bind(this, room.roomName)}>{room.displayName}</p>
+					return <p className="talk-subject-room" key={room._id} onClick={this.handleJoinRoom.bind(this, room.roomName)}>{room.displayName}<span onClick={this.handleMuteRoom.bind(this, room._id)}>Mute</span><span onClick={this.handleDeleteRoom.bind(this, room._id)}>Delete</span></p>
 				}.bind(this))}
 			</div>
 		)
+	},
+	handleMuteRoom: function(roomId){
+		this.props.handleMuteRoom(roomId);
+	},
+	handleDeleteRoom: function(roomId){
+		this.props.handleDeleteRoom(roomId);
 	},
 	handleJoinRoom: function(roomName){
 		this.props.handleJoinRoom(roomName);
@@ -476,7 +515,7 @@ var TalkMessage = React.createClass({
 		return (
 
 			<div className={talkMessageClass}>
-				<b className='talk-message-title'>{this.props.message.sender.displayName}</b><span className='talk-message-time'>{this.props.message.sendTime}</span>
+				<b className='talk-message-title'>{this.props.message.sender.displayName}</b><span className='talk-message-time'>{moment(this.props.message.sendTime).calendar()}</span>
 				<p className='talk-message-content'>{this.state.elements}</p>
 			</div>
 		)
