@@ -275,6 +275,7 @@ h1{
 	}
 
 	.talk-header{
+		display: inline-block;
 		font-family: $font;
 		font-weight: 300;
 		position: fixed;
@@ -312,24 +313,76 @@ h1{
 
 		}
 
-		.menu-button{
-			position: relative;
-			height: 30px;
-			width: 30px;
-			background-color: red;
-			left: 10px;
-			float: left;
+		.talk-members-button{
+			text-align: center;
+			color: white;
+			display: inline-block;
+			position: absolute;
+			float: right;
 			@media (min-width: $device-min){
-				display: none;
+				width: 50px;
+				height: 50px;
+				margin-left: 50px;
 			}
-
 			@media (max-width: $device-max){
-				//top: ($talk-header-height-shrink - 30px)/2;
-				display: none;
+				width: $talk-header-height-shrink;
+				height: $talk-header-height-shrink;
+				margin-left: 20px;	
 			}
 
 		}
-		
+
+		.talk-members-button:hover{
+			cursor: hand;
+		}
+
+		.fa-user{
+			position: relative;
+			@media (min-width: $device-min){
+				font-size: 24px;
+				top: ($talk-header-height-grow - 30px)/2;
+			}
+			@media (max-width: $device-max){
+				font-size: 18px;
+				top: ($talk-header-height-shrink - 36px)/2;				
+			}
+		}
+
+		.member-count{
+			@extend .fa-user;
+			left: 2px;
+		}
+
+		.member-list {
+			text-align: left;
+			display: inline-block;
+			position: relative;
+			background: #ecf0f1;
+			width: 200px;
+			min-height: 250px;
+			z-index: 2;
+			right: 50px;
+			top: 22px;
+			overflow-x: hidden;
+			overflow-y: auto;
+			-webkit-box-shadow: 0px 0px 51px 0px rgba(0,0,0,0.4);
+			-moz-box-shadow: 0px 0px 51px 0px rgba(0,0,0,0.4);
+			box-shadow: 0px 0px 51px 0px rgba(0,0,0,0.4);
+
+			.member-name{
+				position: relative;
+				font-family: $font;
+				font-size: 18px;
+				color: #2c3e50;
+				left: 10px;
+			}
+
+			.member-name:nth-child(1){
+				top: 10px;
+			}
+
+		}
+
 	}
 
 	.talk-stream {
