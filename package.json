@@ -12,7 +12,6 @@
     "express": "^4.10.6",
     "express-session": "^1.9.3",
     "fs": "0.0.2",
-    "ghost": "^0.5.8",
     "jsonwebtoken": "^3.2.0",
     "method-override": "^2.3.1",
     "moment": "^2.8.4",
@@ -22,8 +21,7 @@
     "socket.io": "^1.2.1",
     "socketio-jwt": "^2.3.5"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server/server.js"
