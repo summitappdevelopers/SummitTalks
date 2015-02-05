@@ -32,9 +32,3 @@
   "license": "ISC",
   "main": "server/server.js"
 }
-
-/* Commands 
-  jsx --extension jsx jsx/ js/ --no-cache-dir
-  sass scss/landing.scss:css/landing.css
-  sass scss/talk.scss:css/talk.css
-*/
