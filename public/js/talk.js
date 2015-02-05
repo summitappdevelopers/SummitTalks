@@ -102,7 +102,9 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 			if(this.state.allRooms[i]._id==data.roomId){
 				var nextAllRooms = this.state.allRooms;
 					nextAllRooms.splice(i,1);
-					this.setState({allRooms: nextAllRooms, room:null});
+					if(this.state.room._id==data.roomId){
+						this.setState({allRooms: nextAllRooms, room:null});
+					}
 				break;
 			}
 		}
