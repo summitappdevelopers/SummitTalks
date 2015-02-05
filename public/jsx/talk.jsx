@@ -12,7 +12,7 @@ if (Notification.permission !== "granted"){
  	Notification.requestPermission();
 }
 
-var TalkApp = React.createClass({displayName: "TalkApp",
+var TalkApp = React.createClass({
 	getInitialState: function(){
 		if(socket){
 			socket.on('roomdata', this.getRoomData);
@@ -234,29 +234,29 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 		var ContentView;
 		if (this.state.room) {
 			ContentView = 
-				(React.createElement("div", null, 
-					React.createElement(TalkHeader, {handleMuteRoom: this.handleMuteRoom, handleDeleteRoom: this.handleDeleteRoom, profile: this.state.profile, showMembers: this.state.showMembers, room: this.state.room, toggleMemberList: this.toggleMemberList, picture: this.state.profile.picture}), 
-					React.createElement(TalkStream, {isNew: this.state.isNew, loadOlder: this.loadOlder, messages: this.state.messages}), 
-					React.createElement(TalkInput, {disabled: this.state.room.isMute, handleSend: this.handleSend})
-				));
+				(<div>
+					<TalkHeader handleMuteRoom={this.handleMuteRoom} handleDeleteRoom={this.handleDeleteRoom} profile={this.state.profile} showMembers={this.state.showMembers} room={this.state.room} toggleMemberList={this.toggleMemberList} picture={this.state.profile.picture} />
+					<TalkStream isNew={this.state.isNew} loadOlder={this.loadOlder} messages={this.state.messages}/>
+					<TalkInput disabled={this.state.room.isMute} handleSend={this.handleSend}/>
+				</div>);
 		}else{
 
 			ContentView =
-				React.createElement("iframe", {className: "talk-blog", src: blogURL})
+				<iframe className="talk-blog" src={blogURL}></iframe>
 		}
 
 		return (
-			React.createElement("div", null, 
-				React.createElement(TalkSideBar, {handleSearch: this.handleSearch, handleCreateRoom: this.handleCreateRoom, handleHomeButton: this.handleHomeButton, handleJoinRoom: this.handleJoinRoom, rooms: this.state.rooms}), 
-				React.createElement("div", {className: "talk-container"}, 
-					ContentView
-				)
-			)
+			<div>
+				<TalkSideBar handleSearch={this.handleSearch} handleCreateRoom={this.handleCreateRoom} handleHomeButton={this.handleHomeButton} handleJoinRoom={this.handleJoinRoom} rooms={this.state.rooms}/>
+				<div className="talk-container">
+					{ContentView}
+				</div>
+			</div>
 		)
 	}
 });
 
-var TalkHeader = React.createClass({displayName: "TalkHeader",
+var TalkHeader = React.createClass({
 	render: function(){
 		var membersListClass = "member-list";
 		var banClass = "fa fa-ban";
@@ -269,23 +269,23 @@ var TalkHeader = React.createClass({displayName: "TalkHeader",
 			trashClass = "hidden";
 		}
 		return (
-			React.createElement("div", {className: "talk-header"}, 
-				React.createElement("img", {className: "avi", src: this.props.profile.picture}), 
-				React.createElement("span", {className: "talk-title"}, 
-					this.props.room.displayName, " - ", React.createElement("i", null, this.props.room.creator.displayName), 
-					React.createElement("i", {className: banClass, onClick: this.handleMuteRoom}), 
-					React.createElement("i", {className: trashClass, onClick: this.handleDeleteRoom})
-				), 
-				React.createElement("div", {className: "talk-members-button", onClick: this.handleMembersClick}, 
-					React.createElement("i", {className: "fa fa-user"}), 
-					React.createElement("span", {className: "member-count"}, this.props.room.members.length), 
-					React.createElement("div", {className: membersListClass}, 
-						this.props.room.members.map(function(member){
-							return React.createElement("div", {key: member._id, className: "member"}, React.createElement("img", {className: "avi", src: member.picture}), React.createElement("span", {className: "member-name"}, member.displayName), React.createElement("br", null))
-						}.bind(this))
-					)
-				)
-			)
+			<div className="talk-header">
+				<img className="avi" src={this.props.profile.picture}></img>
+				<span className="talk-title">
+					{this.props.room.displayName} - <i>{this.props.room.creator.displayName}</i> 
+					<i className={banClass} onClick={this.handleMuteRoom}></i>
+					<i className={trashClass} onClick={this.handleDeleteRoom}></i>
+				</span>
+				<div className="talk-members-button" onClick={this.handleMembersClick}>
+					<i className="fa fa-user"></i>
+					<span className="member-count">{this.props.room.members.length}</span>
+					<div className={membersListClass}>
+						{this.props.room.members.map(function(member){
+							return <div key={member._id} className="member"><img className="avi" src={member.picture}></img><span className="member-name">{member.displayName}</span><br></br></div>
+						}.bind(this))}
+					</div>
+				</div>
+			</div>
 		)
 	},
 	handleMuteRoom: function(){
@@ -300,22 +300,22 @@ var TalkHeader = React.createClass({displayName: "TalkHeader",
 });
 
 
-var TalkSideBar = React.createClass({displayName: "TalkSideBar",
+var TalkSideBar = React.createClass({
 
 	render: function(){
 		var createRoom = null;
 		if(profile.isTeacher){
-			createRoom = React.createElement(TalkCreateRoom, {handleCreateRoom: this.handleCreateRoom})
+			createRoom = <TalkCreateRoom handleCreateRoom={this.handleCreateRoom} />
 		}
 		return (
-			React.createElement("div", {className: "sidebar"}, 
-				React.createElement(TalkToolbar, {handleHomeButton: this.handleHomeButton}), 
-				createRoom, 
-				React.createElement("p", {className: "talk-heading"}, "Rooms"), 
-				React.createElement("input", {placeholder: "Search for a room", className: "search-field", type: "text", onChange: this.handleChange}), 
-				React.createElement(TalkRoomsList, {handleJoinRoom: this.handleJoinRoom, rooms: this.props.rooms}), 
-				React.createElement(TalkUser, null)
-			)
+			<div className="sidebar">
+				<TalkToolbar handleHomeButton={this.handleHomeButton}/>
+				{createRoom}
+				<p className="talk-heading">Rooms</p>
+				<input placeholder="Search for a room" className="search-field" type="text" onChange={this.handleChange} />
+				<TalkRoomsList handleJoinRoom={this.handleJoinRoom} rooms={this.props.rooms}/>
+				<TalkUser/>
+			</div>
 		)
 	},
 	handleMuteRoom: function(roomId){
@@ -338,7 +338,7 @@ var TalkSideBar = React.createClass({displayName: "TalkSideBar",
 	}
 });
 
-var TalkToolbar = React.createClass({displayName: "TalkToolbar",
+var TalkToolbar = React.createClass({
 	getInitialState: function(){
 		return {isExpanded: false};
 	},
@@ -350,16 +350,16 @@ var TalkToolbar = React.createClass({displayName: "TalkToolbar",
 			caretClass = "fa fa-caret-up";
 			brandingClass="sidebar-branding-expanded";
 			toolbarElements.push(
-				React.createElement("a", {key: "logout-button", href: "/auth/logout"}, React.createElement("div", {className: "logout-button"}, React.createElement("i", {className: "fa fa-sign-out"})))
+				<a key="logout-button" href="/auth/logout"><div className="logout-button"><i className="fa fa-sign-out"></i></div></a>
 			)
 		}
 		return(
-			React.createElement("div", {className: brandingClass}, 
-				React.createElement("a", {className: "sidebar-link"}, 
-				React.createElement("span", {className: "sidebar-branding-text", onClick: this.handleHomeButton}, "Summit Talks")), 
-				React.createElement("i", {className: caretClass, onClick: this.handleCaretButton}), 
-				toolbarElements
-			)
+			<div className={brandingClass}>
+				<a className="sidebar-link">
+				<span className="sidebar-branding-text" onClick={this.handleHomeButton}>Summit Talks</span></a>
+				<i className={caretClass} onClick={this.handleCaretButton}></i>
+				{toolbarElements}
+			</div>
 		)
 	},
 	handleHomeButton: function(){
@@ -371,22 +371,22 @@ var TalkToolbar = React.createClass({displayName: "TalkToolbar",
 	}
 });
 
-var TalkCreateRoom = React.createClass({displayName: "TalkCreateRoom",
+var TalkCreateRoom = React.createClass({
   render: function(){
     if(profile.isTeacher){
       return (
-        React.createElement("div", {className: "create-room"}, 
-        	React.createElement("p", {className: "talk-heading"}, "Create a room"), 
-        	React.createElement("select", {className: "subject-selection"}, 
-			    React.createElement("option", {value: "Math"}, "Math"), 
-			    React.createElement("option", {value: "Science"}, "Science"), 
-			    React.createElement("option", {value: "Social Studies"}, "Social Studies"), 
-			    React.createElement("option", {value: "English"}, "English"), 
-			    React.createElement("option", {value: "Foreign Language"}, "Foreign Language"), 
-			    React.createElement("option", {value: "Other"}, "Other")
-  			), 
-       		React.createElement("input", {type: "text", value: this.state.value, placeholder: "Name it and hit enter", className: "create-room-input", onChange: this.handleText, onKeyPress: this.handleKeyPress})
-        )
+        <div className="create-room">
+        	<p className="talk-heading">Create a room</p>
+        	<select className="subject-selection">
+			    <option value="Math">Math</option>
+			    <option value="Science">Science</option>
+			    <option value="Social Studies">Social Studies</option>
+			    <option value="English">English</option>
+			    <option value="Foreign Language">Foreign Language</option>
+			    <option value="Other">Other</option>
+  			</select>
+       		<input type="text" value={this.state.value} placeholder="Name it and hit enter" className="create-room-input" onChange={this.handleText} onKeyPress={this.handleKeyPress}></input>
+        </div>
       )
     }
     return null;
@@ -409,18 +409,18 @@ var TalkCreateRoom = React.createClass({displayName: "TalkCreateRoom",
 
 });
 
-var TalkRoomsList = React.createClass({displayName: "TalkRoomsList",
+var TalkRoomsList = React.createClass({
 	render: function(){
 		return (
-			React.createElement("div", {className: "talk-rooms-list"}, 
-				this.props.rooms.map(function(room){
+			<div className="talk-rooms-list">
+				{this.props.rooms.map(function(room){
 					if(this.props.rooms.length > 0){
-						return React.createElement(TalkRoom, {key: room._id, handleJoinRoom: this.handleJoinRoom, room: room});
+						return <TalkRoom key={room._id} handleJoinRoom={this.handleJoinRoom} room={room}/>;
 					}else{
 						return null;
 					}
-				}.bind(this))
-			)
+				}.bind(this))}
+			</div>
 		)
 	},
 	handleMuteRoom: function(roomId){
@@ -434,12 +434,12 @@ var TalkRoomsList = React.createClass({displayName: "TalkRoomsList",
 	}
 });
 
-var TalkRoom = React.createClass({displayName: "TalkRoom",
+var TalkRoom = React.createClass({
 	render: function(){
 		return (
-			React.createElement("div", null, 
-				React.createElement("div", {className: "talk-room", onClick: this.handleJoinRoom.bind(this, this.props.room.roomName)}, React.createElement("p", {className: "room-name"}, this.props.room.displayName))
-			)
+			<div>
+				<div className="talk-room" onClick={this.handleJoinRoom.bind(this, this.props.room.roomName)}><p className="room-name">{this.props.room.displayName}</p></div>
+			</div>
 		)
 	},
 	handleMuteRoom: function(roomId){
@@ -453,15 +453,15 @@ var TalkRoom = React.createClass({displayName: "TalkRoom",
 	}
 });
 
-var TalkUser = React.createClass({displayName: "TalkUser",
+var TalkUser = React.createClass({
 	render: function(){
 		return(
-			React.createElement("div", {className: "talk-user"})
+			<div className="talk-user"></div>
 		)
 	}
 });
 
-var TalkStream = React.createClass({displayName: "TalkStream",
+var TalkStream = React.createClass({
 	render: function(){
 		var buttonClass = "talk-stream-button";
 
@@ -470,14 +470,14 @@ var TalkStream = React.createClass({displayName: "TalkStream",
 		}
 
 		return (
-			React.createElement("div", {className: "talk-stream"}, 
-				React.createElement("div", {onClick: this.handleClick, className: buttonClass}, 
-					React.createElement("p", {className: "load-text"}, "Load older messages")
-				), 
-				this.props.messages.map(function(message){
-					return(React.createElement(TalkMessage, {key: message._id, message: message}));
-				}.bind(this))
-			)
+			<div className="talk-stream">
+				<div onClick={this.handleClick} className={buttonClass}>
+					<p className="load-text">Load older messages</p>
+				</div>
+				{this.props.messages.map(function(message){
+					return(<TalkMessage key={message._id} message={message}/>);
+				}.bind(this))}
+			</div>
 		)
 	},
 	handleClick: function() {
@@ -485,7 +485,7 @@ var TalkStream = React.createClass({displayName: "TalkStream",
 	}
 });
 
-var TalkMessage = React.createClass({displayName: "TalkMessage",
+var TalkMessage = React.createClass({
 	getInitialState: function(){
 		return {elements: []}
 	},
@@ -501,18 +501,18 @@ var TalkMessage = React.createClass({displayName: "TalkMessage",
 		/* Works thanks to @GreenJello & Ronak Gajrawala */
 		function process(token){
 			if (/(https?:\/\/[\w\-\.]+\.[a-zA-Z]{2,3}(?:\/\S*)?(?:[\w])+\.(?:jpg|png|gif|jpeg|bmp|svg))/ig.test(token)) {
-				return React.createElement("img", {className: "talk-message-image", src: token})
+				return <img className="talk-message-image" src={token}></img>
 			} else if (/https?:\/\/www.desmos.com\/calculator\/[a-zA-Z0-9]+/ig.test(token)) {
-				return React.createElement("iframe", {className: "talk-message-desmos", src: token})
+				return <iframe className="talk-message-desmos" src={token}></iframe>
 			} else if (/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(.+)/ig.test(token)) {
 				var video_id = token.split('v=')[1];
 				var ampersandPosition = video_id.indexOf('&');
 				if(ampersandPosition != -1) {
   					video_id = video_id.substring(0, ampersandPosition);
 				}
-				return React.createElement("iframe", {className: "talk-message-youtube", width: "560", height: "315", src: 'https://www.youtube.com/embed/'+video_id, frameBorder: "0", allowfullscreen: true});
+				return <iframe className='talk-message-youtube' width='560' height='315' src={'https://www.youtube.com/embed/'+video_id} frameBorder='0' allowfullscreen></iframe>;
 			} else {
-				return React.createElement("a", {target: "_blank", href: token}, token)
+				return <a target="_blank" href={token}>{token}</a>
 			}
 		}
 
@@ -543,15 +543,15 @@ var TalkMessage = React.createClass({displayName: "TalkMessage",
 
 		return (
 
-			React.createElement("div", {className: talkMessageClass}, 
-				React.createElement("b", {className: "talk-message-title"}, this.props.message.sender.displayName), React.createElement("span", {className: "talk-message-time"}, moment(this.props.message.sendTime).calendar()), 
-				React.createElement("p", {className: "talk-message-content"}, this.state.elements)
-			)
+			<div className={talkMessageClass}>
+				<b className='talk-message-title'>{this.props.message.sender.displayName}</b><span className='talk-message-time'>{moment(this.props.message.sendTime).calendar()}</span>
+				<p className='talk-message-content'>{this.state.elements}</p>
+			</div>
 		)
 	}
 });
 
-var TalkInput = React.createClass({displayName: "TalkInput",
+var TalkInput = React.createClass({
 	getInitialState: function(){
 		return ({inputText:''});
 	},
@@ -573,9 +573,9 @@ var TalkInput = React.createClass({displayName: "TalkInput",
 			placeholder = 'This room has been temporarily disabled';
 		}
 		return (
-			React.createElement("textarea", {value: this.state.inputText, placeholder: placeholder, disabled: this.props.disabled, className: "talk-input", onChange: this.handleChange, onKeyPress: this.handleKeyPress})
+			<textarea value={this.state.inputText} placeholder={placeholder} disabled={this.props.disabled} className="talk-input" onChange={this.handleChange} onKeyPress={this.handleKeyPress}></textarea>
 		)
 	}
 });
 
-React.render(React.createElement(TalkApp, null), $('.wrap').get(0));
+React.render(<TalkApp/>, $('.wrap').get(0));

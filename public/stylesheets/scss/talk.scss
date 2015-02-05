@@ -363,9 +363,20 @@ h1{
 
 		}
 
-		.talk-members-button:hover{
+		.fa:hover{
 			cursor: hand;
 		}
+
+		.fa-ban{
+			position: relative;
+			left: 10px;
+		}
+
+		.fa-trash{
+			position: relative;
+			left: 15px;
+		}
+
 
 		.fa-user{
 			position: relative;

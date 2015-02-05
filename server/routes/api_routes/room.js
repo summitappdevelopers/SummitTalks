@@ -62,18 +62,20 @@ room.route('/create').post(app.utilities.ensureAuthenticated,function(req, res) 
 
 room.route('/mute').post(app.utilities.ensureAuthenticated, function(req,res){
 	app.models.Room.findOne({_id:req.body.id}, function(err, room){
-		if(room.creator.toString()==req.user._id){
-			if(err){
-				throw err;
-			}else{
-				room.isMute = !room.isMute;
-				room.save(function(err){
-					if(err){
-						throw err;
-					}else{
-						res.json(room.isMute);
-					}
-				});
+		if(room){
+			if(room.creator.toString()==req.user._id){
+				if(err){
+					throw err;
+				}else{
+					room.isMute = !room.isMute;
+					room.save(function(err){
+						if(err){
+							throw err;
+						}else{
+							res.json({isMute:room.isMute});
+						}
+					});
+				}
 			}
 		}
 	});
@@ -102,32 +104,34 @@ room.route('/:id/messages').get(app.utilities.ensureAuthenticated, function(req,
 
 room.route('/delete').post(app.utilities.ensureAuthenticated, function(req,res){
 	app.models.Room.findOne({_id:req.body.id}, function(err,room){
-		var displayName = room.displayName;
-		var roomName = room.roomName;
-		if(room.creator.toString()==req.user._id){
+		if(room){
+			var displayName = room.displayName;
+			var roomName = room.roomName;
+			if(room.creator.toString()==req.user._id){
 
-			app.models.Message.remove({roomId: room._id}, function(err){
-				if(err){
-					throw err;
-				}
-			});
-
-			room.remove(function(err){
-				if(err){
-					throw err;
-				}else{
-					
-					for(var clientId in app.modules.io.sockets.adapter.rooms[roomName]){
-						var clientSocket = app.modules.io.sockets.connected[clientId];
-						clientSocket.disconnect();
+				app.models.Message.remove({roomId: room._id}, function(err){
+					if(err){
+						throw err;
 					}
+				});
 
-					res.json('Deleted '+displayName);
-				}
-			});
+				room.remove(function(err){
+					if(err){
+						throw err;
+					}else{
+						
+						for(var clientId in app.modules.io.sockets.adapter.rooms[roomName]){
+							var clientSocket = app.modules.io.sockets.connected[clientId];
+							clientSocket.leave(roomName);
+						}
 
-		}else{
-			res.json('You are unauthorized to delete '+displayName);
+						res.json('Deleted '+displayName);
+					}
+				});
+
+			}else{
+				res.json('You are unauthorized to delete '+displayName);
+			}
 		}
 	});
 });

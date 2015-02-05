@@ -50,6 +50,14 @@ io.on('connection', function(socket){
 		});
 	});
 
+	socket.on('outdeleteroom', function(data){
+		io.sockets.emit('indeleteroom',data);
+	});
+
+	socket.on('outcreateroom', function(data){
+		io.sockets.emit('increateroom',data);
+	});
+
 	socket.on('outmessage', function(data){
 		if(data.content.length>0){
 			data.content = data.content.replace(/(<([^>]+)>)/ig,"");
@@ -58,6 +66,12 @@ io.on('connection', function(socket){
 			});
 		}
 	});
+
+
+	socket.on('outmuteroom', function(data){
+		io.to(data.roomName).emit('inmuteroom',data.isMute);
+	});
+
 
 	/*
 		Client will send the list of all the rooms it is connected to when closing the window.
