@@ -189,6 +189,7 @@ h1{
 		}
 	}
 
+
 	.create-room {
 		width:100%;
 		position: relative;
@@ -225,6 +226,7 @@ h1{
 		.create-room-input:focus{outline:none;}
 	}
 
+
 	.talk-heading{
 		position: relative;
 		font-family: $font;
@@ -257,23 +259,35 @@ h1{
 		background-color: #5C97BF;
 	}
 
-	.search-field{
-		position: relative;
-		border-radius: 5px;
-		left: 15px;
-		width: 80%;
-		height: 30px;
-		font-family: $font;
-		font-size: 14px;
-		z-index: 0;
-		border-top: 0px;
-		border-bottom: 0px;
-		border-left: 0px;
-		border-right: 0px;
-		text-indent: 10px;
-		box-shadow: 0px 0px 18px 1px rgba(0,0,0,0.2);
+	.find-room{
+		.subject-selection{
+			position: relative;
+			left: 15px;
+			width: 80%;
+			height: 25px;
+			margin: 0 auto;
+			margin-bottom: 7px;
+			border: 0px;
+			outline: 0px;
+		}
+		.search-field{
+			position: relative;
+			border-radius: 5px;
+			left: 15px;
+			width: 80%;
+			height: 30px;
+			font-family: $font;
+			font-size: 14px;
+			z-index: 0;
+			border-top: 0px;
+			border-bottom: 0px;
+			border-left: 0px;
+			border-right: 0px;
+			text-indent: 10px;
+			box-shadow: 0px 0px 18px 1px rgba(0,0,0,0.2);
+		}
+		.search-field:focus{outline:none;}
 	}
-	.search-field:focus{outline:none;}
 
 	.sidebar-branding:hover{
 		background-color: #34495e;

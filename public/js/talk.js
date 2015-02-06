@@ -1,12 +1,14 @@
 /** @jsx React.DOM */
 
+/* TODO: setTimeout socket doesn't work */
+
 var socketURL = "https://summittalks.herokuapp.com";
 var blogURL = "https://summittalks.herokuapp.com/blog";
 if(dev){
 	socketURL = "http://localhost:1337";
 	blogURL = "http://localhost:2368/blog";
 }
-var socket = io.connect(socketURL,{query: 'token='+token});;
+var socket = io.connect(socketURL,{query: 'token='+token});
 
 if (Notification.permission !== "granted"){
  	Notification.requestPermission();
@@ -15,13 +17,12 @@ if (Notification.permission !== "granted"){
 var TalkApp = React.createClass({displayName: "TalkApp",
 	getInitialState: function(){
 		if(socket){
-			socket.on('roomdata', this.getRoomData);
-			socket.on('userjoin', this.userJoin);
-			socket.on('userleave', this.userLeave);
+			socket.on('userjoin', this.inUserJoin);
+			socket.on('userleave', this.inUserLeave);
 			socket.on('inmessage', this.inMessage);
-			socket.on('indeleteroom',this.deleteRoom);
-			socket.on('inmuteroom', this.muteRoom);
-			socket.on('increateroom',this.createRoom);
+			socket.on('indeleteroom',this.inDeleteRoom);
+			socket.on('inmuteroom', this.inMuteRoom);
+			socket.on('increateroom',this.inCreateRoom);
 		}
 		return {
 				joinedRooms: [], //roomName's of rooms the user has joined in this instance
@@ -42,8 +43,9 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 		window.onbeforeunload = function(){
 			socket.emit('willdisconnect', this.state.joinedRooms);
 			setTimeout(function() {
-				socket.connect();
-			}, 1);
+				/*socket = io.connect(socketURL,{query: 'token='+token});
+				socket.emit('joinroom',{roomName: this.state.room.roomName});*/
+			}.bind(this), 1);
 			return "You are now disconnecting from Summit Talks";
 		}.bind(this);
 		this.getRooms();
@@ -64,10 +66,7 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 		this.setState({messages: nextMessages});
 		this.scrollDown();
 	},
-	handleSend: function(message){
-		socket.emit('outmessage',{content: message.replace(/(<([^>]+)>)/ig,""), roomId:this.state.room._id, roomName: this.state.room.roomName});
-	},
-	userJoin: function(data){
+	inUserJoin: function(data){
 		/*
 			Update room members when a unique user joins
 		*/
@@ -77,7 +76,7 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 		nextRoom.members = nextMembers;
 		this.setState({room: nextRoom});
 	},
-	userLeave: function(data){
+	inUserLeave: function(data){
 		/*
 			Update room members when a unique user leaves
 		*/
@@ -92,27 +91,28 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 			}
 		}
 	},
-	muteRoom: function(data){
+	inMuteRoom: function(data){
 		var nextRoom = this.state.room;
 		nextRoom.isMute = data;
 		this.setState({room: nextRoom});
 	},
-	deleteRoom: function(data){
+	inDeleteRoom: function(data){
 		for(var i in this.state.allRooms){
 			if(this.state.allRooms[i]._id==data.roomId){
 				var nextAllRooms = this.state.allRooms;
 					nextAllRooms.splice(i,1);
 					if(this.state.room._id==data.roomId){
-						this.setState({allRooms: nextAllRooms, room:null});
+						this.setState({room:null});
 					}
+					this.setState({allRooms: nextAllRooms, rooms:nextAllRooms});
 				break;
 			}
 		}
 	},
-	createRoom: function(data){
+	inCreateRoom: function(data){
 		var nextAllRooms = this.state.allRooms;
 		nextAllRooms.unshift(data);
-		this.setState({allRooms:nextAllRooms});
+		this.setState({allRooms:nextAllRooms, rooms:nextAllRooms});
 	},
 	handleJoinRoom: function(roomName){
 		/*
@@ -147,13 +147,28 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 		var nextRooms = this.state.rooms;
 		if(term.length>0){
 			nextRooms = nextRooms.filter(function(room){
-				return room.displayName.toLowerCase().search(
-					term.toLowerCase()) !== -1;
+				return room.displayName.toLowerCase().search(term.toLowerCase()) !== -1;
 			});
 		}else{
 			nextRooms = this.state.allRooms;
 		}
 		this.setState({rooms: nextRooms});
+	},
+	handleFilter: function(subject){
+		var nextRooms = [];
+		if(subject.length>0){
+			for(var i in this.state.allRooms){
+				if(this.state.allRooms[i].subject==subject){
+					nextRooms.push(this.state.allRooms[i]);
+				}
+			}
+		}else{
+			nextRooms = this.state.allRooms;
+		}
+		this.setState({rooms:nextRooms});
+	},
+	handleSend: function(message){
+		socket.emit('outmessage',{content: message.replace(/(<([^>]+)>)/ig,""), roomId:this.state.room._id, roomName: this.state.room.roomName});
 	},
 	scrollDown: function(){
 		$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight}, 500);
@@ -249,7 +264,7 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 
 		return (
 			React.createElement("div", null, 
-				React.createElement(TalkSideBar, {handleSearch: this.handleSearch, handleCreateRoom: this.handleCreateRoom, handleHomeButton: this.handleHomeButton, handleJoinRoom: this.handleJoinRoom, rooms: this.state.rooms}), 
+				React.createElement(TalkSideBar, {handleFilter: this.handleFilter, handleSearch: this.handleSearch, handleCreateRoom: this.handleCreateRoom, handleHomeButton: this.handleHomeButton, handleJoinRoom: this.handleJoinRoom, rooms: this.state.rooms}), 
 				React.createElement("div", {className: "talk-container"}, 
 					ContentView
 				)
@@ -303,7 +318,9 @@ var TalkHeader = React.createClass({displayName: "TalkHeader",
 
 
 var TalkSideBar = React.createClass({displayName: "TalkSideBar",
-
+	getInitialState: function(){
+		return {selected:""}
+	},
 	render: function(){
 		var createRoom = null;
 		if(profile.isTeacher){
@@ -313,21 +330,17 @@ var TalkSideBar = React.createClass({displayName: "TalkSideBar",
 			React.createElement("div", {className: "sidebar"}, 
 				React.createElement(TalkToolbar, {handleHomeButton: this.handleHomeButton}), 
 				createRoom, 
-				React.createElement("p", {className: "talk-heading"}, "Rooms"), 
-				React.createElement("input", {placeholder: "Search for a room", className: "search-field", type: "text", onChange: this.handleChange}), 
+				React.createElement(TalkFindRoom, {handleSearch: this.handleSearch, handleFilter: this.handleFilter}), 
 				React.createElement(TalkRoomsList, {handleJoinRoom: this.handleJoinRoom, rooms: this.props.rooms}), 
 				React.createElement(TalkUser, null)
 			)
 		)
 	},
-	handleMuteRoom: function(roomId){
-		this.props.handleMuteRoom(roomId);
+	handleSearch: function(term){
+		this.props.handleSearch(term);
 	},
-	handleDeleteRoom: function(roomId){
-		this.props.handleDeleteRoom(roomId);
-	},
-	handleChange: function(e){
-		this.props.handleSearch(e.target.value);
+	handleFilter: function(subject){
+		this.props.handleFilter(subject);
 	},
 	handleCreateRoom: function(name, subject){
 		this.props.handleCreateRoom(name, subject);
@@ -379,7 +392,8 @@ var TalkCreateRoom = React.createClass({displayName: "TalkCreateRoom",
       return (
         React.createElement("div", {className: "create-room"}, 
         	React.createElement("p", {className: "talk-heading"}, "Create a room"), 
-        	React.createElement("select", {className: "subject-selection"}, 
+        	React.createElement("select", {ref: "subject", className: "subject-selection"}, 
+        		React.createElement("option", {value: ""}, "Choose a subject"), 
 			    React.createElement("option", {value: "Math"}, "Math"), 
 			    React.createElement("option", {value: "Science"}, "Science"), 
 			    React.createElement("option", {value: "Social Studies"}, "Social Studies"), 
@@ -401,7 +415,7 @@ var TalkCreateRoom = React.createClass({displayName: "TalkCreateRoom",
   },
   handleKeyPress: function(e){
     if(e.which==13){
-    	var subjectSelection = $('.subject-selection').val();
+    	var subjectSelection = this.refs.subject.getDOMNode().value;
       if(this.state.value.length>0 & subjectSelection.length>0){
         this.props.handleCreateRoom(this.state.value,subjectSelection);
         this.setState({value:''});
@@ -409,6 +423,33 @@ var TalkCreateRoom = React.createClass({displayName: "TalkCreateRoom",
     }
   }
 
+});
+
+var TalkFindRoom = React.createClass({displayName: "TalkFindRoom",
+	render: function(){
+		return (
+			React.createElement("div", {className: "find-room"}, 
+				React.createElement("p", {className: "talk-heading"}, "Rooms"), 
+				React.createElement("select", {ref: "filter", className: "subject-selection", onChange: this.handleFilter}, 
+					React.createElement("option", {value: ""}, "Show All Rooms"), 
+				    React.createElement("option", {value: "Math"}, "Math"), 
+				    React.createElement("option", {value: "Science"}, "Science"), 
+				    React.createElement("option", {value: "Social Studies"}, "Social Studies"), 
+				    React.createElement("option", {value: "English"}, "English"), 
+				    React.createElement("option", {value: "Foreign Language"}, "Foreign Language"), 
+				    React.createElement("option", {value: "Other"}, "Other")
+				), 
+				React.createElement("input", {placeholder: "Search for a room", className: "search-field", type: "text", onChange: this.handleSearch})
+			)
+		)
+	},
+	handleSearch: function(e){
+		this.props.handleSearch(e.target.value);
+	},
+	handleFilter: function(e){
+		var selected = this.refs.filter.getDOMNode().value;
+		this.props.handleFilter(selected);
+	}
 });
 
 var TalkRoomsList = React.createClass({displayName: "TalkRoomsList",
@@ -489,7 +530,7 @@ var TalkStream = React.createClass({displayName: "TalkStream",
 
 var TalkMessage = React.createClass({displayName: "TalkMessage",
 	getInitialState: function(){
-		return {elements: []}
+		return {elements: [],inputText:''}
 	},
 	componentWillMount: function(){
 

@@ -67,7 +67,6 @@ io.on('connection', function(socket){
 		}
 	});
 
-
 	socket.on('outmuteroom', function(data){
 		io.to(data.roomName).emit('inmuteroom',data.isMute);
 	});
@@ -113,13 +112,13 @@ io.on('connection', function(socket){
 		});
 	});
 
-	function saveMessage(data, callback, parentId){
+	function saveMessage(data, callback){
 		var newMessage = new app.models.Message();
 		newMessage.content = data.content;
 		newMessage.sender = profile._id;
 		newMessage.roomId = data.roomId;
 		newMessage.sendTime = new Date();
-		if(parentId) newMessage.parent = app.modules.mongoose.Schema.Types.ObjectId(parentId);
+		if(data.parentId) newMessage.parent = app.modules.mongoose.Schema.Types.ObjectId(data.parentId);
 		newMessage.save(function(err){
 			if(err) throw err;
 			callback(newMessage);
