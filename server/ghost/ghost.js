@@ -10,7 +10,7 @@ config = {
     // When running Ghost in the wild, use the production environment
     // Configure your URL and mail settings here
     production: {
-        url: 'https://summittalks.herokuapp.com:2368/blog',
+        url: 'https://summittalks.herokuapp.com/blog',
         mail: {},
         database: {
             client: 'postgres',
