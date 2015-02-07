@@ -38,6 +38,7 @@ app.utilities.ensureAuthenticated = function ensureAuthenticated(req,res,next) {
 	next();
 }
 
+app.utilities.newrelic = require('newrelic');
 app.modules.http = require('http');
 app.modules.fs = require('fs');
 app.modules.express = require('express');
@@ -54,7 +55,6 @@ app.modules.moment = require('moment');
 app.modules.jwt = require('jsonwebtoken');
 app.modules.socketJwt = require('socketio-jwt');
 app.modules.ghost = require('ghost');
-app.utilities.newrelic = require('newrelic');
 app.utilities.api_manager = require('./routes/api_manager');
 app.utilities.auth = require('./routes/auth/auth');
 app.utilities.view_manager = require('./routes/view_manager');
