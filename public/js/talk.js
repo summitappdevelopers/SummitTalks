@@ -32,7 +32,8 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 				profile: profile, 
 				room: null, 
 				isNew: true,
-				showMembers: false
+				showMembers: false,
+				filter: ''
 			};
 	},
 	componentDidMount: function(){
@@ -112,7 +113,7 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 	inCreateRoom: function(data){
 		var nextAllRooms = this.state.allRooms;
 		nextAllRooms.unshift(data);
-		this.setState({allRooms:nextAllRooms, rooms:nextAllRooms});
+		this.setState({allRooms:nextAllRooms, rooms:nextAllRooms, filter:''});
 	},
 	handleJoinRoom: function(roomName){
 		/*
@@ -165,7 +166,7 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 		}else{
 			nextRooms = this.state.allRooms;
 		}
-		this.setState({rooms:nextRooms});
+		this.setState({rooms:nextRooms, filter:subject});
 	},
 	handleSend: function(message){
 		socket.emit('outmessage',{content: message.replace(/(<([^>]+)>)/ig,""), roomId:this.state.room._id, roomName: this.state.room.roomName});
@@ -264,7 +265,7 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 
 		return (
 			React.createElement("div", null, 
-				React.createElement(TalkSideBar, {handleFilter: this.handleFilter, handleSearch: this.handleSearch, handleCreateRoom: this.handleCreateRoom, handleHomeButton: this.handleHomeButton, handleJoinRoom: this.handleJoinRoom, rooms: this.state.rooms}), 
+				React.createElement(TalkSideBar, {filter: this.state.filter, handleFilter: this.handleFilter, handleSearch: this.handleSearch, handleCreateRoom: this.handleCreateRoom, handleHomeButton: this.handleHomeButton, handleJoinRoom: this.handleJoinRoom, rooms: this.state.rooms}), 
 				React.createElement("div", {className: "talk-container"}, 
 					ContentView
 				)
@@ -330,7 +331,7 @@ var TalkSideBar = React.createClass({displayName: "TalkSideBar",
 			React.createElement("div", {className: "sidebar"}, 
 				React.createElement(TalkToolbar, {handleHomeButton: this.handleHomeButton}), 
 				createRoom, 
-				React.createElement(TalkFindRoom, {handleSearch: this.handleSearch, handleFilter: this.handleFilter}), 
+				React.createElement(TalkFindRoom, {filter: this.props.filter, handleSearch: this.handleSearch, handleFilter: this.handleFilter}), 
 				React.createElement(TalkRoomsList, {handleJoinRoom: this.handleJoinRoom, rooms: this.props.rooms}), 
 				React.createElement(TalkUser, null)
 			)
@@ -430,7 +431,7 @@ var TalkFindRoom = React.createClass({displayName: "TalkFindRoom",
 		return (
 			React.createElement("div", {className: "find-room"}, 
 				React.createElement("p", {className: "talk-heading"}, "Rooms"), 
-				React.createElement("select", {ref: "filter", className: "subject-selection", onChange: this.handleFilter}, 
+				React.createElement("select", {value: this.props.filter, ref: "filter", className: "subject-selection", onChange: this.handleFilter}, 
 					React.createElement("option", {value: ""}, "Show All Rooms"), 
 				    React.createElement("option", {value: "Math"}, "Math"), 
 				    React.createElement("option", {value: "Science"}, "Science"), 

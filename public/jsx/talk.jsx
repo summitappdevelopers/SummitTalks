@@ -32,7 +32,8 @@ var TalkApp = React.createClass({
 				profile: profile, 
 				room: null, 
 				isNew: true,
-				showMembers: false
+				showMembers: false,
+				filter: ''
 			};
 	},
 	componentDidMount: function(){
@@ -112,7 +113,7 @@ var TalkApp = React.createClass({
 	inCreateRoom: function(data){
 		var nextAllRooms = this.state.allRooms;
 		nextAllRooms.unshift(data);
-		this.setState({allRooms:nextAllRooms, rooms:nextAllRooms});
+		this.setState({allRooms:nextAllRooms, rooms:nextAllRooms, filter:''});
 	},
 	handleJoinRoom: function(roomName){
 		/*
@@ -165,7 +166,7 @@ var TalkApp = React.createClass({
 		}else{
 			nextRooms = this.state.allRooms;
 		}
-		this.setState({rooms:nextRooms});
+		this.setState({rooms:nextRooms, filter:subject});
 	},
 	handleSend: function(message){
 		socket.emit('outmessage',{content: message.replace(/(<([^>]+)>)/ig,""), roomId:this.state.room._id, roomName: this.state.room.roomName});
@@ -264,7 +265,7 @@ var TalkApp = React.createClass({
 
 		return (
 			<div>
-				<TalkSideBar handleFilter={this.handleFilter} handleSearch={this.handleSearch} handleCreateRoom={this.handleCreateRoom} handleHomeButton={this.handleHomeButton} handleJoinRoom={this.handleJoinRoom} rooms={this.state.rooms}/>
+				<TalkSideBar filter={this.state.filter} handleFilter={this.handleFilter} handleSearch={this.handleSearch} handleCreateRoom={this.handleCreateRoom} handleHomeButton={this.handleHomeButton} handleJoinRoom={this.handleJoinRoom} rooms={this.state.rooms}/>
 				<div className="talk-container">
 					{ContentView}
 				</div>
@@ -330,7 +331,7 @@ var TalkSideBar = React.createClass({
 			<div className="sidebar">
 				<TalkToolbar handleHomeButton={this.handleHomeButton}/>
 				{createRoom}
-				<TalkFindRoom handleSearch={this.handleSearch} handleFilter={this.handleFilter}/>
+				<TalkFindRoom filter={this.props.filter} handleSearch={this.handleSearch} handleFilter={this.handleFilter}/>
 				<TalkRoomsList handleJoinRoom={this.handleJoinRoom} rooms={this.props.rooms}/>
 				<TalkUser/>
 			</div>
@@ -430,7 +431,7 @@ var TalkFindRoom = React.createClass({
 		return (
 			<div className="find-room">
 				<p className="talk-heading">Rooms</p>
-				<select ref="filter" className="subject-selection" onChange={this.handleFilter}>
+				<select value={this.props.filter} ref="filter" className="subject-selection" onChange={this.handleFilter}>
 					<option value="">Show All Rooms</option>
 				    <option value="Math">Math</option>
 				    <option value="Science">Science</option>
