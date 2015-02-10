@@ -188,6 +188,9 @@ var TalkApp = React.createClass({
 		*/
 		$.get('/api/room/', function(data){
 			this.setState({rooms: data, allRooms:data});
+			if(window.location.hash){
+				this.getRoom(window.location.hash.slice(1,window.location.hash.length));
+			}
 		}.bind(this));
 	},
 	getRoom: function(roomName){
@@ -218,6 +221,7 @@ var TalkApp = React.createClass({
 			}
 			this.setState({room: data, joinedRooms: nextJoinedRooms});
 			this.getMessages(20,0);
+			window.location.hash = roomName;
 			socket.emit('joinroom',{roomName: roomName});
 		}.bind(this));
 	},
