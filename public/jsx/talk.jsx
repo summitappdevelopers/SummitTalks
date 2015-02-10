@@ -264,7 +264,7 @@ var TalkApp = React.createClass({
 					<TalkInput disabled={this.state.room.isMute} handleSend={this.handleSend}/>
 				</div>);
 		}else{
-
+			window.location.hash = "";
 			ContentView =
 				<iframe className="talk-blog" src={blogURL}></iframe>
 		}
