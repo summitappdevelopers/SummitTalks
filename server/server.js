@@ -38,7 +38,6 @@ app.utilities.ensureAuthenticated = function ensureAuthenticated(req,res,next) {
 	next();
 }
 
-app.utilities.newrelic = require('newrelic');
 app.modules.http = require('http');
 app.modules.fs = require('fs');
 app.modules.express = require('express');
