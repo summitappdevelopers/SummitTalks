@@ -3,7 +3,7 @@
 /* TODO: setTimeout socket doesn't work */
 
 var socketURL = "https://summittalks.herokuapp.com";
-var blogURL = "https://summittalks.herokuapp.com/blog";
+var blogURL = "https://summittalks-blog.herokuapp.com";
 if(dev){
 	socketURL = "http://localhost:1337";
 	blogURL = "http://localhost:2368/blog";
