@@ -103,20 +103,14 @@ app.modules.server.listen(app.port);
 app.modules.io = require('socket.io')(app.modules.server);
 app.utilities.talkSocket = require('./utilities/socket');
 
+app.modules.mongoose.connection.on('disconnected', function(){
+	console.log("DISCONNECTING MONGOOSE");
+});
+
 app.utilities.cleanupHandler = function(){
 	console.log("Disconnecting all sockets...");
 	app.modules.io.sockets.sockets.forEach(function (socket) {
 		socket.disconnect();
-	});
-	console.log("Deleting all members from rooms...");
-	app.models.Room.find({}, function(err, rooms){
-		if(err) throw err;
-		for(var i=0;i<rooms.length;i++){
-			rooms[i].members = [];
-			rooms[i].save(function(err){
-				if(err) throw err;
-			});
-		}
 	});
 	console.log("Done!");
 	console.log("Shutting down, bye!");
@@ -125,4 +119,5 @@ app.utilities.cleanupHandler = function(){
 
 console.log("App listening on port: "+app.port+" Dev Mode: "+app.dev);
 
+process.on('SIGINT', app.utilities.cleanupHandler);
 process.on('SIGTERM', app.utilities.cleanupHandler);
