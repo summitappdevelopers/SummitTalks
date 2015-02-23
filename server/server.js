@@ -110,7 +110,17 @@ process.on('SIGINT', function() {
 	app.modules.io.sockets.sockets.forEach(function (socket) {
 		socket.disconnect();
 	});
-	console.log("Done...");
+	console.log("Deleting all members from rooms...");
+	app.models.Room.find({}, function(err, rooms){
+		if(err) throw err;
+		for(var i=0;i<rooms.length;i++){
+			rooms[i].members = [];
+			rooms[i].save(function(err){
+				if(err) throw err;
+			});
+		}
+	});
+	console.log("Done!");
 	console.log("Shutting down, bye!");
 	process.exit();
 });
