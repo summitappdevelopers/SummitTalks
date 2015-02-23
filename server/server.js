@@ -127,5 +127,4 @@ console.log("App listening on port: "+app.port+" Dev Mode: "+app.dev);
 
 process.on('SIGINT', app.utilities.cleanupHandler);
 process.on('SIGTERM', app.utilities.cleanupHandler);
-process.on('SIGQUIT', app.utilities.cleanupHandler);
 process.on('SIGKILL', app.utilities.cleanupHandler);
