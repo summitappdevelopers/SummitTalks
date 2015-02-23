@@ -103,9 +103,7 @@ app.modules.server.listen(app.port);
 app.modules.io = require('socket.io')(app.modules.server);
 app.utilities.talkSocket = require('./utilities/socket');
 
-console.log("App listening on port: "+app.port+" Dev Mode: "+app.dev);
-
-process.on('SIGINT', function() {
+app.utilities.cleanupHandler = function(){
 	console.log("Disconnecting all sockets...");
 	app.modules.io.sockets.sockets.forEach(function (socket) {
 		socket.disconnect();
@@ -123,4 +121,11 @@ process.on('SIGINT', function() {
 	console.log("Done!");
 	console.log("Shutting down, bye!");
 	process.exit();
-});
+}
+
+console.log("App listening on port: "+app.port+" Dev Mode: "+app.dev);
+
+process.on('SIGINT', app.utilities.cleanupHandler);
+process.on('SIGTERM', app.utilities.cleanupHandler);
+process.on('SIGQUIT', app.utilities.cleanupHandler);
+process.on('SIGKILL', app.utilities.cleanupHandler);
