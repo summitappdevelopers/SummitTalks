@@ -16,8 +16,8 @@ if (Notification.permission !== "granted"){
 var TalkApp = React.createClass({
 	getInitialState: function(){
 		if(socket){
-			socket.on('userjoin', this.inUserJoin);
-			socket.on('userleave', this.inUserLeave);
+			//socket.on('userjoin', this.inUserJoin);
+			//socket.on('userleave', this.inUserLeave);
 			socket.on('inmessage', this.inMessage);
 			socket.on('indeleteroom',this.inDeleteRoom);
 			socket.on('inmuteroom', this.inMuteRoom);
@@ -41,7 +41,7 @@ var TalkApp = React.createClass({
 			setTimeout() waits for "Stay on Page" click from dialog box.
 		*/
 		window.onbeforeunload = function(){
-			socket.emit('willdisconnect', this.state.joinedRooms);
+			//socket.emit('willdisconnect', this.state.joinedRooms);
 			setTimeout(function() {
 				/*socket = io.connect(socketURL,{query: 'token='+token});
 				socket.emit('joinroom',{roomName: this.state.room.roomName});*/
@@ -66,10 +66,10 @@ var TalkApp = React.createClass({
 		this.setState({messages: nextMessages});
 		this.scrollDown();
 	},
-	inUserJoin: function(data){
-		/*
-			Update room members when a unique user joins
-		*/
+	/*inUserJoin: function(data){
+		
+		Update room members when a unique user joins
+		
 		var nextMembers = this.state.room.members;
 		nextMembers.push(data);
 		var nextRoom = this.state.room;
@@ -77,9 +77,9 @@ var TalkApp = React.createClass({
 		this.setState({room: nextRoom});
 	},
 	inUserLeave: function(data){
-		/*
-			Update room members when a unique user leaves
-		*/
+		
+		Update room members when a unique user leaves
+		
 		for(var m in this.state.room.members){
 			if(this.state.room.members[m]._id==data){
 				var nextMembers = this.state.room.members;
@@ -90,7 +90,7 @@ var TalkApp = React.createClass({
 				break;
 			}
 		}
-	},
+	},*/
 	inMuteRoom: function(data){
 		var nextRoom = this.state.room;
 		nextRoom.isMute = data;
@@ -299,7 +299,7 @@ var TalkHeader = React.createClass({
 					<i className={banClass} onClick={this.handleMuteRoom}></i>
 					<i className={trashClass} onClick={this.handleDeleteRoom}></i>
 				</span>
-				<div className="talk-members-button" onClick={this.handleMembersClick}>
+				{ /*<div className="talk-members-button" onClick={this.handleMembersClick}>
 					<i className="fa fa-user"></i>
 					<span className="member-count">{this.props.room.members.length}</span>
 					<div className={membersListClass}>
@@ -307,7 +307,7 @@ var TalkHeader = React.createClass({
 							return <div key={member._id} className="member"><img className="avi" src={member.picture}></img><span className="member-name">{member.displayName}</span><br></br></div>
 						}.bind(this))}
 					</div>
-				</div>
+				</div>*/ }
 			</div>
 		)
 	},

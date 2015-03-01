@@ -6,7 +6,6 @@ var socketURL = "https://summittalks.herokuapp.com";
 var blogURL = "https://summittalks-blog.herokuapp.com/welcome/";
 if(dev){
 	socketURL = "http://localhost:1337";
-	blogURL = "http://localhost:2368/blog";
 }
 var socket = io.connect(socketURL,{query: 'token='+token});
 
@@ -17,8 +16,8 @@ if (Notification.permission !== "granted"){
 var TalkApp = React.createClass({displayName: "TalkApp",
 	getInitialState: function(){
 		if(socket){
-			socket.on('userjoin', this.inUserJoin);
-			socket.on('userleave', this.inUserLeave);
+			//socket.on('userjoin', this.inUserJoin);
+			//socket.on('userleave', this.inUserLeave);
 			socket.on('inmessage', this.inMessage);
 			socket.on('indeleteroom',this.inDeleteRoom);
 			socket.on('inmuteroom', this.inMuteRoom);
@@ -42,7 +41,7 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 			setTimeout() waits for "Stay on Page" click from dialog box.
 		*/
 		window.onbeforeunload = function(){
-			socket.emit('willdisconnect', this.state.joinedRooms);
+			//socket.emit('willdisconnect', this.state.joinedRooms);
 			setTimeout(function() {
 				/*socket = io.connect(socketURL,{query: 'token='+token});
 				socket.emit('joinroom',{roomName: this.state.room.roomName});*/
@@ -67,10 +66,10 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 		this.setState({messages: nextMessages});
 		this.scrollDown();
 	},
-	inUserJoin: function(data){
-		/*
-			Update room members when a unique user joins
-		*/
+	/*inUserJoin: function(data){
+		
+		Update room members when a unique user joins
+		
 		var nextMembers = this.state.room.members;
 		nextMembers.push(data);
 		var nextRoom = this.state.room;
@@ -78,9 +77,9 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 		this.setState({room: nextRoom});
 	},
 	inUserLeave: function(data){
-		/*
-			Update room members when a unique user leaves
-		*/
+		
+		Update room members when a unique user leaves
+		
 		for(var m in this.state.room.members){
 			if(this.state.room.members[m]._id==data){
 				var nextMembers = this.state.room.members;
@@ -91,7 +90,7 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 				break;
 			}
 		}
-	},
+	},*/
 	inMuteRoom: function(data){
 		var nextRoom = this.state.room;
 		nextRoom.isMute = data;
@@ -299,16 +298,16 @@ var TalkHeader = React.createClass({displayName: "TalkHeader",
 					this.props.room.displayName, " - ", React.createElement("i", null, this.props.room.creator.displayName), 
 					React.createElement("i", {className: banClass, onClick: this.handleMuteRoom}), 
 					React.createElement("i", {className: trashClass, onClick: this.handleDeleteRoom})
-				), 
-				React.createElement("div", {className: "talk-members-button", onClick: this.handleMembersClick}, 
-					React.createElement("i", {className: "fa fa-user"}), 
-					React.createElement("span", {className: "member-count"}, this.props.room.members.length), 
-					React.createElement("div", {className: membersListClass}, 
-						this.props.room.members.map(function(member){
-							return React.createElement("div", {key: member._id, className: "member"}, React.createElement("img", {className: "avi", src: member.picture}), React.createElement("span", {className: "member-name"}, member.displayName), React.createElement("br", null))
-						}.bind(this))
-					)
 				)
+				/*<div className="talk-members-button" onClick={this.handleMembersClick}>
+					<i className="fa fa-user"></i>
+					<span className="member-count">{this.props.room.members.length}</span>
+					<div className={membersListClass}>
+						{this.props.room.members.map(function(member){
+							return <div key={member._id} className="member"><img className="avi" src={member.picture}></img><span className="member-name">{member.displayName}</span><br></br></div>
+						}.bind(this))}
+					</div>
+				</div>*/ 
 			)
 		)
 	},
