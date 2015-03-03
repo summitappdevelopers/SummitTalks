@@ -6,13 +6,13 @@ var MessageSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'User'
 	},
+	replies: [{"type":Schema.ObjectId, "ref":"Message"}],
 	roomId: String,
 	sendTime: Date,
 	content: String,
-	parent: {
-		type: Schema.ObjectId,
-		ref: 'Message'
-	}
+	parentId: Schema.ObjectId
 });
+
+MessageSchema.plugin(app.utilities.mongooseDeepPopulate);
 
 module.exports = mongoose.model('Message', MessageSchema);

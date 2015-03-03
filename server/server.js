@@ -57,6 +57,7 @@ app.utilities.api_manager = require('./routes/api_manager');
 app.utilities.auth = require('./routes/auth/auth');
 app.utilities.view_manager = require('./routes/view_manager');
 app.utilities.path = require('path');
+app.utilities.mongooseDeepPopulate = require('mongoose-deep-populate');
 
 //====== MONGODB SETUP ======
 

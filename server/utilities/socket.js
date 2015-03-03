@@ -66,7 +66,16 @@ io.on('connection', function(socket){
 		if(data.content.length>0){
 			data.content = data.content.replace(/(<([^>]+)>)/ig,"");
 			saveMessage(data, function(message){
-				io.to(data.roomName).emit('inmessage',{content:message.content, _id: message._id, sender: profile,sendTime:new Date()});
+				io.to(data.roomName).emit('inmessage',{content:message.content, _id: message._id, sender: profile,sendTime:new Date(), replies:[]});
+			});
+		}
+	});
+
+	socket.on('outreply', function(data){
+		if(data.content.length>0){
+			data.content = data.content.replace(/(<([^>]+)>)/ig,"");
+			saveMessage(data, function(message){
+				io.to(data.roomName).emit('inreply', {content:message.content, _id: message._id, sender:profile, sendTime: new Date(), parentId: message.parentId});
 			});
 		}
 	});
@@ -122,7 +131,16 @@ io.on('connection', function(socket){
 		newMessage.sender = profile._id;
 		newMessage.roomId = data.roomId;
 		newMessage.sendTime = new Date();
-		if(data.parentId) newMessage.parent = app.modules.mongoose.Schema.Types.ObjectId(data.parentId);
+		if(data.parentId){
+			newMessage.parentId = data.parentId;
+			app.models.Message.findByIdAndUpdate(
+		        data.parentId,
+		        { "$push": { "replies": newMessage._id } },
+		        function(err,message) {
+		        	if(err) throw err;
+		        }
+      		);
+		}
 		newMessage.save(function(err){
 			if(err) throw err;
 			callback(newMessage);

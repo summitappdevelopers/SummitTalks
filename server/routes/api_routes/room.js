@@ -1,4 +1,5 @@
 var room = app.modules.express.Router();
+var deepPopulate = app.utilities.mongooseDeepPopulate;
 
 room.route('/').get(app.utilities.ensureAuthenticated, function(req,res){
 	app.models.Room.find({}).populate('creator').sort({creationDate: 'desc'}).exec(function(err, rooms){
@@ -11,7 +12,7 @@ room.route('/').get(app.utilities.ensureAuthenticated, function(req,res){
 });
 
 room.route('/:name').get(app.utilities.ensureAuthenticated, function(req,res){
-	app.models.Room.findOne({roomName:req.params.name}).populate('creator').exec(function(err, room) {
+	app.models.Room.findOne({roomName:req.params.name}).populate('creator').populate('replies').exec(function(err, room) {
 		if(err) throw err;
 		res.json(room);
 	});
@@ -91,7 +92,7 @@ room.route('/:id/messages').get(app.utilities.ensureAuthenticated, function(req,
 		query._id = {$lt: req.query.before};
 	}
 
-	app.models.Message.find(query).populate('sender').sort({sendTime: -1}).limit(req.query.limit).exec(function(err,messages){
+	app.models.Message.find(query).populate('sender').populate('replies').deepPopulate('replies.sender').sort({sendTime: -1}).limit(req.query.limit).exec(function(err,messages){
 		if(err){
 			throw err;
 		}else{
