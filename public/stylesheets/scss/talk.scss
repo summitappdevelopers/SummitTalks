@@ -507,7 +507,7 @@ h1{
 		font-weight: 300;
 		color: white;
 		display: block;
-		min-height: 30px;
+		min-height: 25px;
 		position: relative;
 		left: 10px;
 		margin-top: 10px;
@@ -523,16 +523,61 @@ h1{
 			width: 100%;
 		}
 
+		hr { 
+			display: block; height: 1px;
+    		border: 0; border-top: 1px solid white;
+    		margin: 1em 0; padding: 0; 
+    	}
+
+
 		.talk-message-reply{
 			background-color: red;
+		}
+		.talk-message-title{
+			position: relative;
+			top: 5px;
+			left: 5px;
+		}
+
+		.talk-message-time{
+			position: relative;
+			top: 5px;
+			left: 15px;
+			font-size: 14px;
+		}
+
+		.talk-message-content{
+			position: relative;
+			left: 5px;
+			top: 2px;
+			bottom: 5px;
+			width: 100%;
+		}
+
+		.talk-message-image{
+			padding: 20px;
+			max-height: 300px;
+		}
+
+		.talk-message-desmos{
+			padding: 20px;
+			height: 500px;
+			width: 700px;
+			border: 0px;
+		}
+
+		.talk-message-youtube{
+			padding: 20px;
 		}
 
 		.talk-message-input{
 			position: relative;
 			border-radius: 5px;
 			width: 250px;
+			height: 25px;
 			border: none;
-			left: 10px;
+			left: 5px;
+			margin-bottom: 5px;
 
 		}
 	}
@@ -556,43 +601,6 @@ h1{
 	.talk-message:last-child{
 		@extend .talk-message;
 		margin-bottom: 10px;
-	}
-
-	.talk-message-title{
-		position: relative;
-		top: 5px;
-		left: 5px;
-	}
-
-	.talk-message-time{
-		position: relative;
-		top: 5px;
-		left: 15px;
-		font-size: 14px;
-	}
-
-	.talk-message-content{
-		position: relative;
-		left: 5px;
-		top: 2px;
-		bottom: 5px;
-		width: 100%;
-	}
-
-	.talk-message-image{
-		padding: 20px;
-		max-height: 300px;
-	}
-
-	.talk-message-desmos{
-		padding: 20px;
-		height: 500px;
-		width: 700px;
-		border: 0px;
-	}
-
-	.talk-message-youtube{
-		padding: 20px;
 	}
 
 	.talk-input{

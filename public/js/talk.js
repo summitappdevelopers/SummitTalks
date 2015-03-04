@@ -628,7 +628,7 @@ var TalkMessage = React.createClass({displayName: "TalkMessage",
 			React.createElement("div", {className: talkMessageClass}, 
 				React.createElement("b", {className: "talk-message-title"}, this.props.message.sender.displayName), React.createElement("span", {className: "talk-message-time"}, moment(this.props.message.sendTime).calendar(), " ", deleteButton), 
 				React.createElement("p", {className: "talk-message-content"}, this.state.elements), 
-				React.createElement("input", {type: "text", value: this.state.inputText, onChange: this.handleChange, onKeyPress: this.handleKeyPress}), 
+				React.createElement("input", {className: "talk-message-input", placeholder: "   Reply to "+this.props.message.sender.displayName, type: "text", value: this.state.inputText, onChange: this.handleChange, onKeyPress: this.handleKeyPress}), 
 				this.props.message.replies.map(function(reply){
 					return (React.createElement(TalkReply, {handleDeleteMessage: this.handleDeleteMessage, reply: reply}));
 				}.bind(this))
@@ -655,9 +655,9 @@ var TalkReply = React.createClass({displayName: "TalkReply",
 		}
 		return ( 
 			React.createElement("div", null, 
-				React.createElement("b", {className: "talk-message-title"}, this.props.reply.sender.displayName), React.createElement("span", {className: "talk-message-time"}, moment(this.props.reply.sendTime).calendar()), 
-				React.createElement("p", {className: "talk-message-content"}, this.state.elements), 
-				deleteButton
+				React.createElement("hr", null), 
+				React.createElement("b", {className: "talk-message-title"}, this.props.reply.sender.displayName), React.createElement("span", {className: "talk-message-time"}, moment(this.props.reply.sendTime).calendar(), " ", deleteButton), 
+				React.createElement("p", {className: "talk-message-content"}, this.state.elements)
 			)
 		)
 	}
