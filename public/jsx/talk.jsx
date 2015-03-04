@@ -156,6 +156,29 @@ var TalkApp = React.createClass({
 			}
 		}.bind(this));
 	},
+	handleDeleteMessage: function(messageId,isReply) {
+		$.post('/api/message/delete',{messageId:messageId}, function(data){
+			if(data){
+				var nextMessages = this.state.messages;
+				for(var i in nextMessages){
+					if(isReply){
+						for(var j in nextMessages[i].replies){
+							if(nextMessages[i].replies[j]._id==messageId){
+								nextMessages[i].replies.splice(j,1);
+								break;
+							}
+						}
+					}else{
+						if(nextMessages[i]._id==messageId){
+							nextMessages.splice(i,1);
+							break;
+						}
+					}
+				}
+				this.setState({messages: nextMessages});
+			}
+		}.bind(this));
+	},
 	handleHomeButton: function(){
 		this.setState({room: null});
 	},
@@ -282,7 +305,7 @@ var TalkApp = React.createClass({
 			ContentView = 
 				(<div>
 					<TalkHeader handleMuteRoom={this.handleMuteRoom} handleDeleteRoom={this.handleDeleteRoom} profile={this.state.profile} showMembers={this.state.showMembers} room={this.state.room} toggleMemberList={this.toggleMemberList} picture={this.state.profile.picture} />
-					<TalkStream isNew={this.state.isNew} loadOlder={this.loadOlder} messages={this.state.messages} handleReply={this.handleReply}/>
+					<TalkStream handleDeleteMessage={this.handleDeleteMessage} isNew={this.state.isNew} loadOlder={this.loadOlder} messages={this.state.messages} handleReply={this.handleReply}/>
 					<TalkInput disabled={this.state.room.isMute} handleSend={this.handleSend}/>
 				</div>);
 		}else{
@@ -548,11 +571,14 @@ var TalkStream = React.createClass({
 				</div>
 				{this.props.messages.map(function(message){
 					if(!message.parentId){
-						return(<TalkMessage handleReply={this.handleReply} key={message._id} message={message}/>);
+						return(<TalkMessage handleDeleteMessage={this.handleDeleteMessage} handleReply={this.handleReply} key={message._id} message={message}/>);
 					}
 				}.bind(this))}
 			</div>
 		)
+	},
+	handleDeleteMessage: function(messageId,isReply){
+		this.props.handleDeleteMessage(messageId,isReply);
 	},
 	handleReply: function(content, parentId){
 		this.props.handleReply(content,parentId);
@@ -586,20 +612,26 @@ var TalkMessage = React.createClass({
 	handleSend: function(content){
 		this.props.handleReply(content, this.props.message._id);
 	},
+	handleDeleteMessage: function(messageId,isReply){
+		this.props.handleDeleteMessage(messageId, isReply);
+	},
 	render: function(){
 		var talkMessageClass = "talk-message";
+		var deleteButton;
 		if(this.props.message.isSelf){
 			talkMessageClass = "talk-message-user";
 		}
-
+		if(profile.isTeacher){
+			deleteButton = <a onClick={this.handleDeleteMessage.bind(this,this.props.message._id, false)}>Delete</a>;
+		}
 		return (
 			<div className={talkMessageClass}>
-				<b className='talk-message-title'>{this.props.message.sender.displayName}</b><span className='talk-message-time'>{moment(this.props.message.sendTime).calendar()}</span>
+				<b className='talk-message-title'>{this.props.message.sender.displayName}</b><span className='talk-message-time'>{moment(this.props.message.sendTime).calendar()} {deleteButton}</span>
 				<p className='talk-message-content'>{this.state.elements}</p>
 				<input type="text" value={this.state.inputText} onChange={this.handleChange} onKeyPress={this.handleKeyPress}></input>
 				{this.props.message.replies.map(function(reply){
-					return (<TalkReply reply={reply} />);
-				}.bind())}
+					return (<TalkReply handleDeleteMessage={this.handleDeleteMessage} reply={reply} />);
+				}.bind(this))}
 			</div>
 		)
 	}
@@ -613,11 +645,19 @@ var TalkReply = React.createClass({
 		var content = this.props.reply.content;
 		this.setState({elements: elementsFromContent(content)});
 	},
+	handleDeleteMessage: function(){
+		this.props.handleDeleteMessage(this.props.reply._id,true);
+	},
 	render: function(){
+		var deleteButton;
+		if(profile.isTeacher){
+			deleteButton = <a onClick={this.handleDeleteMessage}>Delete</a>;
+		}
 		return ( 
 			<div>
 				<b className='talk-message-title'>{this.props.reply.sender.displayName}</b><span className='talk-message-time'>{moment(this.props.reply.sendTime).calendar()}</span>
 				<p className='talk-message-content'>{this.state.elements}</p>
+				{deleteButton}
 			</div>
 		)
 	}

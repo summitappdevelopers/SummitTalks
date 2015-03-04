@@ -507,7 +507,7 @@ h1{
 		font-weight: 300;
 		color: white;
 		display: block;
-		min-height: 50px;
+		min-height: 30px;
 		position: relative;
 		left: 10px;
 		margin-top: 10px;
@@ -521,6 +521,19 @@ h1{
 
 		@media (max-width: $device-max){
 			width: 100%;
+		}
+
+		.talk-message-reply{
+			background-color: red;
+		}
+
+		.talk-message-input{
+			position: relative;
+			border-radius: 5px;
+			width: 250px;
+			border: none;
+			left: 10px;
+
 		}
 	}
 

@@ -461,7 +461,7 @@ h1 {
     font-weight: 300;
     color: white;
     display: block;
-    min-height: 50px;
+    min-height: 30px;
     position: relative;
     left: 10px;
     margin-top: 10px;
@@ -477,6 +477,14 @@ h1 {
     @media (max-width: 700px) {
       .talk-container .talk-message, .talk-container .talk-message-user, .talk-container .talk-message:nth-child(1), .talk-container .talk-message:last-child {
         width: 100%; } }
+    .talk-container .talk-message .talk-message-reply, .talk-container .talk-message-user .talk-message-reply {
+      background-color: red; }
+    .talk-container .talk-message .talk-message-input, .talk-container .talk-message-user .talk-message-input {
+      position: relative;
+      border-radius: 5px;
+      width: 250px;
+      border: none;
+      left: 10px; }
   .talk-container .talk-message-user {
     background-color: #2ecc71;
     float: right; }
@@ -546,3 +554,4 @@ h1 {
     .avi {
       display: none; } }
 
+/*# sourceMappingURL=talk.css.map */

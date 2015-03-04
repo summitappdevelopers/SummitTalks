@@ -103,22 +103,6 @@ room.route('/:id/messages').get(app.utilities.ensureAuthenticated, function(req,
 
 });
 
-room.route('/:id/messages/delete/:mid').get(app.utilities.ensureAuthenticated, function(req,res){
-	if(req.user.isTeacher){
-		app.models.Message.remove({parentId: req.params.mid}, function(err){
-			if(err) throw err;
-		});
-		app.models.Message.remove({_id:req.params.id}, function(err){
-			if(err) throw err;
-		});
-	}else{
-		res.json({
-			message: 'Only teachers can delete messages',
-			data: null
-		});
-	}
-});
-
 room.route('/delete').post(app.utilities.ensureAuthenticated, function(req,res){
 	app.models.Room.findOne({_id:req.body.id}, function(err,room){
 		if(room){
