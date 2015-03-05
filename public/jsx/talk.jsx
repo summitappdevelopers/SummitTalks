@@ -228,6 +228,7 @@ var TalkApp = React.createClass({
 		$.get('/api/room/', function(data){
 			this.setState({rooms: data, allRooms:data});
 			if(window.location.hash){
+				 console.log("TEST");
 				this.getRoom(window.location.hash.slice(1,window.location.hash.length));
 			}
 		}.bind(this));
@@ -309,7 +310,6 @@ var TalkApp = React.createClass({
 					<TalkInput disabled={this.state.room.isMute} handleSend={this.handleSend}/>
 				</div>);
 		}else{
-			window.location.hash = "";
 			ContentView =
 				<iframe className="talk-blog" src={blogURL}></iframe>
 		}
