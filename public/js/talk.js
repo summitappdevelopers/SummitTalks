@@ -228,7 +228,6 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 		$.get('/api/room/', function(data){
 			this.setState({rooms: data, allRooms:data});
 			if(window.location.hash){
-				 console.log("TEST");
 				this.getRoom(window.location.hash.slice(1,window.location.hash.length));
 			}
 		}.bind(this));
@@ -558,6 +557,7 @@ var TalkUser = React.createClass({displayName: "TalkUser",
 
 var TalkStream = React.createClass({displayName: "TalkStream",
 	render: function(){
+		console.log("Talk Stream Props: "+this.props.messages);
 		var buttonClass = "talk-stream-button";
 
 		if(this.props.isNew){
@@ -616,6 +616,7 @@ var TalkMessage = React.createClass({displayName: "TalkMessage",
 		this.props.handleDeleteMessage(messageId, isReply);
 	},
 	render: function(){
+		console.log("Parent Message Replies: "+this.props.message.replies);
 		var talkMessageClass = "talk-message";
 		var deleteButton;
 		if(this.props.message.isSelf){
@@ -649,6 +650,7 @@ var TalkReply = React.createClass({displayName: "TalkReply",
 		this.props.handleDeleteMessage(this.props.reply._id,true);
 	},
 	render: function(){
+		console.log("Message Reply Elements: "+this.state.elements);
 		var deleteButton;
 		if(profile.isTeacher){
 			deleteButton = React.createElement("a", {onClick: this.handleDeleteMessage}, "Delete");
