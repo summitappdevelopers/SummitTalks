@@ -151,6 +151,11 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 	handleMuteRoom: function(roomId){
 		$.post('/api/room/mute',{id:roomId}, function(data){
 			if(data){
+				if(data.isMute){
+					alert("Room muted! Click again to unmute");
+				}else{
+					alert("Room unmuted! Click again to mute");
+				}
 				var nextRoom = this.state.room;
 				socket.emit('outmuteroom',{roomName:this.state.room.roomName, isMute:data.isMute});
 			}
@@ -236,20 +241,20 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 		$.get('/api/room/'+roomName, function(data){
 			/*
 				Check if the user has already joined in another instance
-			*/
-			var alreadyJoined = false;
+			
+			/*(var alreadyJoined = false;
 			for(var i in data.members){
 				if(data.members[i]._id==profile._id){
 					alreadyJoined = true;
 					break;
 				}
 			}
-			/*
+			
 				If this is the first join, then add user to the list
-			*/
+			
 			if(alreadyJoined==false){
 				data.members = data.members.concat([profile]);
-			}
+			}*/
 			/*
 				Prevent joining a room more than once when clicking on them
 			*/
@@ -467,7 +472,10 @@ var TalkCreateRoom = React.createClass({displayName: "TalkCreateRoom",
   handleKeyPress: function(e){
     if(e.which==13){
     	var subjectSelection = this.refs.subject.getDOMNode().value;
-      if(this.state.value.length>0 & subjectSelection.length>0){
+      if(this.state.value.length>0){
+      	if(subjectSelection.length==0){
+      		subjectSelection = "Other";
+      	}
         this.props.handleCreateRoom(this.state.value,subjectSelection);
         this.setState({value:''});
       }
