@@ -529,12 +529,13 @@ h1 {
     z-index: 1;
     border-top: 1px solid #d9dcde;
     border-left: 0px;
-    background-color: white;
+    background-color: #E4F1FE;
     resize: none;
     box-shadow: 0px 10px 0px 0px rgba(0, 0, 0, 0.75);
     overflow: auto;
     border-top: 2px solid #59ABE3;
-    border-bottom: 2px solid #59ABE3; }
+    border-bottom: 2px solid #59ABE3;
+    text-indent: 10px; }
   .talk-container .talk-input:focus {
     outline: none; }
 
