@@ -327,14 +327,8 @@ h1 {
     font-size: 24px;
     z-index: 1;
     top: 0;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75); }
-    @media (min-width: 701px) {
-      .talk-container .talk-header {
-        height: 50px; } }
-    @media (max-width: 700px) {
-      .talk-container .talk-header {
-        height: 40px;
-        text-align: center; } }
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+    height: 50px; }
     .talk-container .talk-header .talk-title {
       display: inline-block;
       color: white;
@@ -348,7 +342,7 @@ h1 {
         .talk-container .talk-header .talk-title {
           left: 0px;
           font-size: 18px;
-          top: 8px; } }
+          top: 13px; } }
     .talk-container .talk-header .talk-members-button {
       text-align: center;
       color: white;
@@ -362,8 +356,8 @@ h1 {
           margin-left: 50px; } }
       @media (max-width: 700px) {
         .talk-container .talk-header .talk-members-button {
-          width: 40px;
-          height: 40px;
+          width: 50px;
+          height: 50px;
           margin-left: 20px; } }
     .talk-container .talk-header .fa:hover {
       cursor: hand; }
@@ -382,7 +376,7 @@ h1 {
       @media (max-width: 700px) {
         .talk-container .talk-header .fa-user, .talk-container .talk-header .member-count {
           font-size: 18px;
-          top: 2px; } }
+          top: 7px; } }
     .talk-container .talk-header .member-count {
       left: 2px; }
     .talk-container .talk-header .member-list {
@@ -455,80 +449,74 @@ h1 {
     height: 100%;
     border: 0px;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75); }
-  .talk-container .talk-message, .talk-container .talk-message-user, .talk-container .talk-message:nth-child(1), .talk-container .talk-message:last-child {
-    background-color: #3498db;
+  .talk-container .talk-message, .talk-container .talk-message:nth-child(1), .talk-container .talk-message:last-child {
+    width: 100%;
+    background-color: #3FC380;
     font-family: "Lato", "sans-serif";
     font-weight: 300;
     color: white;
     display: block;
     min-height: 25px;
     position: relative;
-    left: 10px;
-    margin-top: 10px;
     z-index: 0;
-    border-radius: 5px;
     float: left;
     -webkit-animation: entityEnter 0.2s forwards ease-out;
     -moz-animation: entityEnter 0.2s forwards ease-out;
-    animation: entityEnter 0.2s forwards ease-out; }
-    @media (min-width: 701px) {
-      .talk-container .talk-message, .talk-container .talk-message-user, .talk-container .talk-message:nth-child(1), .talk-container .talk-message:last-child {
-        width: 75%; } }
-    @media (max-width: 700px) {
-      .talk-container .talk-message, .talk-container .talk-message-user, .talk-container .talk-message:nth-child(1), .talk-container .talk-message:last-child {
-        width: 100%; } }
-    .talk-container .talk-message hr, .talk-container .talk-message-user hr, .talk-container .talk-message:nth-child(1) hr, .talk-container .talk-message:last-child hr {
-      display: block;
-      height: 1px;
-      border: 0;
-      border-top: 1px solid white;
-      margin: 1em 0;
-      padding: 0; }
-    .talk-container .talk-message .talk-message-reply, .talk-container .talk-message-user .talk-message-reply {
-      background-color: red; }
-    .talk-container .talk-message .talk-message-title, .talk-container .talk-message-user .talk-message-title {
+    animation: entityEnter 0.2s forwards ease-out;
+    		/*hr { 
+    			display: block; height: 1px;
+        		border: 0; border-top: 1px solid white;
+        		margin: 1em 0; padding: 0; 
+        	}*/ }
+    .talk-container .talk-message .talk-message-reply {
+      padding-top: 2px;
+      padding-bottom: 2px;
+      padding-left: 25px;
+      min-height: 20px;
+      background-color: #66CC99; }
+    .talk-container .talk-message .talk-message-title {
       position: relative;
       top: 5px;
       left: 5px; }
-    .talk-container .talk-message .talk-message-time, .talk-container .talk-message-user .talk-message-time {
+    .talk-container .talk-message .talk-message-time {
       position: relative;
       top: 5px;
       left: 15px;
       font-size: 14px; }
-    .talk-container .talk-message .talk-message-content, .talk-container .talk-message-user .talk-message-content {
+    .talk-container .talk-message .talk-message-content {
       position: relative;
       left: 5px;
       top: 2px;
       bottom: 5px;
       width: 100%; }
-    .talk-container .talk-message .talk-message-image, .talk-container .talk-message-user .talk-message-image {
-      padding: 20px;
+    .talk-container .talk-message .talk-message-image {
+      padding: 5px;
       max-height: 300px; }
-    .talk-container .talk-message .talk-message-desmos, .talk-container .talk-message-user .talk-message-desmos {
+    .talk-container .talk-message .talk-message-desmos {
       padding: 20px;
       height: 500px;
       width: 700px;
       border: 0px; }
-    .talk-container .talk-message .talk-message-youtube, .talk-container .talk-message-user .talk-message-youtube {
+    .talk-container .talk-message .talk-message-youtube {
       padding: 20px; }
-    .talk-container .talk-message .talk-message-input, .talk-container .talk-message-user .talk-message-input {
-      position: relative;
-      border-radius: 5px;
-      width: 250px;
-      height: 25px;
-      border: none;
-      left: 5px;
-      margin-bottom: 5px; }
-  .talk-container .talk-message-user {
-    background-color: #2ecc71;
-    float: right; }
-  @media (min-width: 701px) {
-    .talk-container .talk-message-user:nth-child(1), .talk-container .talk-message:nth-child(1) {
-      margin-top: 70px; } }
-  @media (max-width: 700px) {
-    .talk-container .talk-message-user:nth-child(1), .talk-container .talk-message:nth-child(1) {
-      margin-top: 60px; } }
-  .talk-container .talk-message-user:last-child, .talk-container .talk-message:last-child {
+    .talk-container .talk-message .talk-message-input {
+      background-color: white;
+      text-indent: 10px;
+      width: 100%;
+      height: 50px;
+      border-top: 2px solid #59ABE3;
+      border-bottom: 2px solid #59ABE3;
+      border-left: none;
+      border-right: none; }
+  .talk-container .talk-message:nth-child(1) {
+    background-color: red; }
+    @media (min-width: 701px) {
+      .talk-container .talk-message:nth-child(1) {
+        margin-top: 70px; } }
+    @media (max-width: 700px) {
+      .talk-container .talk-message:nth-child(1) {
+        margin-top: 70px; } }
+  .talk-container .talk-message:last-child {
     margin-bottom: 10px; }
   .talk-container .talk-input {
     align: right;
@@ -541,10 +529,12 @@ h1 {
     z-index: 1;
     border-top: 1px solid #d9dcde;
     border-left: 0px;
-    background-color: #ecf0f1;
+    background-color: white;
     resize: none;
     box-shadow: 0px 10px 0px 0px rgba(0, 0, 0, 0.75);
-    overflow: auto; }
+    overflow: auto;
+    border-top: 2px solid #59ABE3;
+    border-bottom: 2px solid #59ABE3; }
   .talk-container .talk-input:focus {
     outline: none; }
 
@@ -562,5 +552,3 @@ h1 {
   @media (max-width: 700px) {
     .avi {
       display: none; } }
-
-/*# sourceMappingURL=talk.css.map */

@@ -6,8 +6,7 @@
 
 /*VARS*/
 $sidebar-width: 250px;
-$talk-header-height-grow: 50px;
-$talk-header-height-shrink: 40px;
+$talk-header-height: 50px;
 $device-max: 700px;
 $device-min: 701px;
 $font: 'Lato','sans-serif';
@@ -330,16 +329,8 @@ h1{
 		z-index: 1;
 		top: 0;
 		box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
-		@media (min-width: $device-min){
-			height: $talk-header-height-grow;
-			//@include animation(talkHeaderGrow 0.5s forwards ease-out);
-		}
+		height: 50px;
 
-		@media (max-width: $device-max){
-			height: $talk-header-height-shrink;
-			//@include animation(talkHeaderShrink 0.5s forwards ease-out);
-			text-align: center;
-		}
 
 		.talk-title{
 			display: inline-block;
@@ -348,12 +339,12 @@ h1{
 			position: relative;
 			left: 30px;
 			@media (min-width: $device-min){
-				top: ($talk-header-height-grow - 30px)/2;
+				top: ($talk-header-height - 30px)/2;
 			}
 			@media (max-width: $device-max){
 				left: 0px;
 				font-size: 18px;
-				top: ($talk-header-height-shrink - 24px)/2;
+				top: ($talk-header-height - 24px)/2;
 			}
 
 		}
@@ -370,8 +361,8 @@ h1{
 				margin-left: 50px;
 			}
 			@media (max-width: $device-max){
-				width: $talk-header-height-shrink;
-				height: $talk-header-height-shrink;
+				width: $talk-header-height;
+				height: $talk-header-height;
 				margin-left: 20px;	
 			}
 
@@ -396,11 +387,11 @@ h1{
 			position: relative;
 			@media (min-width: $device-min){
 				font-size: 24px;
-				top: ($talk-header-height-grow - 30px)/2;
+				top: ($talk-header-height - 30px)/2;
 			}
 			@media (max-width: $device-max){
 				font-size: 18px;
-				top: ($talk-header-height-shrink - 36px)/2;				
+				top: ($talk-header-height - 36px)/2;				
 			}
 		}
 
@@ -502,37 +493,33 @@ h1{
 	}
 
 	.talk-message{
-		background-color: #3498db;
+		width: 100%;
+		background-color: #3FC380;
 		font-family: $font;
 		font-weight: 300;
 		color: white;
 		display: block;
 		min-height: 25px;
 		position: relative;
-		left: 10px;
-		margin-top: 10px;
+		//margin-top: 10px;
 		z-index: 0;
-		border-radius: 5px;
 		float: left;
 		@include animation(entityEnter 0.2s forwards ease-out);
-		@media (min-width: $device-min){
-			width: 75%;
-		}
-
-		@media (max-width: $device-max){
-			width: 100%;
-		}
-
-		hr { 
+		
+		/*hr { 
 			display: block; height: 1px;
     		border: 0; border-top: 1px solid white;
     		margin: 1em 0; padding: 0; 
-    	}
-
+    	}*/
 
 		.talk-message-reply{
-			background-color: red;
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-left: 25px;
+			min-height: 20px;
+			background-color: #66CC99;
 		}
+
 		.talk-message-title{
 			position: relative;
 			top: 5px;
@@ -555,7 +542,7 @@ h1{
 		}
 
 		.talk-message-image{
-			padding: 20px;
+			padding: 5px;
 			max-height: 300px;
 		}
 
@@ -571,30 +558,26 @@ h1{
 		}
 
 		.talk-message-input{
-			position: relative;
-			border-radius: 5px;
-			width: 250px;
-			height: 25px;
-			border: none;
-			left: 5px;
-			margin-bottom: 5px;
-
+			background-color: white;
+			text-indent: 10px;
+			width: 100%;
+			height: 50px;
+			border-top: 2px solid #59ABE3;
+			border-bottom: 2px solid #59ABE3;
+			border-left: none;
+			border-right: none;
 		}
-	}
-
-	.talk-message-user{
-		@extend .talk-message;
-		background-color: #2ecc71;
-		float: right;
 	}
 
 	.talk-message:nth-child(1){
 		@extend .talk-message;
+		background-color: red;
+		//margin-top: 0px !important;
 		@media (min-width: $device-min){
-			margin-top: $talk-header-height-grow + 20px;
+			margin-top: $talk-header-height + 20px;
 		}
 		@media (max-width: $device-max){
-			margin-top: $talk-header-height-shrink + 20px;
+			margin-top: $talk-header-height + 20px;
 		}
 	}
 
@@ -614,10 +597,13 @@ h1{
 		z-index: 1;
 		border-top: 1.0px solid lighten(#bdc3c7, 10%);
 		border-left: 0px;
-		background-color: #ecf0f1;
+		background-color: white;
 		resize: none;
 		box-shadow: 0px 10px 0px 0px rgba(0,0,0,0.75);
 		overflow: auto;
+		border-top: 2px solid #59ABE3;
+		border-bottom: 2px solid #59ABE3;
+
 	}
 
 	.talk-input:focus{outline:none;}
@@ -633,7 +619,7 @@ h1{
 	height:35px;
 	left: 10px;
 	@media (min-width: $device-min){
-		top: ($talk-header-height-grow - 39px)/2;
+		top: ($talk-header-height - 39px)/2;
 	}
 	@media (max-width: $device-max){
 		display: none;

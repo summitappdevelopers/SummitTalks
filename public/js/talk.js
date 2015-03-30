@@ -213,7 +213,7 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 		socket.emit('outreply', {content: content.replace(/(<([^>]+)>)/ig,""), parentId: parentId, roomId:this.state.room._id, roomName: this.state.room.roomName});
 	},
 	scrollDown: function(){
-		$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight}, 500);
+		/*$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight}, 500);*/
 	},
 	loadOlder: function(){
 		/*
@@ -617,9 +617,9 @@ var TalkMessage = React.createClass({displayName: "TalkMessage",
 	render: function(){
 		var talkMessageClass = "talk-message";
 		var deleteButton;
-		if(this.props.message.isSelf){
-			talkMessageClass = "talk-message-user";
-		}
+		// if(this.props.message.isSelf){
+		// 	talkMessageClass = "talk-message-user";
+		// }
 		if(profile.isTeacher){
 			deleteButton = React.createElement("a", {onClick: this.handleDeleteMessage.bind(this,this.props.message._id, false)}, "Delete");
 		}
@@ -627,10 +627,10 @@ var TalkMessage = React.createClass({displayName: "TalkMessage",
 			React.createElement("div", {className: talkMessageClass}, 
 				React.createElement("b", {className: "talk-message-title"}, this.props.message.sender.displayName), React.createElement("span", {className: "talk-message-time"}, moment(this.props.message.sendTime).calendar(), " ", deleteButton), 
 				React.createElement("p", {className: "talk-message-content"}, this.state.elements), 
-				React.createElement("input", {className: "talk-message-input", placeholder: "   Reply to "+this.props.message.sender.displayName, type: "text", value: this.state.inputText, onChange: this.handleChange, onKeyPress: this.handleKeyPress}), 
 				this.props.message.replies.map(function(reply){
 					return (React.createElement(TalkReply, {handleDeleteMessage: this.handleDeleteMessage, reply: reply}));
-				}.bind(this))
+				}.bind(this)), 
+				React.createElement("input", {className: "talk-message-input", placeholder: "Reply to "+this.props.message.sender.displayName, type: "text", value: this.state.inputText, onChange: this.handleChange, onKeyPress: this.handleKeyPress})
 			)
 		)
 	}
@@ -653,8 +653,7 @@ var TalkReply = React.createClass({displayName: "TalkReply",
 			deleteButton = React.createElement("a", {onClick: this.handleDeleteMessage}, "Delete");
 		}
 		return ( 
-			React.createElement("div", null, 
-				React.createElement("hr", null), 
+			React.createElement("div", {className: "talk-message-reply"}, 
 				React.createElement("b", {className: "talk-message-title"}, this.props.reply.sender.displayName), React.createElement("span", {className: "talk-message-time"}, moment(this.props.reply.sendTime).calendar(), " ", deleteButton), 
 				React.createElement("p", {className: "talk-message-content"}, this.state.elements)
 			)
@@ -682,7 +681,7 @@ var TalkInput = React.createClass({displayName: "TalkInput",
 		this.props.handleSend(content);
 	},
 	render: function(){
-		var placeholder = 'Press enter to send. Be nice!';
+		var placeholder = 'Press enter to send a new thread. Be nice!';
 		if(this.props.disabled){
 			placeholder = 'This room has been temporarily disabled';
 		}
