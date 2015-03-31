@@ -149,10 +149,11 @@ h1 {
   width: 250px;
   height: 100%;
   background-color: #446CB3;
-  position: absolute;
+  position: relative;
   display: block;
   overflow-y: auto;
-  overflow-x: hidden; }
+  overflow-x: hidden;
+  float: left; }
   @media (min-width: 701px) {
     .sidebar {
       -webkit-animation: sidebarShow 0.5s forwards ease-out;
@@ -306,6 +307,7 @@ h1 {
   width: calc(100% - 250px);
   height: 100%;
   display: block;
+  float: left;
   right: 0px; }
   @media (min-width: 701px) {
     .talk-container {
@@ -361,12 +363,9 @@ h1 {
           margin-left: 20px; } }
     .talk-container .talk-header .fa:hover {
       cursor: hand; }
-    .talk-container .talk-header .fa-ban {
+    .talk-container .talk-header .fa-cog {
       position: relative;
       left: 10px; }
-    .talk-container .talk-header .fa-trash {
-      position: relative;
-      left: 15px; }
     .talk-container .talk-header .fa-user, .talk-container .talk-header .member-count {
       position: relative; }
       @media (min-width: 701px) {
@@ -538,6 +537,25 @@ h1 {
     text-indent: 10px; }
   .talk-container .talk-input:focus {
     outline: none; }
+
+.teacher-tools {
+  width: 250px;
+  height: 100%;
+  background-color: #EEEEEE;
+  position: relative;
+  z-index: 1;
+  float: right;
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  right: -250px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+  -webkit-transition: right 0.1s ease-in;
+  -moz-transition: right 0.1s ease-in;
+  transition: right 0.1s ease-in; }
+
+.teacher-tools-show {
+  right: 0; }
 
 .avi {
   float: left;

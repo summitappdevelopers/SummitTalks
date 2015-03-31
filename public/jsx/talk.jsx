@@ -32,6 +32,7 @@ var TalkApp = React.createClass({
 				room: null, 
 				isNew: true,
 				showMembers: false,
+				showTools: false,
 				filter: ''
 			};
 	},
@@ -262,12 +263,15 @@ var TalkApp = React.createClass({
 	toggleMemberList: function(){
 		this.setState({showMembers: !this.state.showMembers});
 	},
+	toggleTools: function(){
+		this.setState({showTools: !this.state.showTools});
+	},
 	render: function(){
 		var ContentView;
 		if (this.state.room) {
 			ContentView = 
 				(<div>
-					<TalkHeader handleMuteRoom={this.handleMuteRoom} handleDeleteRoom={this.handleDeleteRoom} profile={this.state.profile} showMembers={this.state.showMembers} room={this.state.room} toggleMemberList={this.toggleMemberList} picture={this.state.profile.picture} />
+					<TalkHeader toggleTools={this.toggleTools} profile={this.state.profile} showMembers={this.state.showMembers} room={this.state.room} toggleMemberList={this.toggleMemberList} picture={this.state.profile.picture} />
 					<TalkStream handleDeleteMessage={this.handleDeleteMessage} isNew={this.state.isNew} loadOlder={this.loadOlder} messages={this.state.messages} handleReply={this.handleReply}/>
 					<TalkInput disabled={this.state.room.isMute} handleSend={this.handleSend}/>
 				</div>);
@@ -282,6 +286,7 @@ var TalkApp = React.createClass({
 				<div className="talk-container">
 					{ContentView}
 				</div>
+				<TalkTeacherTools handleMuteRoom={this.handleMuteRoom} handleDeleteRoom={this.handleDeleteRoom} showTools={this.state.showTools}/>
 			</div>
 		)
 	}
@@ -290,22 +295,19 @@ var TalkApp = React.createClass({
 var TalkHeader = React.createClass({
 	render: function(){
 		var membersListClass = "member-list";
-		var banClass = "fa fa-ban";
-		var trashClass = "fa fa-trash";
+		var cogClass = "fa fa-cog";
 		if(!this.props.showMembers){
-				membersListClass = "hidden";
+			membersListClass = "hidden";
 		}
 		if(!(this.props.profile._id == this.props.room.creator._id)){
-			banClass = "hidden";
-			trashClass = "hidden";
+			cogClass = "hidden";
 		}
 		return (
 			<div className="talk-header">
 				<img className="avi" src={this.props.profile.picture}></img>
 				<span className="talk-title">
-					{this.props.room.displayName} - <i>{this.props.room.creator.displayName}</i> 
-					<i className={banClass} onClick={this.handleMuteRoom}></i>
-					<i className={trashClass} onClick={this.handleDeleteRoom}></i>
+					{this.props.room.displayName} - <i>{this.props.room.creator.displayName}</i>
+					<i className={cogClass} onClick={this.handleToolsClick}></i>
 				</span>
 				{<div className="talk-members-button" onClick={this.handleMembersClick}>
 					<i className="fa fa-user"></i>
@@ -319,11 +321,8 @@ var TalkHeader = React.createClass({
 			</div>
 		)
 	},
-	handleMuteRoom: function(){
-		this.props.handleMuteRoom(this.props.room._id);
-	},
-	handleDeleteRoom: function(){
-		this.props.handleDeleteRoom(this.props.room._id);
+	handleToolsClick: function(){
+		this.props.toggleTools();
 	},
 	handleMembersClick: function(){
 		this.props.toggleMemberList();
@@ -527,7 +526,6 @@ var TalkStream = React.createClass({
 		if(this.props.isNew){
 			buttonClass = "disabled";
 		}
-
 		return (
 			<div className="talk-stream">
 				<div onClick={this.handleClick} className={buttonClass}>
@@ -653,6 +651,24 @@ var TalkInput = React.createClass({
 		return (
 			<textarea value={this.state.inputText} placeholder={placeholder} disabled={this.props.disabled} className="talk-input" onChange={this.handleChange} onKeyPress={this.handleKeyPress}></textarea>
 		)
+	}
+});
+
+var TalkTeacherTools = React.createClass({
+	render: function(){
+		var toolsClass="teacher-tools";
+		if(this.props.showTools){
+			toolsClass+=" teacher-tools-show";
+		}
+		return (
+			<div className={toolsClass}></div>
+		)
+	},
+	handleMuteRoom: function(){
+		this.props.handleMuteRoom(this.props.room._id);
+	},
+	handleDeleteRoom: function(){
+		this.props.handleDeleteRoom(this.props.room._id);
 	}
 });
 

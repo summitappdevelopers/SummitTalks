@@ -32,6 +32,7 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 				room: null, 
 				isNew: true,
 				showMembers: false,
+				showTools: false,
 				filter: ''
 			};
 	},
@@ -262,12 +263,15 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 	toggleMemberList: function(){
 		this.setState({showMembers: !this.state.showMembers});
 	},
+	toggleTools: function(){
+		this.setState({showTools: !this.state.showTools});
+	},
 	render: function(){
 		var ContentView;
 		if (this.state.room) {
 			ContentView = 
 				(React.createElement("div", null, 
-					React.createElement(TalkHeader, {handleMuteRoom: this.handleMuteRoom, handleDeleteRoom: this.handleDeleteRoom, profile: this.state.profile, showMembers: this.state.showMembers, room: this.state.room, toggleMemberList: this.toggleMemberList, picture: this.state.profile.picture}), 
+					React.createElement(TalkHeader, {toggleTools: this.toggleTools, profile: this.state.profile, showMembers: this.state.showMembers, room: this.state.room, toggleMemberList: this.toggleMemberList, picture: this.state.profile.picture}), 
 					React.createElement(TalkStream, {handleDeleteMessage: this.handleDeleteMessage, isNew: this.state.isNew, loadOlder: this.loadOlder, messages: this.state.messages, handleReply: this.handleReply}), 
 					React.createElement(TalkInput, {disabled: this.state.room.isMute, handleSend: this.handleSend})
 				));
@@ -281,7 +285,8 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 				React.createElement(TalkSideBar, {filter: this.state.filter, handleFilter: this.handleFilter, handleSearch: this.handleSearch, handleCreateRoom: this.handleCreateRoom, handleHomeButton: this.handleHomeButton, handleJoinRoom: this.handleJoinRoom, rooms: this.state.rooms}), 
 				React.createElement("div", {className: "talk-container"}, 
 					ContentView
-				)
+				), 
+				React.createElement(TalkTeacherTools, {handleMuteRoom: this.handleMuteRoom, handleDeleteRoom: this.handleDeleteRoom, showTools: this.state.showTools})
 			)
 		)
 	}
@@ -290,22 +295,19 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 var TalkHeader = React.createClass({displayName: "TalkHeader",
 	render: function(){
 		var membersListClass = "member-list";
-		var banClass = "fa fa-ban";
-		var trashClass = "fa fa-trash";
+		var cogClass = "fa fa-cog";
 		if(!this.props.showMembers){
-				membersListClass = "hidden";
+			membersListClass = "hidden";
 		}
 		if(!(this.props.profile._id == this.props.room.creator._id)){
-			banClass = "hidden";
-			trashClass = "hidden";
+			cogClass = "hidden";
 		}
 		return (
 			React.createElement("div", {className: "talk-header"}, 
 				React.createElement("img", {className: "avi", src: this.props.profile.picture}), 
 				React.createElement("span", {className: "talk-title"}, 
 					this.props.room.displayName, " - ", React.createElement("i", null, this.props.room.creator.displayName), 
-					React.createElement("i", {className: banClass, onClick: this.handleMuteRoom}), 
-					React.createElement("i", {className: trashClass, onClick: this.handleDeleteRoom})
+					React.createElement("i", {className: cogClass, onClick: this.handleToolsClick})
 				), 
 				React.createElement("div", {className: "talk-members-button", onClick: this.handleMembersClick}, 
 					React.createElement("i", {className: "fa fa-user"}), 
@@ -319,11 +321,8 @@ var TalkHeader = React.createClass({displayName: "TalkHeader",
 			)
 		)
 	},
-	handleMuteRoom: function(){
-		this.props.handleMuteRoom(this.props.room._id);
-	},
-	handleDeleteRoom: function(){
-		this.props.handleDeleteRoom(this.props.room._id);
+	handleToolsClick: function(){
+		this.props.toggleTools();
 	},
 	handleMembersClick: function(){
 		this.props.toggleMemberList();
@@ -527,7 +526,6 @@ var TalkStream = React.createClass({displayName: "TalkStream",
 		if(this.props.isNew){
 			buttonClass = "disabled";
 		}
-
 		return (
 			React.createElement("div", {className: "talk-stream"}, 
 				React.createElement("div", {onClick: this.handleClick, className: buttonClass}, 
@@ -653,6 +651,24 @@ var TalkInput = React.createClass({displayName: "TalkInput",
 		return (
 			React.createElement("textarea", {value: this.state.inputText, placeholder: placeholder, disabled: this.props.disabled, className: "talk-input", onChange: this.handleChange, onKeyPress: this.handleKeyPress})
 		)
+	}
+});
+
+var TalkTeacherTools = React.createClass({displayName: "TalkTeacherTools",
+	render: function(){
+		var toolsClass="teacher-tools";
+		if(this.props.showTools){
+			toolsClass+=" teacher-tools-show";
+		}
+		return (
+			React.createElement("div", {className: toolsClass})
+		)
+	},
+	handleMuteRoom: function(){
+		this.props.handleMuteRoom(this.props.room._id);
+	},
+	handleDeleteRoom: function(){
+		this.props.handleDeleteRoom(this.props.room._id);
 	}
 });
 
