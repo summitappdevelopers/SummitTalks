@@ -13,6 +13,7 @@
     "express-session": "^1.9.3",
     "fs": "0.0.2",
     "jsonwebtoken": "^3.2.0",
+    "lodash": "^3.6.0",
     "method-override": "^2.3.1",
     "moment": "^2.8.4",
     "mongoose": "^3.8.21",

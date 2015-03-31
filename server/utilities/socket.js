@@ -5,6 +5,7 @@
 
 var io = app.modules.io
 var socketioJwt = app.modules.socketJwt;
+var _ = app.utilities.lodash;
 
 io.set('authorization', socketioJwt.authorize({
   secret: app.secrets.jwtSecret,
@@ -16,42 +17,10 @@ io.on('connection', function(socket){
 	var profile = socket.client.request.decoded_token;
 	
 	socket.on('joinroom', function(data){
+		socket.join(data.roomName);
+		console.log(profile.displayName+" joined "+data.roomName);
+		io.to(data.roomName).emit('inupdatemembers',{members:currentMembersInRoom(data.roomName)});
 
-		app.models.Room.findOne({roomName: data.roomName}).populate('creator').exec(function(err, room){
-	
-			if(room){
-
-				socket.join(data.roomName);
-
-				/*
-
-				Check if user is already connected to the room, but has opened another instance (ie. tabs)
-
-				var userExists = false;
-				for(var m=0; m<room.members.length; m++){
-					if(room.members[m]._id == profile._id){
-						console.log(profile.displayName+" connected again to "+room.roomName);
-						var userExists = true;
-						break;
-					}
-				}
-
-				Add user to room.members if it is their first time joining
-				
-				if(!userExists){
-					room.members.push(profile);
-					room.save(function(err){
-						socket.broadcast.to(data.roomName).emit('userjoin', profile);
-						if(err) throw err;
-					});
-					console.log(profile.displayName+" connected to "+room.roomName);
-				}
-
-				*/
-
-			}
-
-		});
 	});
 
 	socket.on('outdeleteroom', function(data){
@@ -84,46 +53,21 @@ io.on('connection', function(socket){
 		io.to(data.roomName).emit('inmuteroom',data.isMute);
 	});
 
+	socket.on('willdisconnect', function(room){
+		socket.disconnect();
+		io.to(room).emit('inupdatemembers',{members:currentMembersInRoom(room)});
+	});
 
-	/*
-		Client will send the list of all the rooms it is connected to when closing the window.
-	*/
 
-	/*socket.on('willdisconnect', function(data){
-		console.log(data);
-		app.models.Room.find({roomName: {$in: data}}, function(err, rooms){
-			for(var i in rooms){
-				var room = rooms[i];
-				var instances = 0;
-				
-					Check if client is disconnecting from an instance of a room (ie. tabs)
-					The client should only truly "disconnect" if it closed its last instance of the room
-				
-				for(var sockID in io.nsps['/'].adapter.rooms[room.roomName]){
-					if(io.sockets.connected[sockID].client.request.decoded_token._id==profile._id){
-						instances+=1;
-					}
-				}
-				if(instances==1){
-					
-						Remove the right user from the list of users
-					
-					for(var j in room.members){
-						if(room.members[j]._id==profile._id){
-							room.members.splice(j,1);
-							room.save(function(err, room){
-								if(err) throw err;
-								console.log("Fully disconnecting "+profile.displayName+" from "+room.roomName);
-								socket.broadcast.to(room.roomName).emit('userleave', profile._id);
-								socket.disconnect();
-							});
-							break;
-						}
-					}
-				}
-			}
+	function currentMembersInRoom(room, callback){
+		var currentMembers = [];
+		for(var sockID in io.nsps['/'].adapter.rooms[room]){
+			currentMembers.push(io.sockets.connected[sockID].client.request.decoded_token);
+		}
+		return _.unique(currentMembers, function(user){
+			return user._id;
 		});
-	});*/
+	}
 
 	function saveMessage(data, callback){
 		var newMessage = new app.models.Message();
