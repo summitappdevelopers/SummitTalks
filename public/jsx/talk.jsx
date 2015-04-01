@@ -124,11 +124,13 @@ var TalkApp = React.createClass({
 		}.bind(this));
 	},
 	handleDeleteRoom: function(roomId){
-		$.post('/api/room/delete', {id:roomId}, function(data){
-			if(data){
-				socket.emit('outdeleteroom',{roomId:this.state.room._id});
-			}
-		}.bind(this));
+		if(confirm('Deleting the room will permanently remove all of its messages. Are you sure?')){
+			$.post('/api/room/delete', {id:roomId}, function(data){
+				if(data){
+					socket.emit('outdeleteroom',{roomId:this.state.room._id});
+				}
+			}.bind(this));
+		}
 	},
 	handleMuteRoom: function(roomId){
 		$.post('/api/room/mute',{id:roomId}, function(data){
@@ -165,6 +167,13 @@ var TalkApp = React.createClass({
 				this.setState({messages: nextMessages});
 			}
 		}.bind(this));
+	},
+	handleSendInvites: function(invitees){
+		$.post('/api/mail/send',{invitees:invitees,roomName:this.state.room.roomName,roomDisplay:this.state.room.displayName}, function(data){
+			if(data){
+				alert("Mail sent!");
+			}
+		});
 	},
 	handleHomeButton: function(){
 		this.setState({room: null});
@@ -272,6 +281,7 @@ var TalkApp = React.createClass({
 			ContentView = 
 				(<div>
 					<TalkHeader toggleTools={this.toggleTools} profile={this.state.profile} showMembers={this.state.showMembers} room={this.state.room} toggleMemberList={this.toggleMemberList} picture={this.state.profile.picture} />
+					<TalkTeacherTools handleSendInvites={this.handleSendInvites} room={this.state.room} handleMuteRoom={this.handleMuteRoom} handleDeleteRoom={this.handleDeleteRoom} showTools={this.state.showTools}/>
 					<TalkStream handleDeleteMessage={this.handleDeleteMessage} isNew={this.state.isNew} loadOlder={this.loadOlder} messages={this.state.messages} handleReply={this.handleReply}/>
 					<TalkInput disabled={this.state.room.isMute} handleSend={this.handleSend}/>
 				</div>);
@@ -286,7 +296,6 @@ var TalkApp = React.createClass({
 				<div className="talk-container">
 					{ContentView}
 				</div>
-				<TalkTeacherTools handleMuteRoom={this.handleMuteRoom} handleDeleteRoom={this.handleDeleteRoom} showTools={this.state.showTools}/>
 			</div>
 		)
 	}
@@ -655,14 +664,31 @@ var TalkInput = React.createClass({
 });
 
 var TalkTeacherTools = React.createClass({
+	getInitialState: function(){
+		return {invitees:''}
+	},
 	render: function(){
 		var toolsClass="teacher-tools";
 		if(this.props.showTools){
 			toolsClass+=" teacher-tools-show";
 		}
 		return (
-			<div className={toolsClass}></div>
+			<div className={toolsClass}>
+				<div className="button-container">
+					<div className="button-c mute" onClick={this.handleMuteRoom}><i className="fa fa-ban"></i></div>
+					<div className="button-c trash"onClick={this.handleDeleteRoom}><i className="fa fa-trash"></i></div>
+				</div>
+				<textarea onChange={this.handleText} value={this.state.invitees} placeholder="Enter emails to invite. Separate multiple emails with a comma" rows="10"></textarea>
+				<div onClick={this.handleSendInvites} className="send-mail"><i className="fa fa-envelope"></i></div>
+			</div>
 		)
+	},
+	handleText: function(e){
+    	this.setState({invitees: e.target.value});
+  	},
+	handleSendInvites: function(){
+		var invitees = this.state.invitees.replace(/ /g,'').split(',');
+		this.props.handleSendInvites(invitees);
 	},
 	handleMuteRoom: function(){
 		this.props.handleMuteRoom(this.props.room._id);

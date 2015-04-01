@@ -108,6 +108,7 @@ h1{
 }
 
 .wrap {
+	overflow-x: hidden;
 	//@extend body;
 }
 
@@ -295,6 +296,7 @@ h1{
 
 	position: absolute;
 	border-box: box-sizing;
+	overflow-x: hidden;
 	@include calc(width, "100% - #{$sidebar-width}");
 	height: 100%;
 	display: block;
@@ -430,10 +432,11 @@ h1{
 	}
 
 	.talk-stream {
+		position: absolute;
 		width: 100%;
 		@include calc(height, "100% - 75px");
 		background-color: #ecf0f1;
-		z-index: -1;
+		z-index: 0;
 		overflow-y: auto;
 		overflow-x: hidden;
 		box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
@@ -546,10 +549,6 @@ h1{
 			text-indent: 10px;
 			width: 100%;
 			height: 50px;
-			border-top: 2px solid #59ABE3;
-			border-bottom: 2px solid #59ABE3;
-			border-left: none;
-			border-right: none;
 		}
 	}
 
@@ -581,12 +580,10 @@ h1{
 		z-index: 1;
 		border-top: 1.0px solid lighten(#bdc3c7, 10%);
 		border-left: 0px;
-		background-color: #E4F1FE;
+		background-color: white;
 		resize: none;
 		box-shadow: 0px 10px 0px 0px rgba(0,0,0,0.75);
 		overflow: auto;
-		border-top: 2px solid #59ABE3;
-		border-bottom: 2px solid #59ABE3;
 		text-indent: 10px;
 
 	}
@@ -597,15 +594,80 @@ h1{
 	width: $sidebar-width;
 	height: 100%;
 	background-color: #EEEEEE;
+	text-align: center;
 	position: relative;
-	z-index: 1;
+	z-index: 2;
 	float: right;
-	display: block;
 	overflow-y: auto;
 	overflow-x: hidden;
 	right: -$sidebar-width;
 	box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 	@include transition(right 0.1s ease-in);
+	.invite-text{
+		width: 100%;
+		rows: 100;
+	}
+	.button-c{
+		margin: 10px;
+		position: relative;
+		width: 50px;
+		height: 50px;
+		border-radius: 100%;
+		text-align: center;
+		.fa {
+			font-size: 30px;
+			position: relative;
+			top: (50px - 30px)/2;
+		}
+	}
+	.button:hover{
+		cursor: pointer;
+	}
+
+	.button-container{
+		display: flex;
+		justify-content: center;
+		color: white;
+		.mute{
+			@extend .button;
+			background-color: #4B77BE;
+		}
+		.mute:hover{
+			background-color: #3A539B;
+		}
+		.trash{
+			@extend .button;
+			background-color: #D24D57;
+		}
+		.trash:hover{
+			background-color: #C0392B;
+		}
+	}
+
+	textarea{
+		font-size: 14px;
+		resize: none;
+		width: 90%;
+		
+	}
+
+	.send-mail{
+		width: 90%;
+		height: 50px;
+		margin: 0 auto;
+		background-color: #3FC380;
+		color: white;
+		.fa {
+			font-size: 30px;
+			position: relative;
+			top: (50px - 30px)/2;
+		}
+	}
+	.send-mail:hover{
+		cursor: pointer;
+		background-color: #00B16A;
+	}
+
 }
 
 .teacher-tools-show{

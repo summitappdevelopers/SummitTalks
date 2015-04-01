@@ -124,11 +124,13 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 		}.bind(this));
 	},
 	handleDeleteRoom: function(roomId){
-		$.post('/api/room/delete', {id:roomId}, function(data){
-			if(data){
-				socket.emit('outdeleteroom',{roomId:this.state.room._id});
-			}
-		}.bind(this));
+		if(confirm('Deleting the room will permanently remove all of its messages. Are you sure?')){
+			$.post('/api/room/delete', {id:roomId}, function(data){
+				if(data){
+					socket.emit('outdeleteroom',{roomId:this.state.room._id});
+				}
+			}.bind(this));
+		}
 	},
 	handleMuteRoom: function(roomId){
 		$.post('/api/room/mute',{id:roomId}, function(data){
@@ -165,6 +167,13 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 				this.setState({messages: nextMessages});
 			}
 		}.bind(this));
+	},
+	handleSendInvites: function(invitees){
+		$.post('/api/mail/send',{invitees:invitees,roomName:this.state.room.roomName,roomDisplay:this.state.room.displayName}, function(data){
+			if(data){
+				alert("Mail sent!");
+			}
+		});
 	},
 	handleHomeButton: function(){
 		this.setState({room: null});
@@ -272,6 +281,7 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 			ContentView = 
 				(React.createElement("div", null, 
 					React.createElement(TalkHeader, {toggleTools: this.toggleTools, profile: this.state.profile, showMembers: this.state.showMembers, room: this.state.room, toggleMemberList: this.toggleMemberList, picture: this.state.profile.picture}), 
+					React.createElement(TalkTeacherTools, {handleSendInvites: this.handleSendInvites, room: this.state.room, handleMuteRoom: this.handleMuteRoom, handleDeleteRoom: this.handleDeleteRoom, showTools: this.state.showTools}), 
 					React.createElement(TalkStream, {handleDeleteMessage: this.handleDeleteMessage, isNew: this.state.isNew, loadOlder: this.loadOlder, messages: this.state.messages, handleReply: this.handleReply}), 
 					React.createElement(TalkInput, {disabled: this.state.room.isMute, handleSend: this.handleSend})
 				));
@@ -285,8 +295,7 @@ var TalkApp = React.createClass({displayName: "TalkApp",
 				React.createElement(TalkSideBar, {filter: this.state.filter, handleFilter: this.handleFilter, handleSearch: this.handleSearch, handleCreateRoom: this.handleCreateRoom, handleHomeButton: this.handleHomeButton, handleJoinRoom: this.handleJoinRoom, rooms: this.state.rooms}), 
 				React.createElement("div", {className: "talk-container"}, 
 					ContentView
-				), 
-				React.createElement(TalkTeacherTools, {handleMuteRoom: this.handleMuteRoom, handleDeleteRoom: this.handleDeleteRoom, showTools: this.state.showTools})
+				)
 			)
 		)
 	}
@@ -655,14 +664,31 @@ var TalkInput = React.createClass({displayName: "TalkInput",
 });
 
 var TalkTeacherTools = React.createClass({displayName: "TalkTeacherTools",
+	getInitialState: function(){
+		return {invitees:''}
+	},
 	render: function(){
 		var toolsClass="teacher-tools";
 		if(this.props.showTools){
 			toolsClass+=" teacher-tools-show";
 		}
 		return (
-			React.createElement("div", {className: toolsClass})
+			React.createElement("div", {className: toolsClass}, 
+				React.createElement("div", {className: "button-container"}, 
+					React.createElement("div", {className: "button-c mute", onClick: this.handleMuteRoom}, React.createElement("i", {className: "fa fa-ban"})), 
+					React.createElement("div", {className: "button-c trash", onClick: this.handleDeleteRoom}, React.createElement("i", {className: "fa fa-trash"}))
+				), 
+				React.createElement("textarea", {onChange: this.handleText, value: this.state.invitees, placeholder: "Enter emails to invite. Separate multiple emails with a comma", rows: "10"}), 
+				React.createElement("div", {onClick: this.handleSendInvites, className: "send-mail"}, React.createElement("i", {className: "fa fa-envelope"}))
+			)
 		)
+	},
+	handleText: function(e){
+    	this.setState({invitees: e.target.value});
+  	},
+	handleSendInvites: function(){
+		var invitees = this.state.invitees.replace(/ /g,'').split(',');
+		this.props.handleSendInvites(invitees);
 	},
 	handleMuteRoom: function(){
 		this.props.handleMuteRoom(this.props.room._id);

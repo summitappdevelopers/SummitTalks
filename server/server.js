@@ -53,6 +53,7 @@ app.modules.googleStrategy = require('passport-google-oauth');
 app.modules.moment = require('moment');
 app.modules.jwt = require('jsonwebtoken');
 app.modules.socketJwt = require('socketio-jwt');
+app.modules.mandrill = require('mandrill-api/mandrill');
 app.utilities.api_manager = require('./routes/api_manager');
 app.utilities.auth = require('./routes/auth/auth');
 app.utilities.view_manager = require('./routes/view_manager');
