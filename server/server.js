@@ -1,5 +1,5 @@
 //====== APP SETUP ======
-
+var _CONFIG_ = require('../config');
 global.app = {
 	express: {},
 	router: {},
@@ -7,27 +7,25 @@ global.app = {
 	utilities: {},
 	models: {},
 	secrets: {
-		expressSession: "scheminup",
-		jwtSecret: "topszn"
+		expressSession: _CONFIG_.sessionSecret,
+		jwtSecret: _CONFIG_.jwtSecret
 	},
 	dev: false,
 	port: {},
 	mongo_uri: {},
 	version: {},
 }
-
 if(process.argv[2]=="dev"){
 	app.dev = true;
 }
-
-app.port = (process.env.PORT || 1337);
+app.port = (process.env.PORT || _CONFIG_.port);
 var d = new Date();
 app.version = "v"+d.getFullYear()+"."+d.getMonth()+1+"."+d.getDate();
 
 if(app.dev){
-	app.mongo_uri ="mongodb://localhost:27017/summit-talks-dev";
+	app.mongo_uri = _CONFIG_.mongo_uri_dev;
 }else{
-	app.mongo_uri ="mongodb://heroku_app33201011:ka4anhdnpjbcklnsdt7n188o8h@ds031741.mongolab.com:31741/heroku_app33201011";
+	app.mongo_uri = _CONFIG_.mongo_uri_prod;
 }
 
 app.utilities.ensureAuthenticated = function ensureAuthenticated(req,res,next) {
@@ -54,6 +52,7 @@ app.modules.moment = require('moment');
 app.modules.jwt = require('jsonwebtoken');
 app.modules.socketJwt = require('socketio-jwt');
 app.modules.mandrill = require('mandrill-api/mandrill');
+app.utilities.config = _CONFIG_;
 app.utilities.api_manager = require('./routes/api_manager');
 app.utilities.auth = require('./routes/auth/auth');
 app.utilities.view_manager = require('./routes/view_manager');

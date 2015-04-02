@@ -1,14 +1,14 @@
+var _CONFIG_ = app.utilities.config;
 var googleAuth = app.modules.express.Router();
-
 var GoogleStrategy = app.modules.googleStrategy.OAuth2Strategy;
-var GOOGLE_CLIENT_ID = "764510630822-clsfk29gnm6n3bgiur9uc0l5qm7ss6ft.apps.googleusercontent.com";
-var GOOGLE_CLIENT_SECRET = "Dmh6kWGILQ1DpHM5_jGSsT3Z";
+var GOOGLE_CLIENT_ID = _CONFIG_.auth.g_client_id;
+var GOOGLE_CLIENT_SECRET = _CONFIG_.auth.g_client_secret;
 var callbackURL;
 
 if(app.dev){
 	callbackURL = "http://localhost:1337/auth/google/callback";
 }else{
-	callbackURL = "https://summittalks.herokuapp.com/auth/google/callback";
+	callbackURL = _CONFIG_.auth.g_callback_url;
 }
 
 var passport = app.modules.passport;
