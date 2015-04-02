@@ -9,9 +9,9 @@ if(dev){
 }
 var socket = io.connect(socketURL,{query: 'token='+token});
 
-if (Notification.permission !== "granted"){
+/*if (Notification.permission !== "granted"){
  	Notification.requestPermission();
-}
+}*/
 
 var TalkApp = React.createClass({
 	getInitialState: function(){
@@ -58,7 +58,7 @@ var TalkApp = React.createClass({
 		if(data.sender._id==profile._id){
 			data.isSelf = true;
 		}else{
-			this.postNotification(data);
+			//this.postNotification(data);
 		}
 		var nextMessages = this.state.messages.concat([data]);
 		this.setState({messages: nextMessages});
@@ -68,7 +68,7 @@ var TalkApp = React.createClass({
 		if(data.sender._id==profile._id){
 			data.isSelf = true;
 		}else{
-			this.postNotification(data);
+			//this.postNotification(data);
 		}
 		var nextMessages = this.state.messages;
 		for(var i=0;i<nextMessages.length;i++){

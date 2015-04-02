@@ -24,10 +24,12 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('outdeleteroom', function(data){
+		console.log(profile.displayName+" deleted "+data.roomName);
 		io.sockets.emit('indeleteroom',data);
 	});
 
 	socket.on('outcreateroom', function(data){
+		console.log(profile.displayName+" created "+data.roomName);
 		io.sockets.emit('increateroom',data);
 	});
 
@@ -50,10 +52,12 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('outmuteroom', function(data){
+		console.log(profile.displayName+" muted "+data.roomName);
 		io.to(data.roomName).emit('inmuteroom',data.isMute);
 	});
 
 	socket.on('willdisconnect', function(room){
+		console.log(profile.displayName+" left "+data.roomName);
 		socket.disconnect();
 		io.to(room).emit('inupdatemembers',{members:currentMembersInRoom(room)});
 	});
