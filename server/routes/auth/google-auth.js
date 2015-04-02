@@ -2,7 +2,7 @@ var _CONFIG_ = app.utilities.config;
 var googleAuth = app.modules.express.Router();
 var GoogleStrategy = app.modules.googleStrategy.OAuth2Strategy;
 var GOOGLE_CLIENT_ID = _CONFIG_.auth.g_client_id;
-var GOOGLE_CLIENT_SECRET = _CONFIG_.auth.g_client_;
+var GOOGLE_CLIENT_SECRET = _CONFIG_.auth.g_client_secret;
 var callbackURL;
 
 if(app.dev){
