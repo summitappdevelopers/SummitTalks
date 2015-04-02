@@ -10,83 +10,6 @@ $talk-header-height: 50px;
 $device-max: 700px;
 $device-min: 701px;
 $font: 'Lato','sans-serif';
-/*MIXINS*/
-
-
-/*KEYFRAMES*/
-
-@include keyframes(sidebarShow){
-	from{
-		left: -$sidebar-width;
-	}
-	to{
-		left: 0;
-	}
-}
-
-@include keyframes(sidebarHide) {
-	from{
-		left: 0;
-	}
-	to{
-		left: -$sidebar-width;
-	}
-}
-
-@include keyframes(talkContainerGrow){
-	from{
-		@include calc(width, "100% - #{$sidebar-width}");
-	}
-	to{
-		width: 100%;
-	}
-}
-
-@include keyframes(talkContainerShrink) {
-	from{
-		width: 100%;
-	}
-	to{
-		@include calc(width, "100% - #{$sidebar-width}");
-	}
-}
-
-@include keyframes(entityEnter){
-	from{
-		opacity: 0;
-	}
-	to{
-		opacity: 1;
-	}
-}
-
-
-@include keyframes(talkStreamButtonHover){
-	from{
-		background-color: #bdc3c7;
-	}
-	to{
-		background-color: #AAB0B3;
-	}
-}
-
-@include keyframes(brandingExpand){
-	from{
-		height: 50px;
-	}
-	to{
-		height: 100px;
-	}
-}
-
-@include keyframes(brandingContract){
-	from{
-		height: 100px;
-	}
-	to{
-		height: 50px;
-	}
-}
 
 body{
 	margin:0;
@@ -109,7 +32,6 @@ h1{
 
 .wrap {
 	overflow-x: hidden;
-	//@extend body;
 }
 
 .sidebar {
@@ -121,19 +43,19 @@ h1{
 	overflow-y: auto;
 	overflow-x: hidden;
 	float: left;
+	@include transition(left 0.5s ease-out);
 	@media (min-width: $device-min){
-		@include animation(sidebarShow 0.5s forwards ease-out);
+		left: 0;
 	}
 	@media (max-width: $device-max){
-		@include animation(sidebarHide 0.5s forwards ease-out);
+		left: -$sidebar-width;
 	}
-
 	.sidebar-branding{
 		width: 100%;
 		height: 50px;
 		background-color: #22313F;
 		text-align: center;
-		@include animation(brandingContract 0.2s forwards ease-out);
+		@include transition(height 0.2s ease-out);
 		.sidebar-link{
 			text-decoration: none !important;
 		}
@@ -162,8 +84,7 @@ h1{
 		}
 	}
 	.sidebar-branding-expanded{
-		@extend .sidebar-branding;
-		@include animation(brandingExpand 0.2s forwards ease-out);
+		height: 100px;
 		.logout-button{
 			display: block;
 			float: right;
@@ -183,6 +104,9 @@ h1{
 				top: (30px - 24px)/2;
 			}
 		}
+	}
+	.sidebar-branding:hover{
+		background-color: #34495e;
 	}
 	.create-room {
 		width:100%;
@@ -243,12 +167,10 @@ h1{
 			top:(30px  - 20px)/2;
 		}
 	}
-
 	.talk-room:hover{
 		cursor: hand;
 		background-color: #5C97BF;
 	}
-
 	.find-room{
 		.subject-selection{
 			position: relative;
@@ -278,18 +200,6 @@ h1{
 		}
 		.search-field:focus{outline:none;}
 	}
-
-	.sidebar-branding:hover{
-		background-color: #34495e;
-	}
-
-	.sidebar-show{
-		@include animation(sidebarShow 0.5s forwards ease-out);
-	}
-
-	.sidebar-hide{
-		@include animation(sidebarHide 0.5s forwards ease-out);
-	}
 }
 
 .talk-container{
@@ -302,13 +212,12 @@ h1{
 	display: block;
 	float: left;
 	right: 0px;
-
+	@include transition(width 0.5s ease-out);
 	@media (min-width: $device-min){
-		@include animation(talkContainerShrink 0.5s forwards ease-out);
+		@include calc(width, "100% - #{$sidebar-width}");
 	}
-
 	@media (max-width: $device-max){
-		@include animation(talkContainerGrow 0.5s forwards ease-out);
+		width: 100%;
 	}
 
 	.talk-header{
@@ -436,7 +345,7 @@ h1{
 		width: 100%;
 		@include calc(height, "100% - 75px");
 		background-color: #ecf0f1;
-		z-index: 0;
+		z-index: -1;
 		overflow-y: auto;
 		overflow-x: hidden;
 		box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
@@ -450,6 +359,7 @@ h1{
 		z-index: 0;
 		position: relative;
 		text-align: center;
+		@include transition(background-color 0.5s ease-out);
 
 		@media (min-width: $device-min){
 			margin-top: 50px;		
@@ -469,7 +379,7 @@ h1{
 
 	.talk-stream-button:hover{
 		cursor: hand;
-		@include animation(talkStreamButtonHover 0.5s forwards ease-out);
+		background-color: #AAB0B3;
 	}
 
 	.talk-blog{
@@ -667,7 +577,6 @@ h1{
 		cursor: pointer;
 		background-color: #00B16A;
 	}
-
 }
 
 .teacher-tools-show{

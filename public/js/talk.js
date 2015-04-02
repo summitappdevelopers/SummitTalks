@@ -384,7 +384,7 @@ var TalkToolbar = React.createClass({displayName: "TalkToolbar",
 		var toolbarElements = [];
 		if(this.state.isExpanded){
 			caretClass = "fa fa-caret-up";
-			brandingClass="sidebar-branding-expanded";
+			brandingClass+=" sidebar-branding-expanded";
 			toolbarElements.push(
 				React.createElement("a", {key: "logout-button", href: "/auth/logout"}, React.createElement("div", {className: "logout-button"}, React.createElement("i", {className: "fa fa-sign-out"})))
 			)

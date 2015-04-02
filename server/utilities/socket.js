@@ -57,7 +57,7 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('willdisconnect', function(room){
-		console.log(profile.displayName+" left "+data.roomName);
+		console.log(profile.displayName+" left "+room);
 		socket.disconnect();
 		io.to(room).emit('inupdatemembers',{members:currentMembersInRoom(room)});
 	});
