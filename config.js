@@ -7,6 +7,6 @@ module.exports=  {
 	auth: {
 		g_client_id: "764510630822-clsfk29gnm6n3bgiur9uc0l5qm7ss6ft.apps.googleusercontent.com",
 		g_client_secret: "Dmh6kWGILQ1DpHM5_jGSsT3Z",
-		g_callback_url: "http://localhost:1337/auth/google/callback"
+		g_callback_url: "https://summittalks.herokuapp.com/auth/google/callback"
 	}
 }

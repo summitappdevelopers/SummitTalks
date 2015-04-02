@@ -2,11 +2,11 @@ var _CONFIG_ = app.utilities.config;
 var googleAuth = app.modules.express.Router();
 var GoogleStrategy = app.modules.googleStrategy.OAuth2Strategy;
 var GOOGLE_CLIENT_ID = _CONFIG_.auth.g_client_id;
-var GOOGLE_CLIENT_SECRET = _CONFIG_.auth.g_client_secret;
+var GOOGLE_CLIENT_SECRET = _CONFIG_.auth.g_client_;
 var callbackURL;
 
 if(app.dev){
-	callbackURL = "http://localhost:1337/auth/google/callback";
+	callbackURL = "http://localhost:"+app.port+"/auth/google/callback";
 }else{
 	callbackURL = _CONFIG_.auth.g_callback_url;
 }
