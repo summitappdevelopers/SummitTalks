@@ -36,6 +36,6 @@ The production version of Summit Talks is hosted on [Heroku](http://herokuapp.co
 
 3. Run `mongo` to and type in `use summit-talks-dev`. This will create the database which the application will connect to.
 
-4. Rename `config.example.js` to `config.js` and fill in the placeholders. You can grab your OAuth2.0 credentials after you create an app on the [Google Cloud Console](https://console.developers.google.com/project). You can ignore `mongo_uri_prod` unless you want to deploy it on a production server.
+4. Copy `config.example.js` to `config.js` and fill in the placeholders. You can grab your OAuth2.0 credentials after you create an app on the [Google Cloud Console](https://console.developers.google.com/project). You can ignore `mongo_uri_prod` unless you want to deploy it on a production server.
 
 5. In order to modify the frontend code, you can navigate to `/public` and run `./compile`. This will start the watchers for compiling `.jsx` and `.scss` files. You must have the two optional dependencies installed for this to work.
