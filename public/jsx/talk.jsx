@@ -203,10 +203,14 @@ var TalkApp = React.createClass({
 		this.setState({rooms:nextRooms, filter:subject});
 	},
 	handleSend: function(content){
-		socket.emit('outmessage',{content: content.replace(/(<([^>]+)>)/ig,""), roomId:this.state.room._id, roomName: this.state.room.roomName});
+		if(!this.state.room.isMute){
+			socket.emit('outmessage',{content: content.replace(/(<([^>]+)>)/ig,""), roomId:this.state.room._id, roomName: this.state.room.roomName});
+		}
 	},
 	handleReply: function(content, parentId){
-		socket.emit('outreply', {content: content.replace(/(<([^>]+)>)/ig,""), parentId: parentId, roomId:this.state.room._id, roomName: this.state.room.roomName});
+		if(!this.state.room.isMute){
+			socket.emit('outreply', {content: content.replace(/(<([^>]+)>)/ig,""), parentId: parentId, roomId:this.state.room._id, roomName: this.state.room.roomName});
+		}
 	},
 	scrollDown: function(){
 		/*$(".talk-stream").animate({ scrollTop: $('.talk-stream')[0].scrollHeight}, 500);*/
@@ -282,7 +286,7 @@ var TalkApp = React.createClass({
 				(<div>
 					<TalkHeader toggleTools={this.toggleTools} profile={this.state.profile} showMembers={this.state.showMembers} room={this.state.room} toggleMemberList={this.toggleMemberList} picture={this.state.profile.picture} />
 					<TalkTeacherTools handleSendInvites={this.handleSendInvites} room={this.state.room} handleMuteRoom={this.handleMuteRoom} handleDeleteRoom={this.handleDeleteRoom} showTools={this.state.showTools}/>
-					<TalkStream handleDeleteMessage={this.handleDeleteMessage} isNew={this.state.isNew} loadOlder={this.loadOlder} messages={this.state.messages} handleReply={this.handleReply}/>
+					<TalkStream disabled={this.state.room.isMute} handleDeleteMessage={this.handleDeleteMessage} isNew={this.state.isNew} loadOlder={this.loadOlder} messages={this.state.messages} handleReply={this.handleReply}/>
 					<TalkInput disabled={this.state.room.isMute} handleSend={this.handleSend}/>
 				</div>);
 		}else{
@@ -531,7 +535,6 @@ var TalkUser = React.createClass({
 var TalkStream = React.createClass({
 	render: function(){
 		var buttonClass = "talk-stream-button";
-
 		if(this.props.isNew){
 			buttonClass = "disabled";
 		}
@@ -542,7 +545,7 @@ var TalkStream = React.createClass({
 				</div>
 				{this.props.messages.map(function(message){
 					if(!message.parentId){
-						return(<TalkMessage handleDeleteMessage={this.handleDeleteMessage} handleReply={this.handleReply} key={message._id} message={message}/>);
+						return(<TalkMessage disabled={this.props.disabled} handleDeleteMessage={this.handleDeleteMessage} handleReply={this.handleReply} key={message._id} message={message}/>);
 					}
 				}.bind(this))}
 			</div>
@@ -602,7 +605,7 @@ var TalkMessage = React.createClass({
 				{this.props.message.replies.map(function(reply){
 					return (<TalkReply handleDeleteMessage={this.handleDeleteMessage} reply={reply} />);
 				}.bind(this))}
-				<input className='talk-message-input' placeholder={"Reply to "+this.props.message.sender.displayName} type="text" value={this.state.inputText} onChange={this.handleChange} onKeyPress={this.handleKeyPress}></input>
+				<input disabled={this.props.disabled} className='talk-message-input' placeholder={this.props.disabled?"Room has been disabled":"Reply to "+this.props.message.sender.displayName} type="text" value={this.state.inputText} onChange={this.handleChange} onKeyPress={this.handleKeyPress}></input>
 			</div>
 		)
 	}
