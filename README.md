@@ -2,6 +2,8 @@
 A teacher moderated group chat web applications for Summit Public Schools.
 https://summittalks.herokuapp.com/
 
+![Summit Talks](http://image-store.slidesharecdn.com/33abe51f-973b-4546-82fb-81ed7fc43a80-large.png)
+
 ## Features
 
 * Realtime room based group chat
